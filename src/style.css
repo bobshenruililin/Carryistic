@@ -17,9 +17,10 @@ button,a,input,textarea,video{outline-offset:5px}
 button{background:none;border:0}
 [hidden]{display:none!important}
 .skip{position:fixed;left:1rem;top:-5rem;background:var(--ink);padding:12px 18px;color:white;z-index:100}
+.skip:not(:focus){clip-path:inset(50%)}
 .skip:focus{top:12px}
 .site-head,.site-foot{display:flex;align-items:center}
-.site-head{position:absolute;inset:0 0 auto;z-index:4;height:78px;max-width:none;justify-content:space-between;color:#fbf7ee;background:linear-gradient(180deg,#1111169c,transparent)}
+.site-head{position:absolute;inset:0 0 auto;z-index:4;height:78px;max-width:none;justify-content:space-between;color:#fbf7ee;background:linear-gradient(180deg,#111116ba,#11111673 62%,transparent)}
 .brand{display:inline-flex;align-items:center;font-size:31px;font-weight:760;line-height:1;letter-spacing:-2.6px}
 .brand-period{color:var(--accent)}
 .brand-mark{display:inline-block;position:relative;width:28px;height:30px;margin-right:9px;transform:rotate(-8deg)}
