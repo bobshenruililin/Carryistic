@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f8f7f2" />
+  <meta name="description" content="A portfolio film and two tactile studies drawn from Carry’s oil paintings, photographs and sculpture." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f4f1e9'/%3E%3Cpath d='M5 6h6v6H5zm8 8h9v9h-9zm11 11h12v12H24z' fill='%23272a23'/%3E%3C/svg%3E" />
+  <title>Carryistic — Dream studies</title>
+</head>
+<body>
+  <a class="skip" href="#film">Skip to the film</a>
+  <header class="site-head wrap">
+    <a class="brand" href="#top" aria-label="Carryistic, back to the beginning"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>carryistic<span class="brand-period">.</span></a>
+    <nav aria-label="Portfolio navigation"><a class="nav-anchor" href="#film">Film</a><a class="nav-anchor" href="#spatial-studies">Spatial studies</a><a class="nav-index" href="#work-index">Work index <span aria-hidden="true">↘</span></a></nav>
+  </header>
+  <main id="top">
+    <section class="opening wrap" id="film" aria-labelledby="site-title">
+      <div class="mast">
+        <div><p class="kicker"><span class="red-dot"></span> Artist portfolio</p><h1 id="site-title">Dream <em>studies.</em></h1></div>
+        <p class="intro">Painting, photography and sculpture by Carry, told through a film and two spatial studies.</p>
+      </div>
+      <div class="film-stage" id="film-stage">
+        <button id="enter-film" class="film-cover" type="button" aria-label="Enter the dream and play Afterimage, a 22-second film">
+          <span class="cover-image" aria-hidden="true"><img data-art="dusk-portrait.webp" alt="" fetchpriority="high"></span>
+          <span class="cover-slip" aria-hidden="true"><img data-art="dusk-eye.webp" alt=""></span>
+          <span class="cover-shade" aria-hidden="true"></span>
+          <span class="film-tag"><span class="record-dot"></span> Opening film</span>
+          <span class="cover-caption"><span class="film-title">Afterimage</span><span class="play-row"><span class="play-pill"><i class="play-icon"></i> Enter the dream</span><span class="film-duration">00:22</span></span></span>
+          <span class="frame-corner" aria-hidden="true"></span>
+        </button>
+        <div class="film-player" hidden>
+          <video id="afterimage" controls playsinline preload="none" aria-label="Afterimage, a 22-second wordless film with sound captions available"></video>
+          <button type="button" id="close-film" class="close-film" aria-label="Return to the film poster">×</button>
+        </div>
+      </div>
+      <div class="film-footer"><span>Still from <i>Dusk til Dawn</i> <span class="quiet">/ Oil on canvas</span></span><button type="button" class="text-button" data-open="film-notes">Film notes <span aria-hidden="true">↗</span></button></div>
+      <noscript><p>Watch <a href="./film/afterimage.mp4">Afterimage</a> or browse <a href="https://github.com/bobshenruililin/Carryistic/tree/main/archive/artworks">Carry’s original works</a>. Enable JavaScript to explore the spatial studies.</p></noscript>
+    </section>
+
+    <section class="studies wrap" id="spatial-studies" aria-labelledby="spatial-title">
+      <div class="section-head"><div><p class="kicker">Interactive works</p><h2 id="spatial-title">In <em>space.</em></h2></div><p>First, a gesture leaves the photograph. Then the camera comes close enough to touch the surface.</p></div>
+      <article class="study gesture" id="gesture-study" data-kind="gesture">
+        <div class="scene" aria-label="Fly spatial study">
+          <div class="scene-fallback" aria-hidden="true"><img data-art="fly-water.webp" alt=""></div>
+          <canvas class="spatial-canvas" aria-label="Four waterfront poses lift from the photograph into color blocks. Use the slider below."></canvas>
+          <span class="stage-label">Study 01 <b>/</b> Gesture</span>
+          <span class="scene-mode" aria-live="polite"></span>
+        </div>
+        <div class="study-copy"><div class="copy-main"><p class="kicker">From <i>Fly</i></p><h3>The fall</h3><p>Follow the red hood from the waterfront into four planes of color. Move the slider to pull the layers apart.</p></div>
+          <div class="control-group"><label for="gesture-progress">Separation</label><output id="gesture-read" for="gesture-progress">45%</output><input id="gesture-progress" class="scrub" type="range" min="0" max="100" value="45" aria-describedby="gesture-ends"><div class="scale-ends" id="gesture-ends"><span>Photograph</span><span>Color blocks</span></div></div>
+          <button class="pin" type="button">Remember this view <span aria-hidden="true">＋</span></button>
+        </div>
+      </article>
+      <article class="study object" id="object-study" data-kind="object">
+        <div class="scene" aria-label="Liquid Gold spatial study">
+          <div class="scene-fallback" aria-hidden="true"><img data-art="liquid-front.webp" alt=""></div>
+          <canvas class="spatial-canvas" aria-label="Move through the photographed camera arc around the heart sculpture using the slider below."></canvas>
+          <span class="stage-label">Study 02 <b>/</b> Material</span><span class="scene-mode" aria-live="polite"></span>
+        </div>
+        <div class="study-copy"><div class="copy-main"><p class="kicker">From <i>To Bleed in Liquid Gold</i></p><h3>The orbit</h3><p>A gold rim opens into view. Turn through the camera arc Carry shared and watch the beads stay anchored beneath it.</p></div>
+          <div class="control-group"><label for="object-progress">Viewpoint</label><output id="object-read" for="object-progress">25%</output><input id="object-progress" class="scrub" type="range" min="0" max="100" value="25" aria-describedby="object-ends"><div class="scale-ends" id="object-ends"><span>Side profile</span><span>Open end</span></div></div>
+          <button class="pin" type="button">Remember this view <span aria-hidden="true">＋</span></button>
+        </div>
+      </article>
+    </section>
+
+    <section class="work-section wrap" id="work-index" aria-labelledby="work-title">
+      <div class="section-head"><div><p class="kicker">Selected works</p><h2 id="work-title">Work <em>index.</em></h2></div><p>Look closer at the source images, how a piece was made, and who contributed.</p></div>
+      <div class="work-grid" id="works"></div>
+      <div class="archive-link"><button type="button" class="underlink" id="browse-archive">Browse all 15 posts <span aria-hidden="true">↗</span></button><span>150 stills · 3 videos</span></div>
+    </section>
+    <section class="response wrap" id="response" aria-labelledby="response-title">
+      <div><p class="kicker">Artist’s notebook</p><h2 id="response-title">What stayed <em>with you?</em></h2><p>Leave a thought for the next edit. Any views you remembered will travel with your note.</p></div>
+      <form id="response-form"><div id="pins"></div><label for="reflection">Your words</label><textarea id="reflection" maxlength="1800" rows="4" placeholder="A gesture, a cut, a detail you would change…"></textarea>
+        <div class="response-actions"><button class="dark-button" type="submit">Make a response link <span aria-hidden="true">↗</span></button><button type="button" id="download-note" class="text-button">Save as a file ↓</button></div>
+        <p id="response-status" class="response-status" role="status">Your draft stays on this device. A response link includes only your words and remembered views.</p>
+        <div id="share-result" hidden><label for="response-link">Response link</label><div><input type="text" id="response-link" readonly><button type="button" id="copy-response" class="text-button">Copy</button></div></div>
+      </form>
+    </section>
+  </main>
+  <footer class="site-foot wrap"><a class="brand" href="#top">carryistic<span class="brand-period">.</span></a><span>Work by Carry</span><a href="https://www.instagram.com/carryistic/" rel="noreferrer" target="_blank">Instagram ↗</a><button type="button" class="text-button" data-open="credits">Credits ↗</button></footer>
+  <dialog id="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-shell"><button type="button" class="dialog-close" aria-label="Close details">×</button><div id="dialog-content"></div></div></dialog>
+  <div id="toast" aria-live="polite" role="status"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
