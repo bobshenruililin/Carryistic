@@ -34,7 +34,10 @@ for (const [expression, url] of [...css.matchAll(/url\(["']?([^)'"\s]+)["']?\)/g
 
 const embedded = `<script>window.__carryFiles=${JSON.stringify(assets)}</script>\n`;
 const script = `<script type="module">${js.replace(/<\/script/gi, '<\\/script')}</script>`;
-const offline = html.replace(moduleTag[0], '')
+// The online entry starts both cover requests while the module is downloading.
+// In the file edition the module supplies their embedded bytes immediately.
+const offline = html.replace(/(<img\b[^>]*\bdata-art="[^"]+")\s+src="[^"]+"/g, '$1')
+  .replace(moduleTag[0], '')
   .replace(styleTag[0], () => `<style>${css}</style>`)
   .replace('</body>', () => `${embedded}${script}\n</body>`);
 await writeFile(join(dist, 'Carryistic.html'), offline);
