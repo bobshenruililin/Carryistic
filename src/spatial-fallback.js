@@ -241,7 +241,10 @@ function materialPrint(ctx,view,img,x,y,z,angle,roll,size) {
   imagePlane(ctx,img,plate(view,x,y,z+.018,size*.923,size*.923,angle,roll));
 }
 
-function frameRect(i) { return [(i%6)*448,Math.floor(i/6)*448,448,448]; }
+function frameRect(i) {
+  // An inset prevents linear filtering from pulling color from the next tile.
+  return [(i%6)*448+1.5,Math.floor(i/6)*448+1.5,445,445];
+}
 
 function drawObject(ctx,w,h,p,imgs) {
   const narrow=clamp(w/h/1.44,.73,1),yaw=mix(-.145,.185,p);
@@ -264,29 +267,35 @@ function drawObject(ctx,w,h,p,imgs) {
 
   const position=p*(BOUNDS.length-1), frame=Math.floor(position), next=Math.min(frame+1,BOUNDS.length-1);
   const fraction=position-frame;
-  const [left,upper,right,bottom]=BOUNDS[frame].map((n,i)=>mix(n,BOUNDS[next][i],fraction));
+  const [left,upper,right]=BOUNDS[frame].map((n,i)=>mix(n,BOUNDS[next][i],fraction));
+  const photograph = Math.round(position);
+  const bottom = BOUNDS[photograph][3];
   const size=4.55;
   const centerX=supportX+(.5-(left+right)/(2*448))*size*.83;
   const centerY=top+(bottom/448-.5)*size+.035;
   const window=plate(project,centerX,centerY,.014,size,size,yaw*.82);
   const cropped=1-ease(1,27,Math.min(left,upper,447-right));
-  const arc=imgs['liquid-arc.webp'], relief=imgs['liquid-relief-arc.webp'];
-  if(cropped>.001) {
-    polygon(ctx,window.map(v=>({...v,x:v.x+1.2,y:v.y+2})),'#bc9983',cropped*.86);
-    polygon(ctx,window,'#f0e8d9',cropped*.91);
-    imagePlane(ctx,arc,window,cropped*.6,frameRect(frame));
-    if(fraction>0) imagePlane(ctx,arc,window,cropped*.6*fraction,frameRect(next));
+  const source = frameRect(photograph);
+  if (cropped > .001) {
+    // The physical mount stops at the photographed base. It supports the
+    // source framing without projecting the original table over the plinth.
+    const [x0,y0,x1,y1] = BOUNDS[photograph];
+    const l=Math.max(0,x0-19), t=Math.max(0,y0-11), r=Math.min(448,x1+13), b=Math.min(448,y1+3);
+    const sub = (u,v) => ({
+      x: window[0].x+(window[1].x-window[0].x)*u/448+(window[3].x-window[0].x)*v/448,
+      y: window[0].y+(window[1].y-window[0].y)*u/448+(window[3].y-window[0].y)*v/448,
+    });
+    const mount = [sub(l,t),sub(r,t),sub(r,b),sub(l,b)];
+    polygon(ctx,mount.map(q=>({...q,x:q.x+1,y:q.y+2})),'#ac8873',cropped*.24);
+    polygon(ctx,mount,'#f4e7d4',cropped*.78);
+    const sx = source[2]/448, sy = source[3]/448;
+    imagePlane(ctx,imgs['liquid-arc.webp'],mount,cropped*.21,[source[0]+l*sx,source[1]+t*sy,(r-l)*sx,(b-t)*sy]);
   }
   const front=plate(project,centerX,centerY,.079,size,size,yaw*.82);
-  // Cross-dissolve consecutive photographed angles; registration and camera yaw
-  // continue smoothly even between the 24 source frames.
-  if(fraction<.5) {
-    imagePlane(ctx,relief,front,1,frameRect(frame));
-    if(fraction>.001) imagePlane(ctx,relief,front,fraction,frameRect(next));
-  } else {
-    imagePlane(ctx,relief,front,1,frameRect(next));
-    imagePlane(ctx,relief,front,1-fraction,frameRect(frame));
-  }
+  // Choose one actual exposure. Camera yaw and registration keep moving
+  // between exposures, without double edges on beads or an invented angle.
+  imagePlane(ctx,imgs['liquid-relief-arc.webp'],front,1,source);
+
 }
 
 export function createFallback(canvas,kind,{assetUrl,onReady,onError}) {
