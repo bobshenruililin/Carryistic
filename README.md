@@ -1,6 +1,6 @@
 # Carryistic · Dream studies
 
-[Open the portfolio](https://carryistic-artists-proofs.bobshenruililin.chatgpt.site) · [Download the offline edition](https://raw.githubusercontent.com/bobshenruililin/Carryistic/main/handoff/Carryistic.html) · [Google Drive reference library](https://drive.google.com/drive/folders/1fbso1aN0VT27E0wNxjwqrTS4eapcjhkn)
+[Open the portfolio](https://bobshenruililin.github.io/Carryistic/) · [Offline screening kit](https://drive.google.com/drive/folders/1qjbQmd1ob6WyTthBDtWGXcai26FL3Zgz) · [Google Drive reference library](https://drive.google.com/drive/folders/1fbso1aN0VT27E0wNxjwqrTS4eapcjhkn)
 
 *Afterimage* opens on a sideways glance. The photograph becomes a line drawing, then an oil painting. In *Fly*, four poses break free of the waterfront and land as four blocks of color. The film ends in the studio with the basketball portrait and a number 30 jersey. The visual argument is the director’s reading of Carry’s published work. The artist has the final word on what it means.
 
@@ -27,4 +27,4 @@ npm test
 npm run build
 ```
 
-Serve `dist/` on any static host. `dist/Carryistic.html` is a single-file edition with the film, fonts, images and interactions embedded. Save it to disk and open it in a browser for an in-person review. All 15 contact sheets work offline. The full-resolution originals and source posts open online. [Film and timecodes](film) · [Higgsfield material test](film/experiments) · [Rhythm reference](direction/rhythm.md)
+Serve `dist/` on any static host. The public demo serves the built files from the `gh-pages` branch. `dist/Carryistic.html` is a single-file edition with the film, fonts, images and interactions embedded. Save it to disk and open it in a browser for an in-person review. All 15 contact sheets work offline. The full-resolution originals and source posts open online. [Download the standalone HTML](https://github.com/bobshenruililin/Carryistic/raw/refs/heads/main/handoff/Carryistic.html) · [Film and timecodes](film) · [Higgsfield material test](film/experiments) · [Rhythm reference](direction/rhythm.md)
