@@ -16,6 +16,12 @@ test('limits note length without splitting a character, and omits invalid views'
   assert.deepEqual(saved.views, {});
 });
 
+test('the room can travel with a response using the original link format', () => {
+  const original = { version: 1, note: 'Hold the bouquet here.', views: { room: 47, object: 25 } };
+  assert.deepEqual(decodeReview(encodeReview(original)), original);
+  assert.deepEqual(decodeReview('eyJ2ZXJzaW9uIjoxLCJub3RlIjoiIiwidmlld3MiOnsiZ2VzdHVyZSI6MH19').views, { gesture: 0 });
+});
+
 test('rejects a damaged response and incompatible versions', () => {
   for (const token of ['', '🤍', 'abc=', 'a'.repeat(19001), 'e30', '____']) assert.throws(() => decodeReview(token));
   assert.throws(() => cleanReview({ version: 2, note: '', views: {} }));

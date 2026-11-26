@@ -37,6 +37,7 @@ const dialog = $('#detail-dialog');
 const dialogBody = $('#dialog-content');
 let invoker = null;
 function popup(title, label, content, source) {
+  if (movingStudy) stopMotion(movingStudy);
   invoker = source || document.activeElement;
   dialogBody.replaceChildren(element('p', label, 'kicker'));
   const heading = element('h2', title);
@@ -111,15 +112,26 @@ const video = $('#afterimage');
 const stage = $('#film-stage');
 const cover = $('#enter-film');
 let isFilmOpen = false;
+const player = $('.film-player');
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let entryTimer;
+function finishOpening() {
+  clearTimeout(entryTimer);
+  stage.classList.remove('is-opening', 'is-revealing');
+  cover.hidden = isFilmOpen;
+}
 function closeFilm() {
   isFilmOpen = false;
   video.pause();
-  $('.film-player').hidden = true;
-  cover.hidden = false;
+  finishOpening();
+  player.hidden = true;
+  cover.disabled = false;
   stage.classList.remove('is-playing');
   cover.focus({preventScroll:true});
 }
 function playFilm() {
+  if (isFilmOpen) return;
+  if (movingStudy) stopMotion(movingStudy);
   if (!video.getAttribute('src')) {
     const captions = document.createElement('track');
     captions.kind = 'captions';
@@ -129,14 +141,22 @@ function playFilm() {
     video.append(captions);
     video.src = asset('film/afterimage.mp4');
   }
-  cover.hidden = true;
-  $('.film-player').hidden = false;
-  stage.classList.add('is-playing');
   isFilmOpen = true;
+  cover.disabled = true;
+  player.hidden = false;
+  stage.classList.add('is-playing', 'is-opening');
   if (video.ended) video.currentTime = 0;
-  video.play().catch(() => { if (isFilmOpen) video.focus({preventScroll:true}); });
+  if (reducedMotion.matches) finishOpening();
+  video.play().catch(() => { if (isFilmOpen) finishOpening(); });
   video.focus({preventScroll:true});
 }
+video.addEventListener('playing', () => {
+  if (!stage.classList.contains('is-opening')) return;
+  if (reducedMotion.matches) return finishOpening();
+  stage.classList.add('is-revealing');
+  entryTimer = setTimeout(finishOpening, 560);
+});
+video.addEventListener('error', finishOpening);
 cover.addEventListener('click', playFilm);
 $('#close-film').addEventListener('click', closeFilm);
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && isFilmOpen && !dialog.open && !document.fullscreenElement) closeFilm(); });
@@ -159,7 +179,7 @@ function showCredits(source) {
 for (const btn of $$('[data-open]')) btn.addEventListener('click',()=>{
   if (btn.dataset.open==='credits') return showCredits(btn);
   const cues=element('ol');
-  for(const line of ['00:00 · The eye moves from photograph to pencil to paint.','00:04 · Four figures fall out of the waterfront and into blocks.','00:10 · A cap, two records and gold-rimmed openings carry the cut.','00:17 · A basketball returns the dream to the painting and its maker.']) cues.append(element('li',line));
+  for(const line of ['00:00 · The eye moves from photograph to pencil to paint.','00:04 · Four figures fall out of the waterfront and into blocks.','00:09 · The blue block opens on a red cap. Its printed echoes lift to reveal the camera frame.','00:12 · Two hands hold the records. The picture turns around the red label and opens on a gold rim.','00:17 · A basketball returns the dream to the painting and its maker.']) cues.append(element('li',line));
   const experiment = element('details', undefined, 'material-test');
   experiment.append(element('summary', 'See the four-second Higgsfield material test'));
   const clip = element('video');
@@ -188,16 +208,69 @@ function toast(text) {
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>node.classList.remove('visible'),2400);
 }
 const studies = new Map();
+let movingStudy = null;
+let motionFrame = 0;
+const durations = { gesture: 6200, room: 7800, object: 6000 };
+const motionVisibility = 'IntersectionObserver' in window ? new IntersectionObserver(changes => {
+  for (const change of changes) {
+    if (!change.isIntersecting && movingStudy?.section === change.target) stopMotion(movingStudy);
+  }
+}) : null;
+
+function updatePlayButton(entry) {
+  const playing = movingStudy === entry;
+  const action = playing ? 'Pause' : entry.value === 100 ? 'Replay' : 'Play';
+  entry.play.setAttribute('aria-label', action + ' ' + viewNames[entry.kind]);
+  entry.play.setAttribute('aria-pressed', String(playing));
+  $('span', entry.play).textContent = action + ' study';
+}
+function stopMotion(entry) {
+  if (movingStudy !== entry) return;
+  cancelAnimationFrame(motionFrame);
+  motionFrame = 0;
+  movingStudy = null;
+  entry.fromHere = true;
+  motionVisibility?.unobserve(entry.section);
+  updatePlayButton(entry);
+}
+function runMotion(entry) {
+  if (movingStudy !== entry || motionFrame || !(entry.ready || entry.staticOnly)) return;
+  const from = entry.position;
+  let start;
+  function step(time) {
+    if (movingStudy !== entry) return;
+    start ??= time;
+    const next = from + (time - start) * 100 / durations[entry.kind];
+    setValue(entry, next);
+    if (next >= 100) stopMotion(entry);
+    else motionFrame = requestAnimationFrame(step);
+  }
+  motionFrame = requestAnimationFrame(step);
+}
+function toggleMotion(entry) {
+  if (movingStudy === entry) return stopMotion(entry);
+  if (movingStudy) stopMotion(movingStudy);
+  if (!entry.fromHere || entry.value === 100) setValue(entry, 0);
+  movingStudy = entry;
+  updatePlayButton(entry);
+  motionVisibility?.observe(entry.section);
+  loadScene(entry);
+  runMotion(entry);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && movingStudy) stopMotion(movingStudy);
+});
+function refreshPinButton(entry) {
+  const matched = draft.views[entry.kind] === entry.value;
+  entry.pin.setAttribute('aria-pressed', String(matched));
+  entry.pin.textContent = matched ? 'View remembered ✓' : 'Remember this view ＋';
+}
 function refreshPins() {
   const wrap=$('#pins');wrap.replaceChildren();
   for (const kind of kinds) {
     const value = draft.views[kind];
     const entry=studies.get(kind);
-    if (entry) {
-      const matched=Number.isInteger(value)&&entry.value===value;
-      entry.pin.setAttribute('aria-pressed',String(matched));
-      entry.pin.textContent=matched?'View remembered ✓':'Remember this view ＋';
-    }
+    if (entry) refreshPinButton(entry);
     if (value===undefined) continue;
     const chip=element('span',viewNames[kind]+' · '+value+'%','pin-chip');
     const remove=element('button','×');remove.type='button';remove.setAttribute('aria-label','Remove remembered '+viewNames[kind]+' view');
@@ -205,20 +278,40 @@ function refreshPins() {
     chip.append(remove);wrap.append(chip);
   }
 }
+const fallbackFrames = {
+  gesture: ['fly-water.webp', 'fly-figures.webp', 'fly-blocks.webp'],
+  room: ['blackout-cut.webp', 'blackout-room-inset.webp', 'blackout-hall.webp'],
+  object: ['liquid-front.webp', 'liquid-rim.webp', 'liquid-detail.webp'],
+};
 function fallback(entry) {
   const el=$('.scene-fallback img',entry.section);
   const v=entry.value;
-  const names=entry.kind==='gesture'?['fly-water.webp','fly-figures.webp','fly-blocks.webp']:['liquid-front.webp','liquid-rim.webp','liquid-detail.webp'];
-  el.src=art(names[v<34?0:v<67?1:2]);
+  const name=fallbackFrames[entry.kind][v<34?0:v<67?1:2];
+  if (el.dataset.art !== name) { el.dataset.art = name; el.src = art(name); }
+}
+function valueLabel(kind, n) {
+  if (kind === 'gesture') return n + '% separated';
+  if (kind === 'object') return n + '% through the camera arc';
+  const layer = n < 18 ? 'paper cutout' : n < 48 ? 'room emerging' : n < 57 ? 'bouquet photograph' : n < 95 ? 'three panels opening' : 'empty hall';
+  return n + '% · ' + layer;
 }
 function setValue(entry, n) {
-  entry.value=Math.max(0,Math.min(100,Math.round(n)));
-  entry.range.value=String(entry.value);
-  entry.output.textContent=entry.value+'%';
-  entry.range.setAttribute('aria-valuetext',entry.value+' percent '+(entry.kind==='gesture'?'separated':'through the camera arc'));
-  if (entry.renderer) entry.renderer.setProgress(entry.value/100);
+  entry.position = Math.max(0, Math.min(100, n));
+  entry.renderer?.setProgress(entry.position / 100);
+  const value = Math.round(entry.position);
+  if (entry.value === value) return;
+  entry.value = value;
+  entry.range.value = String(value);
+  entry.output.textContent = value + '%';
+  entry.range.setAttribute('aria-valuetext', valueLabel(entry.kind, value));
   if (!entry.ready) fallback(entry);
-  refreshPins();
+  refreshPinButton(entry);
+  if (movingStudy !== entry) updatePlayButton(entry);
+}
+function scrub(entry, n) {
+  if (movingStudy) stopMotion(movingStudy);
+  entry.fromHere = true;
+  setValue(entry, n);
 }
 async function loadScene(entry) {
   if (entry.loading) return;
@@ -228,16 +321,19 @@ async function loadScene(entry) {
     entry.ready = true;
     entry.scene.classList.add('ready');
     mode.textContent = '';
+    runMotion(entry);
   };
   function stills() {
     entry.ready = false;
     entry.scene.classList.remove('ready');
     mode.textContent = 'Source image sequence';
+    entry.staticOnly = true;
     fallback(entry);
+    runMotion(entry);
   }
   function mount(factory, canvas, onError) {
     entry.renderer = factory(canvas, entry.kind, {assetUrl: art, onReady: ready, onError});
-    entry.renderer.setProgress(entry.value / 100);
+    entry.renderer.setProgress(entry.position / 100);
     entry.renderer.resize();
   }
   let recovering = false;
@@ -257,19 +353,26 @@ async function loadScene(entry) {
     } catch { stills(); }
   }
   try {
+    if (entry.kind === 'room') {
+      const {createFallback} = await import('./spatial-fallback.js');
+      mount(createFallback, $('canvas', entry.scene), stills);
+      return;
+    }
     const {createStudy} = await import('./spatial.js');
     mount(createStudy, $('canvas', entry.scene), useCanvas);
-  } catch { await useCanvas(); }
+  } catch { if (entry.kind === 'room') stills(); else await useCanvas(); }
 }
 const observer='IntersectionObserver' in window ? new IntersectionObserver(changes=>{for(const change of changes){if(change.isIntersecting){const e=studies.get(change.target.dataset.kind);loadScene(e);observer.unobserve(change.target);}}},{rootMargin:'180px 0px'}):null;
 for(const section of $$('.study[data-kind]')) {
   const kind=section.dataset.kind;
   const range=$('.scrub',section);
   const scene=$('.scene',section);
-  const entry={kind,section,scene,range,output:$('output',section),pin:$('.pin',section),value:Number(range.value),ready:false,loading:false,renderer:null};
+  const entry={kind,section,scene,range,output:$('output',section),pin:$('.pin',section),play:$('.motion-toggle',section),value:null,position:0,fromHere:false,ready:false,staticOnly:false,loading:false,renderer:null};
   studies.set(kind,entry);
-  range.addEventListener('input',()=>setValue(entry,Number(range.value)));
-  entry.pin.addEventListener('click',()=>{draft.views[kind]=entry.value;persist();refreshPins();clearShare();toast('View added to your note');});
+  setValue(entry, Number(range.value));
+  range.addEventListener('input',()=>scrub(entry,Number(range.value)));
+  entry.play.addEventListener('click',()=>toggleMotion(entry));
+  entry.pin.addEventListener('click',()=>{if(movingStudy)stopMotion(movingStudy);draft.views[kind]=entry.value;persist();refreshPins();clearShare();toast('View added to your note');});
   let drag=null;
   scene.addEventListener('pointerdown',ev=>{if(ev.button!==0)return;drag={id:ev.pointerId,x:ev.clientX,y:ev.clientY,value:entry.value,active:false};});
   scene.addEventListener('pointermove',ev=>{
@@ -277,7 +380,7 @@ for(const section of $$('.study[data-kind]')) {
     const dx=ev.clientX-drag.x,dy=ev.clientY-drag.y;
     if(!drag.active&&Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>9){drag=null;return;}
     if(!drag.active&&Math.abs(dx)>5){drag.active=true;scene.setPointerCapture(ev.pointerId);}
-    if(drag.active){ev.preventDefault();setValue(entry,drag.value+dx/Math.max(scene.clientWidth*.7,1)*100);}
+    if(drag.active){ev.preventDefault();scrub(entry,drag.value+dx/Math.max(scene.clientWidth*.7,1)*100);}
   });
   for(const name of ['pointerup','pointercancel','lostpointercapture'])scene.addEventListener(name,()=>{drag=null;});
   if(observer)observer.observe(section);else loadScene(entry);
@@ -318,7 +421,7 @@ function openSharedResponse(){
     for(const [kind,value] of Object.entries(shared.views)){
       const b=element('button','Open '+viewNames[kind]+' at '+value+'% →','underlink');
       b.type='button';
-      b.addEventListener('click',()=>{dialog.close();const entry=studies.get(kind);setValue(entry,value);entry.section.scrollIntoView();entry.range.focus({preventScroll:true});});
+      b.addEventListener('click',()=>{dialog.close();const entry=studies.get(kind);scrub(entry,value);entry.section.scrollIntoView();entry.range.focus({preventScroll:true});});
       nodes.push(b);
     }
     if(!nodes.length)nodes.push(element('p','This response has no saved views or text.'));

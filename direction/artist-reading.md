@@ -23,6 +23,14 @@ In both square images, every step moves right, moves down and increases in visib
 
 That difference gives the animator permission to change scale aggressively. Preserve the order and growing weight. Let the positions shift as Carry shifted them. To check the measurement, take each 1280 × 1280 JPEG, mark pixels whose lowest RGB channel is below 240, then sort the four largest four-connected components from left to right. The center is the mean of their pixel coordinates. The counts measure the shapes visible inside the frame. [Reproduce the measurements](measure_fly.py) · [Cutout plate](../archive/artworks/P05%20-%20Fly/P05-02.jpg) · [Block plate](../archive/artworks/P05%20-%20Fly/P05-03.jpg)
 
+## A room held together by a bouquet
+
+![Three original Blackout photographs and matching details of the rose, watch and bent knee in the first two frames.](blackout-registration.jpg)
+
+In *Blackout*, the hollow upper-left figure and the person holding the bouquet in P02-04 return to their places in P02-05. Reducing the cutout to about 75% and translating it by roughly 135 pixels on each axis registers the rose, watch and knee on the 1080-pixel photograph. The hollow falls on the other person in the room. The setting is already there in the relationship between the two slides. [Original plates](../archive/artworks/P02%20-%20Blackout%20photographs) · [Measured registration](../src/blackout-registration.json)
+
+Our prediction is that holding the bouquet steady makes the shift from a gesture to a social scene legible. In *The room*, the first glimpse of color comes through Carry’s cut shape. The paper moves aside. Three strips of the photograph then open on the empty hall of P02-13, taking their spacing from the vertical gutters in the P02-01 triptych. That last move joins two separate photographs. Whether the hall feels like relief, an absence, or somewhere else entirely is a question for Carry.
+
 ## Where the reading could break
 
 - **The fall may remain legible in depth.** Start four image planes at the measured projected positions. Move the camera sideways just far enough for the spaces between them to open. In a private comparison, hold crop, duration and sound constant and play a second take with a fixed camera. Ask what action the viewer remembers. If the movement of the camera buries the landing, shorten its travel.

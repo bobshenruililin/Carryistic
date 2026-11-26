@@ -1,4 +1,6 @@
-// A painter's projection of the same photographic studies for Canvas 2D.
+import { drawRoom, roomFiles } from './blackout.js';
+
+// A painter's projection of the photographic studies for Canvas 2D.
 const FLY = [
   { crop: [0, 280, 225, 270], loose: [-1.38, 1.27, 0.10], block: [0, 324, 87, 104], step: [0.14, 1.46, -0.90], colors: ['#b8b9b4','#e0e1d8','#92958d'] },
   { crop: [214, 409, 320, 318], loose: [-0.43, 0.68, 0.74], block: [128, 427, 164, 165], step: [1.04, 0.98, -0.42], colors: ['#c21302','#f46a43','#912209'] },
@@ -303,6 +305,11 @@ export function createFallback(canvas,kind,{assetUrl,onReady,onError}) {
   let width=0,height=0,ratio=1;
   const ctx=canvas.getContext('2d',{alpha:false});
   const images={};
+  const [draw, files] = {
+    gesture: [drawGesture, FLY_FILES],
+    object: [drawObject, LIQUID_FILES],
+    room: [drawRoom, roomFiles],
+  }[kind];
   function fail(error) {
     if(failed||disposed)return;
     failed=true;
@@ -317,8 +324,7 @@ export function createFallback(canvas,kind,{assetUrl,onReady,onError}) {
       ctx.setTransform(ratio,0,0,ratio,0,0);
       ctx.imageSmoothingEnabled=true;
       ctx.imageSmoothingQuality='high';
-      if(kind==='object') drawObject(ctx,width,height,progress,images);
-      else drawGesture(ctx,width,height,progress,images);
+      draw(ctx,width,height,progress,images);
       if(!painted){painted=true;onReady?.();}
     } catch(error){fail(error);}
   }
@@ -340,7 +346,6 @@ export function createFallback(canvas,kind,{assetUrl,onReady,onError}) {
   observer?.observe(canvas);
   if(!ctx)queueMicrotask(()=>fail(new Error('The 2D scene could not initialize.')));
   else {
-    const files=kind==='object'?LIQUID_FILES:FLY_FILES;
     Promise.all(files.map(name=>new Promise((resolve,reject)=>{
       const img=new Image();
       images[name]=img;

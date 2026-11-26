@@ -24,7 +24,6 @@ CUES = {
     "fold": 8.5,
     "cap": 10.125,
     "discs": 12,
-    "halos": 13,
     "turn": 13.875,
     "beads": 15.25,
     "landing": 16.625,
@@ -40,6 +39,7 @@ STILLS = [
     "P05-03",
     "P11-04",
     "P10-01",
+    "P10-05",
     "P11-01",
     "P08-04",
     "P08-03",
@@ -327,52 +327,176 @@ class Cut:
                 shadow.filter(ImageFilter.GaussianBlur(self.w * 0.009)),
             )
         dr = ImageDraw.Draw(bg)
-        for A, B, C, D, A2, B2, D2, color in rendered:
+        for i, (A, B, C, D, A2, B2, D2, color) in enumerate(rendered):
             lighter = tuple(round(c + (255 - c) * 0.37) for c in color)
             darker = tuple(round(c * 0.56) for c in color)
             dr.polygon([A2, B2, B, A], fill=lighter)
             dr.polygon([A2, A, D, D2], fill=darker)
             dr.polygon([A, B, C, D], fill=color)
+            if i == 3 and t > 9.30:
+                # The existing blue face is the door. Its left edge stays hinged
+                # to the measured block, with a separate photographic plate behind.
+                aperture = Image.new("L", self.size)
+                ImageDraw.Draw(aperture).polygon([A, B, C, D], fill=255)
+                bg.paste(self.cap_photo(t), mask=aperture)
+                theta = math.radians(151) * ease(9.30, 9.97, t)
+                scale = math.cos(theta)
+                depth = math.sin(theta) * (B[0] - A[0])
+                tip = (
+                    A[0] + (B[0] - A[0]) * scale,
+                    A[1] + (B[1] - A[1]) * scale - 0.15 * depth,
+                )
+                foot = (tip[0] + D[0] - A[0], tip[1] + D[1] - A[1])
+                brightness = 1 - 0.39 * math.sin(theta) ** 2
+                flap = tuple(round(value * brightness) for value in color)
+                dr.polygon([A, tip, foot, D], fill=flap)
         return bg
 
-    def cap(self, t):
-        at = (0.455, 0.43)
-        photo = self.surface(
-            "P11-04", (0.552, 0.291), at, 1.18 + 0.08 * ease(10.125, 10.85, t)
-        )
-        if t < 10.79:
-            return photo
-        progress = ease(10.8, 11.76, t)
-        echo = self.surface(
-            "P10-01",
-            (0.372, 0.383),
-            (mix(at[0], 0.31, progress), 0.44),
-            mix(2.20, 1.06, progress),
-            bg=(14, 12, 170),
-        )
-        field = self.x + 0.23 * (self.y > 0.485)
-        return self.wipe(
-            photo, echo, field, mix(-0.02, 1.25, ease(10.79, 11.26, t)), 0.004
-        )
-
-    def disc(self, t):
-        k = ease(12, 13, t)
+    def cap_photo(self, t):
+        p = ease(9.35, 10.055, t)
         return self.surface(
-            "P11-01", (0.382, 0.256), (0.50, 0.49), mix(1.32, 2.18, k), bg=INK
+            "P11-04",
+            (0.552, 0.291),
+            (mix(0.65, 0.554, p), mix(0.72, 0.368, p)),
+            mix(0.53, 1.04, p),
         )
 
-    def halo(self, t):
-        k = ease(13, 13.875, t)
-        ring = self.surface(
-            "P08-04", (0.70, 0.482), (0.50 + 0.18 * k, 0.49), mix(1.70, 1.15, k)
+    def lay_print(self, back, front, corners, separation):
+        """Project a complete photographic sheet onto four screen coordinates."""
+        w, h = self.size
+        fw, fh = front.size
+        source = [(0, 0), (fw, 0), (fw, fh), (0, fh)]
+        equations, values = [], []
+        for (x, y), (u, v) in zip(corners, source):
+            equations.extend(
+                ((x, y, 1, 0, 0, 0, -u * x, -u * y), (0, 0, 0, x, y, 1, -v * x, -v * y))
+            )
+            values.extend((u, v))
+        coefficients = np.linalg.solve(equations, values)
+        placed = front.transform(
+            self.size,
+            Image.Transform.PERSPECTIVE,
+            coefficients,
+            resample=R.BICUBIC,
+            fillcolor=INK,
         )
-        if t >= 13.25:
+        matte = Image.new("L", self.size)
+        ImageDraw.Draw(matte).polygon(corners, fill=255)
+        matte = matte.filter(ImageFilter.GaussianBlur(w / 2400))
+        if separation > 0:
+            shadow = Image.new("L", self.size)
+            offset = w * 0.013 * separation
+            points = [(x + offset * 0.3, y + offset) for x, y in corners]
+            ImageDraw.Draw(shadow).polygon(points, fill=round(88 * separation))
+            shadow = shadow.filter(
+                ImageFilter.GaussianBlur(max(1, w * 0.006 * separation))
+            )
+            back.paste((20, 13, 20), (0, 0, w, h), shadow)
+        back.paste(placed, mask=matte)
+        return back
+
+    def cap(self, t):
+        if t <= 10.42:
+            return self.cap_photo(t)
+        w, h = self.size
+        echo = self.surface(
+            "P10-01", (0.372, 0.383), (0.35, 0.32), 1.015, bg=(9, 10, 173)
+        )
+        if t < 11.17:
+            # The photo itself slides to the left. The actual color echoes wait beneath.
+            p = ease(10.42, 11.17, t)
+            x = -1.04 * w * p
+            bow = math.sin(math.pi * p)
+            corners = [
+                (x, -0.045 * h * bow),
+                (x + w - 0.03 * w * bow, 0.055 * h * bow),
+                (x + w, h - 0.02 * h * bow),
+                (x, h + 0.03 * h * bow),
+            ]
+            return self.lay_print(echo, self.cap_photo(t), corners, bow)
+        if t < 11.375:
+            return echo
+        # Lift the blue print vertically to uncover the artist's phone controls,
+        # both hands and the two records. The printed figures move with their sheet.
+        p = ease(11.375, 12.0, t)
+        y = -1.07 * h * p
+        bow = math.sin(math.pi * p)
+        corners = [
+            (-0.015 * w * bow, y),
+            (w + 0.02 * w * bow, y - 0.01 * h * bow),
+            (w, h + y + 0.08 * h * bow),
+            (0, h + y - 0.025 * h * bow),
+        ]
+        return self.lay_print(self.camera_print(t), echo, corners, bow)
+
+    def record_framing(self, t):
+        p = ease(12.04, 12.66, t)
+        return (mix(0.416, 0.485, p), mix(0.322, 0.47, p)), mix(0.71, 1.12, p)
+
+    def camera_print(self, t):
+        at, width = self.record_framing(t)
+        return self.surface("P10-05", (0.382, 0.320), at, width, bg=(3, 3, 5))
+
+    def records(self, t):
+        camera_exit = 12 + 8 / FPS
+        if t < camera_exit:
+            return self.camera_print(t)
+        # The phone excerpt shows the hands close. The full photograph then
+        # recedes until both wrists and the original PHILA 3 are in frame.
+        grip, scale = self.record_framing(camera_exit)
+        widen = ease(camera_exit, 12.83, t)
+        at = (mix(grip[0], 0.48, widen), mix(grip[1], 0.295, widen))
+        width = mix(scale, 0.65, widen)
+        release = ease(13.22, 13.875, t)
+        at = (mix(at[0], 0.68, release), mix(at[1], 0.49, release))
+        ring = self.surface("P08-04", (0.700, 0.482), at, mix(1.86, 1.15, release))
+        # Tip the uncut photo around a diagonal through the red spindle. The
+        # photograph's own edges expose the gold plate underneath on both sides.
+        p = ease(12.75, 13.52, t)
+        if p >= 0.999:
             return ring
-        # Keep the spindle hole at the center while its material changes.
-        radius = np.sqrt(((self.x - 0.5) * self.w / self.h) ** 2 + (self.y - 0.49) ** 2)
-        return self.wipe(
-            self.disc(13), ring, radius, mix(0.015, 1.09, ease(13, 13.25, t)), 0.008
-        )
+        w, h = self.size
+        cx, cy = at[0] * w, at[1] * h
+        extent = width * w
+        left, top = cx - 0.382 * extent, cy - 0.255 * extent
+        right, bottom = left + extent, top + extent
+        theta = p * math.pi / 2
+        ax, ay = math.cos(-0.16), math.sin(-0.16)
+        cosine, sine = math.cos(theta), math.sin(theta)
+        corners = []
+        for x, y in [(left, top), (right, top), (right, bottom), (left, bottom)]:
+            x, y = (x - cx) / w, (y - cy) / w
+            along = x * ax + y * ay
+            depth = (ax * y - ay * x) * sine
+            perspective = 1.60 / (1.60 + depth)
+            px = x * cosine + ax * along * (1 - cosine)
+            py = y * cosine + ay * along * (1 - cosine)
+            corners.append((cx + px * perspective * w, cy + py * perspective * w))
+        photo = self.lay_print(ring, self.art["P11-01"], corners, 0.35 + 0.65 * sine)
+        if t < 12.70:
+            # The near-identical grips register across two distinct source crops.
+            # Only the camera's black strips move. The photograph already occupies
+            # its preview window at the moment the label pixelates.
+            phone = self.camera_print(t)
+            at, width = self.record_framing(t)
+            p = ease(camera_exit, 12.70, t)
+            top = round(at[1] * h + (0.178 - 0.320) * width * w)
+            bottom = round(at[1] * h + (0.644 - 0.320) * width * w)
+            left = round((at[0] - 0.382 * width) * w)
+            right = round((at[0] + 0.618 * width) * w)
+            if left > 0:
+                photo.paste(phone.crop((0, 0, left, h)), (-round(p * left), 0))
+            if right < w:
+                photo.paste(
+                    phone.crop((right, 0, w, h)), (right + round(p * (w - right)), 0)
+                )
+            if top > 0:
+                photo.paste(phone.crop((0, 0, w, top)), (0, -round(p * top)))
+            if bottom < h:
+                photo.paste(
+                    phone.crop((0, bottom, w, h)), (0, bottom + round(p * (h - bottom)))
+                )
+        return photo
 
     def turn(self, t):
         age = t - 13.875
@@ -450,8 +574,7 @@ class Cut:
             ("fold", self.fall),
             ("cap", self.folds),
             ("discs", self.cap),
-            ("halos", self.disc),
-            ("turn", self.halo),
+            ("turn", self.records),
             ("beads", self.turn),
             ("landing", self.beads),
             ("studio", self.landing),
@@ -579,10 +702,16 @@ def render(args):
     archive = Path(args.archive)
     if (archive / "artworks").is_dir():
         archive /= "artworks"
-    width = 640 if args.proof else 1280
+    short = args.proof or args.reveal_proof
+    width = 640 if short else 1280
     cut = Cut(archive, width)
     # A short proof registers the gaze, the four poses and the painted grip.
-    windows = [(0, 2.75), (5.65, 9.70), (16.625, 19.5)] if args.proof else [(0, LENGTH)]
+    if args.reveal_proof:
+        windows = [(8.25, 14.125)]
+    elif args.proof:
+        windows = [(0, 2.75), (5.65, 9.70), (16.625, 19.5)]
+    else:
+        windows = [(0, LENGTH)]
     periods = [(round(a * FPS), round(b * FPS)) for a, b in windows]
     target = Path(args.output)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -618,9 +747,9 @@ def render(args):
             "-c:v",
             "libx264",
             "-preset",
-            "veryfast" if args.proof else "medium",
+            "veryfast" if short else "medium",
             "-crf",
-            "23" if args.proof else "23.5",
+            "23" if short else "23.5",
             "-pix_fmt",
             "yuv420p",
             "-threads",
@@ -661,10 +790,29 @@ if __name__ == "__main__":
         required=True,
         help="Downloaded reference archive or its artworks directory.",
     )
-    parser.add_argument("--output", default="public/film/afterimage.mp4")
     parser.add_argument(
+        "--output", help="Destination MP4; proofs default to the temporary directory."
+    )
+    proofs = parser.add_mutually_exclusive_group()
+    proofs.add_argument(
         "--proof",
         action="store_true",
         help="Render the short, three-part registration and movement proof.",
     )
-    render(parser.parse_args())
+    proofs.add_argument(
+        "--reveal-proof",
+        action="store_true",
+        help="Render the blue block, camera and gold-opening reveals together.",
+    )
+    args = parser.parse_args()
+    if args.output is None:
+        if args.proof or args.reveal_proof:
+            filename = (
+                "afterimage-reveal-proof.mp4"
+                if args.reveal_proof
+                else "afterimage-proof.mp4"
+            )
+            args.output = Path(tempfile.gettempdir()) / filename
+        else:
+            args.output = "public/film/afterimage.mp4"
+    render(args)

@@ -1,5 +1,5 @@
-export const kinds = ['gesture', 'object'];
-export const viewNames = { gesture: 'The fall', object: 'The orbit' };
+export const viewNames = { gesture: 'The fall', room: 'The room', object: 'The orbit' };
+export const kinds = Object.keys(viewNames);
 const noteLimit = 1800;
 
 export function cleanReview(input) {

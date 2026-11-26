@@ -1,0 +1,22 @@
+{
+  "size": 1080,
+  "silhouetteRect": [128, 104, 296, 618],
+  "figureRect": [508, 450, 445, 548],
+  "roomInsetRect": [237, 170, 606, 733],
+  "apertureCenter": [261, 421],
+  "cutToRoom": { "scale": 0.749849576, "x": 134.751865, "y": 135.211213 },
+  "anchors": {
+    "rose": { "cut": [602, 638], "room": [586.16, 613.62] },
+    "watch": { "cut": [672, 763], "room": [638.65, 707.35] },
+    "knee": { "cut": [751, 960], "room": [697.89, 855.07] }
+  },
+  "geometry": "Top-left pixel coordinates on each original square. Rectangles are [x, y, width, height]. The silhouette and aperture textures use the same rectangle. For both figures, room = cut * scale + [x, y].",
+  "sources": {
+    "cut": "P02-04",
+    "room": "P02-05",
+    "hall": "P02-13",
+    "credit": "Blackout photographs, posted by @carryistic",
+    "url": "https://www.instagram.com/carryistic/p/DfZ2qJ3GdZZ/"
+  },
+  "scope": "The bouquet, hands and knee register across the first two plates. The upper-left photographic rim also registers to the person on the left in the room. The monochrome hall is a separate photograph."
+}
