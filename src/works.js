@@ -1,5 +1,5 @@
 export const repository = 'https://github.com/bobshenruililin/Carryistic';
-export const liveOrigin = 'https://bobshenruililin.github.io/Carryistic/';
+export const liveOrigin = 'https://carryistic.vercel.app/';
 
 export const works = [
   {

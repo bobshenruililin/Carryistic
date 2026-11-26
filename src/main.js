@@ -1,13 +1,16 @@
 import './style.css';
 import { cleanReview, decodeReview, encodeReview, kinds, viewNames } from './review.js';
 import { liveOrigin, repository, works } from './works.js';
+import { mountCollection } from './collection.js';
 import archive from './archive.json';
+import print from './blackout-print.json';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const asset = path => window.__carryFiles?.[path] ?? new URL(path, document.baseURI).href;
 const art = name => asset('art/' + name);
 for (const img of $$('img[data-art]')) img.src = art(img.dataset.art);
+for (const word of $$('[data-ink]')) word.style.setProperty('--type-source', `url("${art(word.dataset.ink)}")`);
 for (const a of $$('[data-repo]')) a.href = repository + '/tree/main/' + a.dataset.repo;
 
 function element(tag, text, className) {
@@ -115,6 +118,21 @@ const cover = $('#enter-film');
 let isFilmOpen = false;
 const player = $('.film-player');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const filmTitle = $('.film-title', cover);
+const coverImage = $('.cover-image', cover);
+cover.addEventListener('pointermove', event => {
+  if (event.pointerType === 'touch' || reducedMotion.matches) return;
+  const bounds = filmTitle.getBoundingClientRect();
+  const amount = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+  cover.style.setProperty('--revealed', (amount * 100).toFixed(1) + '%');
+  const imageBounds = coverImage.getBoundingClientRect();
+  const imageX = (event.clientX - imageBounds.left) / imageBounds.width;
+  cover.style.setProperty('--window-x', (imageX * 100).toFixed(1) + '%');
+  cover.classList.toggle('has-window', imageX > .08 && imageX < .98 && event.clientY < bounds.top);
+});
+cover.addEventListener('pointerleave', () => { cover.style.removeProperty('--revealed'); cover.classList.remove('has-window'); });
+cover.addEventListener('focus', () => { if (cover.matches(':focus-visible')) cover.style.setProperty('--revealed', '70%'); });
+cover.addEventListener('blur', () => cover.style.removeProperty('--revealed'));
 let entryTimer;
 function finishOpening() {
   clearTimeout(entryTimer);
@@ -122,8 +140,8 @@ function finishOpening() {
   cover.hidden = isFilmOpen;
 }
 function pauseFilm() {
+  for (const media of $$('video')) { if (!media.paused) media.pause(); }
   if (!isFilmOpen) return;
-  video.pause();
   if (stage.classList.contains('is-opening')) finishOpening();
 }
 function closeFilm() {
@@ -156,7 +174,11 @@ function playFilm() {
   video.play().catch(() => { if (isFilmOpen) finishOpening(); });
   video.focus({preventScroll:true});
 }
-video.addEventListener('play', () => { if (movingStudy) stopMotion(movingStudy); });
+document.addEventListener('play', event => {
+  if (!(event.target instanceof HTMLMediaElement)) return;
+  for (const other of $$('video')) { if (other !== event.target && !other.paused) other.pause(); }
+  if (movingStudy) stopMotion(movingStudy);
+}, true);
 video.addEventListener('playing', () => {
   if (!stage.classList.contains('is-opening')) return;
   if (reducedMotion.matches) return finishOpening();
@@ -311,6 +333,7 @@ function setValue(entry, n) {
   const value = Math.round(entry.position);
   if (entry.value === value) return;
   entry.value = value;
+  entry.section.style.setProperty('--revealed', value + '%');
   entry.range.value = String(value);
   entry.output.textContent = value + '%';
   entry.range.setAttribute('aria-valuetext', valueLabel(entry.kind, value));
@@ -373,6 +396,52 @@ async function loadScene(entry) {
     mount(createStudy, $('canvas', entry.scene), useCanvas);
   } catch { if (entry.kind === 'room') stills(); else await useCanvas(); }
 }
+function bindHorizontalDrag(surface, getValue, setProgress, span) {
+  let drag;
+  surface.addEventListener('pointerdown', event => {
+    if (event.button === 0) drag = {id:event.pointerId, x:event.clientX, y:event.clientY, start:getValue(), active:false};
+  });
+  surface.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
+    if (!drag.active && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 9) { drag = null; return; }
+    if (!drag.active && Math.abs(dx) > 5) { drag.active = true; surface.setPointerCapture(event.pointerId); }
+    if (drag.active) { event.preventDefault(); setProgress(drag.start + dx * span / Math.max(surface.clientWidth * .7, 1)); }
+  });
+  for (const name of ['pointerup','pointercancel','lostpointercapture']) surface.addEventListener(name, () => { drag = null; });
+}
+
+const printImage = $('#print-landscape');
+const printControl = $('#print-frame');
+const printReadout = $('#print-time');
+printImage.style.aspectRatio = print.frameWidth + ' / ' + print.frameHeight;
+printImage.style.backgroundSize = `${print.columns * 100}% ${print.rows * 100}%`;
+printControl.max = String(print.count - 1);
+function showPrintFrame(value) {
+  const frame = Math.max(0, Math.min(print.count - 1, Math.round(value)));
+  const x = frame % print.columns, y = Math.floor(frame / print.columns);
+  printImage.style.backgroundPosition = `${100 * x / Math.max(1, print.columns - 1)}% ${100 * y / Math.max(1, print.rows - 1)}%`;
+  const seconds = print.sourceFrames[frame] / print.sourceFps;
+  printControl.value = String(frame);
+  printReadout.textContent = seconds.toFixed(2) + ' s';
+  printControl.setAttribute('aria-valuetext', `Frame ${frame + 1} of ${print.count}, ${seconds.toFixed(2)} seconds into the original film`);
+}
+function scrubPrint(value) {
+  pauseFilm();
+  if (movingStudy) stopMotion(movingStudy);
+  showPrintFrame(value);
+}
+function loadPrint() { printImage.style.backgroundImage = `url("${art('blackout-print-strip.webp')}")`; }
+if ('IntersectionObserver' in window) {
+  const printObserver = new IntersectionObserver(entries => {
+    if (entries.some(entry => entry.isIntersecting)) { loadPrint(); printObserver.disconnect(); }
+  }, {rootMargin:'350px'});
+  printObserver.observe(printImage);
+} else loadPrint();
+showPrintFrame(Math.round((print.count - 1) * .55));
+printControl.addEventListener('input', () => scrubPrint(Number(printControl.value)));
+bindHorizontalDrag(printImage, () => Number(printControl.value), scrubPrint, print.count - 1);
+
 const observer='IntersectionObserver' in window ? new IntersectionObserver(changes=>{for(const change of changes){if(change.isIntersecting){const e=studies.get(change.target.dataset.kind);loadScene(e);observer.unobserve(change.target);}}},{rootMargin:'180px 0px'}):null;
 for(const section of $$('.study[data-kind]')) {
   const kind=section.dataset.kind;
@@ -384,16 +453,7 @@ for(const section of $$('.study[data-kind]')) {
   range.addEventListener('input',()=>scrub(entry,Number(range.value)));
   entry.play.addEventListener('click',()=>toggleMotion(entry));
   entry.pin.addEventListener('click',()=>{if(movingStudy)stopMotion(movingStudy);draft.views[kind]=entry.value;persist();refreshPins();clearShare();toast('View added to your note');});
-  let drag=null;
-  scene.addEventListener('pointerdown',ev=>{if(ev.button!==0)return;drag={id:ev.pointerId,x:ev.clientX,y:ev.clientY,value:entry.value,active:false};});
-  scene.addEventListener('pointermove',ev=>{
-    if(!drag||drag.id!==ev.pointerId)return;
-    const dx=ev.clientX-drag.x,dy=ev.clientY-drag.y;
-    if(!drag.active&&Math.abs(dy)>Math.abs(dx)&&Math.abs(dy)>9){drag=null;return;}
-    if(!drag.active&&Math.abs(dx)>5){drag.active=true;scene.setPointerCapture(ev.pointerId);}
-    if(drag.active){ev.preventDefault();scrub(entry,drag.value+dx/Math.max(scene.clientWidth*.7,1)*100);}
-  });
-  for(const name of ['pointerup','pointercancel','lostpointercapture'])scene.addEventListener(name,()=>{drag=null;});
+  bindHorizontalDrag(scene, () => entry.value, value => scrub(entry, value), 100);
   if(observer)observer.observe(section);else loadScene(entry);
 }
 refreshPins();
@@ -439,4 +499,5 @@ function openSharedResponse(){
     popup('A response','Artist’s notebook',nodes);
   }catch{toast('This response link could not be read.');}
 }
+mountCollection($('#collection'), {asset, onlineBase: liveOrigin});
 openSharedResponse();window.addEventListener('hashchange',openSharedResponse);

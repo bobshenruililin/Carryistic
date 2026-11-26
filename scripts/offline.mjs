@@ -3,7 +3,7 @@ import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
-const types = { '.webp': 'image/webp', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.vtt': 'text/vtt' };
+const types = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.vtt': 'text/vtt' };
 
 async function dataUrl(path) {
   const type = types[extname(path)];
@@ -12,7 +12,7 @@ async function dataUrl(path) {
 }
 
 const assets = {};
-for (const group of ['art', 'film']) {
+for (const group of ['art', 'film', 'plates']) {
   for (const filename of (await readdir(join(dist, group))).sort()) {
     const key = `${group}/${filename}`;
     assets[key] = await dataUrl(join(dist, key));

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f8f7f2" />
-  <meta name="description" content="A wordless film and three interactive studies drawn from Carry’s paintings, photographs and sculpture." />
+  <meta name="theme-color" content="#161518" />
+  <meta name="description" content="Carry’s painting, photography and sculpture. Enter a wordless film, move through three spatial studies, or open any of the 153 images and films in her portfolio." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%23f4f1e9'/%3E%3Cpath d='M5 6h6v6H5zm8 8h9v9h-9zm11 11h12v12H24z' fill='%23272a23'/%3E%3C/svg%3E" />
   <title>Carryistic — Dream studies</title>
 </head>
@@ -12,43 +12,40 @@
   <a class="skip" href="#film">Skip to the film</a>
   <header class="site-head wrap">
     <a class="brand" href="#top" aria-label="Carryistic, back to the beginning"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>carryistic<span class="brand-period">.</span></a>
-    <nav aria-label="Portfolio navigation"><a class="nav-anchor" href="#film">Film</a><a class="nav-anchor" href="#spatial-studies">Spatial studies</a><a class="nav-index" href="#work-index">Work index <span class="arrow down" aria-hidden="true"></span></a></nav>
+    <nav aria-label="Portfolio navigation"><a class="nav-anchor" href="#spatial-studies">Spatial studies</a><a class="nav-index" href="#work-index">All works</a><a class="nav-note" href="#response">Notebook</a></nav>
   </header>
   <main id="top">
-    <section class="opening wrap" id="film" aria-labelledby="site-title">
-      <div class="mast">
-        <div><p class="kicker"><span class="red-dot"></span> Artist portfolio</p><h1 id="site-title">Dream <em>studies.</em></h1></div>
-        <p class="intro">Painting, photography and sculpture by Carry, told through a film and three spatial studies.</p>
-      </div>
+    <section class="opening" id="film" aria-labelledby="site-title">
+      <h1 id="site-title" class="sr-only">Dream studies by Carry</h1>
       <div class="film-stage" id="film-stage">
-        <div class="entry-drawing" aria-hidden="true"><img data-art="dusk-line.webp" alt=""></div>
+        <div class="entry-drawing" aria-hidden="true"><img data-art="dusk-window.webp" alt=""></div>
         <button id="enter-film" class="film-cover" type="button" aria-label="Enter the dream and play Afterimage, a 22-second film">
-          <span class="cover-image" aria-hidden="true"><img data-art="dusk-portrait.webp" src="./art/dusk-portrait.webp" alt="" fetchpriority="high"></span>
-          <span class="cover-slip" aria-hidden="true"><img data-art="dusk-eye.webp" src="./art/dusk-eye.webp" alt=""></span>
+          <span class="cover-image" aria-hidden="true"><img data-art="dusk-portrait.webp" src="./art/dusk-portrait.webp" alt="" fetchpriority="high"><img class="paper-window" data-art="dusk-window.webp" alt=""></span>
           <span class="cover-shade" aria-hidden="true"></span>
-          <span class="film-tag"><span class="record-dot"></span> Opening film</span>
-          <span class="cover-caption"><span class="film-title">Afterimage</span><span class="play-row"><span class="play-pill"><i class="play-icon"></i> Enter the dream</span><span class="film-duration">00:22</span></span></span>
-          <span class="frame-corner" aria-hidden="true"></span>
+          <span class="cover-caption">
+            <span class="film-tag">Dream studies <b aria-hidden="true">/</b> Carry</span>
+            <span class="film-title art-word" data-ink="dusk-line.webp">Afterimage<span class="word-trace" aria-hidden="true">Afterimage</span></span>
+            <span class="play-row"><span class="play-pill"><i class="play-icon" aria-hidden="true"></i> Enter the film</span><span class="film-duration">00:22</span></span>
+          </span>
         </button>
         <div class="film-player" hidden>
           <video id="afterimage" controls playsinline preload="none" aria-label="Afterimage, a 22-second wordless film with sound captions available"></video>
           <button type="button" id="close-film" class="close-film" aria-label="Return to the film poster">×</button>
         </div>
       </div>
-      <div class="film-footer"><span>Still from <i>Dusk til Dawn</i> <span class="quiet">/ Oil on canvas</span></span><button type="button" class="text-button" data-open="film-notes">Film notes <span class="arrow" aria-hidden="true"></span></button></div>
+      <div class="film-footer"><a href="#work-P01-02"><i>Dusk til Dawn</i> <span class="quiet">/ Oil on canvas</span> <span class="arrow" aria-hidden="true"></span></a><button type="button" class="text-button" data-open="film-notes">Film notes <span class="arrow" aria-hidden="true"></span></button></div>
       <noscript><p>Watch <a href="./film/afterimage.mp4">Afterimage</a> or browse <a href="https://github.com/bobshenruililin/Carryistic/tree/main/archive/artworks">Carry’s original works</a>. Enable JavaScript to explore the spatial studies.</p></noscript>
     </section>
 
-    <section class="studies wrap" id="spatial-studies" aria-labelledby="spatial-title">
-      <div class="section-head"><div><p class="kicker">Interactive works</p><h2 id="spatial-title">In <em>space.</em></h2></div><p>Pull a figure off the page, open the room behind a cutout, then turn toward the gold rim.</p></div>
+    <section class="studies" id="spatial-studies" aria-labelledby="spatial-title">
+      <div class="section-head wrap"><div><p class="kicker">Three spatial studies</p><h2 id="spatial-title">In <em>space.</em></h2></div><p>Play a study, or drag the image to move through it by hand.</p></div>
       <article class="study gesture" id="gesture-study" data-kind="gesture">
         <div class="scene" aria-label="Fly spatial study">
           <div class="scene-fallback" aria-hidden="true"><img data-art="fly-water.webp" alt=""></div>
           <canvas class="spatial-canvas" aria-label="Four waterfront poses lift from the photograph into color blocks. Use the slider below."></canvas>
-          <span class="stage-label">Study 01 <b>/</b> Gesture</span>
           <span class="scene-mode" aria-live="polite"></span>
         </div>
-        <div class="study-copy"><div class="copy-main"><p class="kicker">From <i>Fly</i></p><h3>The fall</h3><p>Follow the red hood from the waterfront into four planes of color. Move the slider to pull the layers apart.</p></div>
+        <div class="study-copy"><div class="copy-main"><p class="kicker">From <a href="#work-P05-01"><i>Fly</i> <span class="arrow" aria-hidden="true"></span></a></p><h3>The <span class="art-word" data-ink="fly-water.webp">fall<span class="word-trace" aria-hidden="true">fall</span></span></h3><p>A red hood falls four times. Follow it off the waterfront and into four blocks of color.</p></div>
           <div class="control-group"><label for="gesture-progress">Separation</label><output id="gesture-read" for="gesture-progress">45%</output><input id="gesture-progress" class="scrub" type="range" min="0" max="100" value="45" aria-describedby="gesture-ends"><div class="scale-ends" id="gesture-ends"><span>Photograph</span><span>Color blocks</span></div></div>
           <div class="study-tools"><button class="motion-toggle" type="button" aria-label="Play The fall"><i class="motion-symbol" aria-hidden="true"></i><span>Play study</span></button><button class="pin" type="button">Remember this view <span aria-hidden="true">＋</span></button></div>
         </div>
@@ -57,9 +54,9 @@
         <div class="scene" aria-label="Blackout layered photograph study">
           <div class="scene-fallback" aria-hidden="true"><img data-art="blackout-cut.webp" alt=""></div>
           <canvas class="spatial-canvas" aria-label="A hollow in a paper figure reveals the room around a bouquet. Three strips of the color photograph open onto a black-and-white hall. Use the Reveal slider below."></canvas>
-          <span class="stage-label">Study 02 <b>/</b> Paper</span><span class="scene-mode" aria-live="polite"></span>
+          <span class="scene-mode" aria-live="polite"></span>
         </div>
-        <div class="study-copy"><div class="copy-main"><p class="kicker">From <a href="https://www.instagram.com/carryistic/p/DfZ2qJ3GdZZ/" target="_blank" rel="noreferrer"><i>Blackout</i> <span class="arrow" aria-hidden="true"></span></a></p><h3>The room</h3><p>Keep an eye on the bouquet. The paper slips away, the people around it appear, and the photograph opens onto an empty hall.</p></div>
+        <div class="study-copy"><div class="copy-main"><p class="kicker">From <a href="#work-P02-04"><i>Blackout</i> <span class="arrow" aria-hidden="true"></span></a></p><h3>The <span class="art-word" data-ink="blackout-hall.webp">room<span class="word-trace" aria-hidden="true">room</span></span></h3><p>Keep an eye on the bouquet. The paper slips away, the people around it appear, and the photograph opens onto an empty hall.</p></div>
           <div class="control-group"><label for="room-progress">Reveal</label><output id="room-read" for="room-progress">32%</output><input id="room-progress" class="scrub" type="range" min="0" max="100" value="32" aria-describedby="room-ends"><div class="scale-ends" id="room-ends"><span>Paper cutout</span><span>Empty hall</span></div></div>
           <div class="study-tools"><button class="motion-toggle" type="button" aria-label="Play The room"><i class="motion-symbol" aria-hidden="true"></i><span>Play study</span></button><button class="pin" type="button">Remember this view <span aria-hidden="true">＋</span></button></div>
         </div>
@@ -68,19 +65,30 @@
         <div class="scene" aria-label="Liquid Gold spatial study">
           <div class="scene-fallback" aria-hidden="true"><img data-art="liquid-front.webp" alt=""></div>
           <canvas class="spatial-canvas" aria-label="Move through the photographed camera arc around the heart sculpture using the slider below."></canvas>
-          <span class="stage-label">Study 03 <b>/</b> Material</span><span class="scene-mode" aria-live="polite"></span>
+          <span class="scene-mode" aria-live="polite"></span>
         </div>
-        <div class="study-copy"><div class="copy-main"><p class="kicker">From <i>To Bleed in Liquid Gold</i></p><h3>The orbit</h3><p>A gold rim opens into view. Turn through the camera arc Carry shared and watch the beads stay anchored beneath it.</p></div>
+        <div class="study-copy"><div class="copy-main"><p class="kicker">From <a href="#work-P08-01"><i>To Bleed in Liquid Gold</i> <span class="arrow" aria-hidden="true"></span></a></p><h3>The <span class="art-word" data-ink="liquid-rim.webp">orbit<span class="word-trace" aria-hidden="true">orbit</span></span></h3><p>A gold rim opens into view. Turn through the camera arc Carry shared and watch the beads stay anchored beneath it.</p></div>
           <div class="control-group"><label for="object-progress">Viewpoint</label><output id="object-read" for="object-progress">25%</output><input id="object-progress" class="scrub" type="range" min="0" max="100" value="25" aria-describedby="object-ends"><div class="scale-ends" id="object-ends"><span>Side profile</span><span>Open end</span></div></div>
           <div class="study-tools"><button class="motion-toggle" type="button" aria-label="Play The orbit"><i class="motion-symbol" aria-hidden="true"></i><span>Play study</span></button><button class="pin" type="button">Remember this view <span aria-hidden="true">＋</span></button></div>
         </div>
       </article>
     </section>
 
+    <section class="print-interlude" id="blackout-print" aria-labelledby="print-title">
+      <div class="print-landscape" id="print-landscape" role="img" aria-label="A figure moves aside to reveal a white BLACK OUT print. Behind the glass, a second person raises its dark counterpart."></div>
+      <div class="print-foot">
+        <div><p class="kicker">From the original film</p><h2 id="print-title"><a href="#work-P03-01">The Blackout <em>Awaits</em> <span class="arrow" aria-hidden="true"></span></a></h2></div>
+        <div class="print-control control-group"><label for="print-frame">Reveal the second print</label><output for="print-frame" id="print-time"></output><input id="print-frame" class="scrub" type="range" min="0" max="15" value="0" aria-describedby="print-title"></div>
+      </div>
+    </section>
+
     <section class="work-section wrap" id="work-index" aria-labelledby="work-title">
-      <div class="section-head"><div><p class="kicker">Selected works</p><h2 id="work-title">Work <em>index.</em></h2></div><p>Look closer at the source images, how a piece was made, and who contributed.</p></div>
-      <div class="work-grid" id="works"></div>
-      <div class="archive-link"><button type="button" class="underlink" id="browse-archive">Browse all 15 posts <span class="arrow" aria-hidden="true"></span></button><span>150 stills · 3 videos</span></div>
+      <div class="section-head"><div><p class="kicker">150 photographs and stills · 3 films</p><h2 id="work-title">All <em>works.</em></h2></div></div>
+      <div id="collection"></div>
+      <details class="process-notes"><summary>Studio notes and contact sheets</summary>
+        <div class="work-grid" id="works"></div>
+        <button type="button" class="underlink" id="browse-archive">Open the 15 contact sheets <span class="arrow" aria-hidden="true"></span></button>
+      </details>
     </section>
     <section class="response wrap" id="response" aria-labelledby="response-title">
       <div><p class="kicker">Artist’s notebook</p><h2 id="response-title">What stayed <em>with you?</em></h2><p>Leave a thought for the next edit. Any views you remembered will travel with your note.</p></div>
