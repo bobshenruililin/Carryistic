@@ -1,0 +1,19 @@
+{
+  "name": "carryistic-dream-studies",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/offline.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.2.0",
+    "@fontsource/instrument-serif": "^5.2.0",
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "vite": "7.3.8"
+  }
+}
