@@ -37,6 +37,7 @@ const dialog = $('#detail-dialog');
 const dialogBody = $('#dialog-content');
 let invoker = null;
 function popup(title, label, content, source) {
+  pauseFilm();
   if (movingStudy) stopMotion(movingStudy);
   invoker = source || document.activeElement;
   dialogBody.replaceChildren(element('p', label, 'kicker'));
@@ -120,6 +121,11 @@ function finishOpening() {
   stage.classList.remove('is-opening', 'is-revealing');
   cover.hidden = isFilmOpen;
 }
+function pauseFilm() {
+  if (!isFilmOpen) return;
+  video.pause();
+  if (stage.classList.contains('is-opening')) finishOpening();
+}
 function closeFilm() {
   isFilmOpen = false;
   video.pause();
@@ -150,6 +156,7 @@ function playFilm() {
   video.play().catch(() => { if (isFilmOpen) finishOpening(); });
   video.focus({preventScroll:true});
 }
+video.addEventListener('play', () => { if (movingStudy) stopMotion(movingStudy); });
 video.addEventListener('playing', () => {
   if (!stage.classList.contains('is-opening')) return;
   if (reducedMotion.matches) return finishOpening();
@@ -161,6 +168,8 @@ cover.addEventListener('click', playFilm);
 $('#close-film').addEventListener('click', closeFilm);
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && isFilmOpen && !dialog.open && !document.fullscreenElement) closeFilm(); });
 video.addEventListener('ended', () => {
+  const bounds = stage.getBoundingClientRect();
+  if (dialog.open || movingStudy || bounds.bottom < innerHeight * .18 || bounds.top >= innerHeight) return;
   closeFilm();
   $('#spatial-studies').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
 });
@@ -249,6 +258,7 @@ function runMotion(entry) {
 }
 function toggleMotion(entry) {
   if (movingStudy === entry) return stopMotion(entry);
+  pauseFilm();
   if (movingStudy) stopMotion(movingStudy);
   if (!entry.fromHere || entry.value === 100) setValue(entry, 0);
   movingStudy = entry;
@@ -309,6 +319,7 @@ function setValue(entry, n) {
   if (movingStudy !== entry) updatePlayButton(entry);
 }
 function scrub(entry, n) {
+  pauseFilm();
   if (movingStudy) stopMotion(movingStudy);
   entry.fromHere = true;
   setValue(entry, n);

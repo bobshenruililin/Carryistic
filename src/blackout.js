@@ -87,6 +87,12 @@ function drawLeaf(ctx, image, left, right, top, bottom, index, amount) {
   ctx.clip();
   ctx.fillStyle = '#fff';
   ctx.fill();
+  if (columns > 1) {
+    const outerTop = Math.min(first.top, last.top);
+    const outerHeight = Math.max(first.bottom, last.bottom) - outerTop;
+    ctx.drawImage(image, left, top, width, bottom - top,
+      first.x, outerTop, last.x - first.x, outerHeight);
+  }
   for (let i = 0; i < columns; i++) {
     const x0 = left + width * i / columns;
     const x1 = left + width * (i + 1) / columns;
@@ -96,7 +102,7 @@ function drawLeaf(ctx, image, left, right, top, bottom, index, amount) {
     ctx.transform(b.x - a.x, b.top - a.top, 0, a.bottom - a.top, a.x, a.top);
     // Let the strips overlap in both image and projection. Only the outer
     // four edges of the paper are visible, even at shallow viewing angles.
-    const overscan = i === columns - 1 ? 0 : Math.min(.3, 3 / (b.x - a.x));
+    const overscan = i === columns - 1 ? 0 : Math.min(1.5, 3 / (b.x - a.x));
     ctx.drawImage(image, x0, top, (x1 - x0) * (1 + overscan), bottom - top,
       0, 0, 1 + overscan, 1);
     ctx.restore();
