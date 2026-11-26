@@ -169,3 +169,12 @@ dialog::backdrop{background:#121413ab;backdrop-filter:blur(4px)}
 .archive-controls select{min-width:0;flex:1;padding-inline:10px;font:inherit}
 .archive-sheet{display:block;width:100%;height:auto;background:#e6e4db}
 .dialog-shell .archive-credit{font:11px/1.5 var(--mono);margin:11px 0;color:var(--muted)}
+.arrow{position:relative;display:inline-block;width:.7em;height:.7em;vertical-align:.04em}
+.arrow::before,.arrow::after{content:'';position:absolute;top:0;right:0}
+.arrow::before{width:.39em;height:.39em;border-top:1.4px solid;border-right:1.4px solid}
+.arrow::after{width:.91em;border-top:1.4px solid;transform-origin:100% 0;transform:rotate(-45deg)}
+.arrow.down{transform:rotate(90deg)}
+.material-test{border-block:1px solid var(--rule);margin:20px 0;padding:13px 0}
+.material-test summary{font-size:14px;font-weight:630;cursor:pointer}
+.material-test video{width:100%;aspect-ratio:16/9;display:block;background:#191917;margin:12px 0;object-fit:contain}
+.dialog-shell .material-test p{color:var(--muted);font-size:14px}

@@ -12,7 +12,7 @@
   <a class="skip" href="#film">Skip to the film</a>
   <header class="site-head wrap">
     <a class="brand" href="#top" aria-label="Carryistic, back to the beginning"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>carryistic<span class="brand-period">.</span></a>
-    <nav aria-label="Portfolio navigation"><a class="nav-anchor" href="#film">Film</a><a class="nav-anchor" href="#spatial-studies">Spatial studies</a><a class="nav-index" href="#work-index">Work index <span aria-hidden="true">↘</span></a></nav>
+    <nav aria-label="Portfolio navigation"><a class="nav-anchor" href="#film">Film</a><a class="nav-anchor" href="#spatial-studies">Spatial studies</a><a class="nav-index" href="#work-index">Work index <span class="arrow down" aria-hidden="true"></span></a></nav>
   </header>
   <main id="top">
     <section class="opening wrap" id="film" aria-labelledby="site-title">
@@ -34,7 +34,7 @@
           <button type="button" id="close-film" class="close-film" aria-label="Return to the film poster">×</button>
         </div>
       </div>
-      <div class="film-footer"><span>Still from <i>Dusk til Dawn</i> <span class="quiet">/ Oil on canvas</span></span><button type="button" class="text-button" data-open="film-notes">Film notes <span aria-hidden="true">↗</span></button></div>
+      <div class="film-footer"><span>Still from <i>Dusk til Dawn</i> <span class="quiet">/ Oil on canvas</span></span><button type="button" class="text-button" data-open="film-notes">Film notes <span class="arrow" aria-hidden="true"></span></button></div>
       <noscript><p>Watch <a href="./film/afterimage.mp4">Afterimage</a> or browse <a href="https://github.com/bobshenruililin/Carryistic/tree/main/archive/artworks">Carry’s original works</a>. Enable JavaScript to explore the spatial studies.</p></noscript>
     </section>
 
@@ -68,18 +68,18 @@
     <section class="work-section wrap" id="work-index" aria-labelledby="work-title">
       <div class="section-head"><div><p class="kicker">Selected works</p><h2 id="work-title">Work <em>index.</em></h2></div><p>Look closer at the source images, how a piece was made, and who contributed.</p></div>
       <div class="work-grid" id="works"></div>
-      <div class="archive-link"><button type="button" class="underlink" id="browse-archive">Browse all 15 posts <span aria-hidden="true">↗</span></button><span>150 stills · 3 videos</span></div>
+      <div class="archive-link"><button type="button" class="underlink" id="browse-archive">Browse all 15 posts <span class="arrow" aria-hidden="true"></span></button><span>150 stills · 3 videos</span></div>
     </section>
     <section class="response wrap" id="response" aria-labelledby="response-title">
       <div><p class="kicker">Artist’s notebook</p><h2 id="response-title">What stayed <em>with you?</em></h2><p>Leave a thought for the next edit. Any views you remembered will travel with your note.</p></div>
       <form id="response-form"><div id="pins"></div><label for="reflection">Your words</label><textarea id="reflection" maxlength="1800" rows="4" placeholder="A gesture, a cut, a detail you would change…"></textarea>
-        <div class="response-actions"><button class="dark-button" type="submit">Make a response link <span aria-hidden="true">↗</span></button><button type="button" id="download-note" class="text-button">Save as a file ↓</button></div>
+        <div class="response-actions"><button class="dark-button" type="submit">Make a response link <span class="arrow" aria-hidden="true"></span></button><button type="button" id="download-note" class="text-button">Save as a file ↓</button></div>
         <p id="response-status" class="response-status" role="status">Your draft stays on this device. A response link includes only your words and remembered views.</p>
         <div id="share-result" hidden><label for="response-link">Response link</label><div><input type="text" id="response-link" readonly><button type="button" id="copy-response" class="text-button">Copy</button></div></div>
       </form>
     </section>
   </main>
-  <footer class="site-foot wrap"><a class="brand" href="#top">carryistic<span class="brand-period">.</span></a><span>Work by Carry</span><a href="https://www.instagram.com/carryistic/" rel="noreferrer" target="_blank">Instagram ↗</a><button type="button" class="text-button" data-open="credits">Credits ↗</button></footer>
+  <footer class="site-foot wrap"><a class="brand" href="#top">carryistic<span class="brand-period">.</span></a><span>Work by Carry</span><a href="https://www.instagram.com/carryistic/" rel="noreferrer" target="_blank">Instagram <span class="arrow" aria-hidden="true"></span></a><button type="button" class="text-button" data-open="credits">Credits <span class="arrow" aria-hidden="true"></span></button></footer>
   <dialog id="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-shell"><button type="button" class="dialog-close" aria-label="Close details">×</button><div id="dialog-content"></div></div></dialog>
   <div id="toast" aria-live="polite" role="status"></div>
   <script type="module" src="/src/main.js"></script>

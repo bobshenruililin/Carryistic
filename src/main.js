@@ -17,7 +17,10 @@ function element(tag, text, className) {
   return node;
 }
 function external(label, href) {
-  const a = element('a', label);
+  const a = element('a', label.replace(/\s*↗$/, ''));
+  const arrow = element('span', undefined, 'arrow');
+  arrow.setAttribute('aria-hidden', 'true');
+  a.append(' ', arrow);
   a.href = href;
   a.target = '_blank';
   a.rel = 'noreferrer';
@@ -66,7 +69,7 @@ for (const work of works) {
   const card = element('button', undefined, 'work-card');
   card.type = 'button';
   const thumb = element('span', undefined, 'work-thumb');
-  thumb.append(photo(work.image, work.title));
+  thumb.append(photo(work.image, ''));
   card.append(thumb, element('strong', work.title), element('small', work.medium));
   card.addEventListener('click', () => showWork(work, card));
   $('#works').append(card);
@@ -157,9 +160,22 @@ for (const btn of $$('[data-open]')) btn.addEventListener('click',()=>{
   if (btn.dataset.open==='credits') return showCredits(btn);
   const cues=element('ol');
   for(const line of ['00:00 · The eye moves from photograph to pencil to paint.','00:04 · Four figures fall out of the waterfront and into blocks.','00:10 · A cap, two records and gold-rimmed openings carry the cut.','00:17 · A basketball returns the dream to the painting and its maker.']) cues.append(element('li',line));
+  const experiment = element('details', undefined, 'material-test');
+  experiment.append(element('summary', 'See the four-second Higgsfield material test'));
+  const clip = element('video');
+  clip.controls = true;
+  clip.playsInline = true;
+  clip.preload = 'none';
+  clip.poster = art('liquid-detail.webp');
+  clip.setAttribute('aria-label', 'Silent generated camera study of the sculpture’s red beads');
+  experiment.addEventListener('toggle', () => {
+    if (experiment.open && !clip.hasAttribute('src')) clip.src = asset('film/bead-study.mp4');
+    if (!experiment.open) clip.pause();
+  });
+  experiment.append(clip, element('p', 'Seedance follows the hanging beads to the right. In the finished film, the camera tracks down Carry’s photograph into the bead pile just before the ball drops.'));
   const links=element('p',undefined,'dialog-links');
   links.append(external('Shot ledger ↗',repository+'/blob/main/film/shots.csv'),external('Higgsfield bead test ↗',repository+'/tree/main/film/experiments'));
-  popup('Afterimage','Opening film · 22 seconds',[element('p','The same eye holds through a photograph, a pencil line and layers of oil. Later, a record label leads to a gold rim and the basketball. Listen for the bead taps just before the bounce.'),cues,links],btn);
+  popup('Afterimage','Opening film · 22 seconds',[element('p','The same eye holds through a photograph, a pencil line and layers of oil. Later, a record label leads to a gold rim and the basketball. Listen for the bead taps just before the bounce.'),cues,experiment,links],btn);
 });
 
 const storageKey = 'carryistic.dream-note.v1';
@@ -205,15 +221,45 @@ function setValue(entry, n) {
   refreshPins();
 }
 async function loadScene(entry) {
-  if(entry.loading) return;
-  entry.loading=true;
-  const failed=()=>{entry.ready=false;entry.scene.classList.remove('ready');$('.scene-mode',entry.scene).textContent='Source image sequence';fallback(entry);};
+  if (entry.loading) return;
+  entry.loading = true;
+  const mode = $('.scene-mode', entry.scene);
+  const ready = () => {
+    entry.ready = true;
+    entry.scene.classList.add('ready');
+    mode.textContent = '';
+  };
+  function stills() {
+    entry.ready = false;
+    entry.scene.classList.remove('ready');
+    mode.textContent = 'Source image sequence';
+    fallback(entry);
+  }
+  function mount(factory, canvas, onError) {
+    entry.renderer = factory(canvas, entry.kind, {assetUrl: art, onReady: ready, onError});
+    entry.renderer.setProgress(entry.value / 100);
+    entry.renderer.resize();
+  }
+  let recovering = false;
+  async function useCanvas() {
+    if (recovering) return;
+    recovering = true;
+    entry.renderer?.dispose();
+    entry.renderer = null;
+    entry.ready = false;
+    entry.scene.classList.remove('ready');
+    const old = $('canvas', entry.scene);
+    const canvas = old.cloneNode(false);
+    old.replaceWith(canvas);
+    try {
+      const {createFallback} = await import('./spatial-fallback.js');
+      mount(createFallback, canvas, stills);
+    } catch { stills(); }
+  }
   try {
-    const {createStudy}=await import('./spatial.js');
-    entry.renderer=createStudy($('canvas',entry.scene),entry.kind,{assetUrl:art,onReady:()=>{entry.ready=true;entry.scene.classList.add('ready');$('.scene-mode',entry.scene).textContent='';},onError:failed});
-    entry.renderer?.setProgress(entry.value/100);
-    entry.renderer?.resize();
-  } catch { failed(); }
+    const {createStudy} = await import('./spatial.js');
+    mount(createStudy, $('canvas', entry.scene), useCanvas);
+  } catch { await useCanvas(); }
 }
 const observer='IntersectionObserver' in window ? new IntersectionObserver(changes=>{for(const change of changes){if(change.isIntersecting){const e=studies.get(change.target.dataset.kind);loadScene(e);observer.unobserve(change.target);}}},{rootMargin:'180px 0px'}):null;
 for(const section of $$('.study[data-kind]')) {

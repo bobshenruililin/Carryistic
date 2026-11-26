@@ -364,7 +364,10 @@ function objectScene(scene, camera, textures, shadowTexture) {
 export function createStudy(canvas, kind, { assetUrl, onReady, onError }) {
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'low-power' });
+    const attributes = { antialias: true, alpha: false, powerPreference: 'low-power' };
+    const context = canvas.getContext('webgl2', attributes);
+    if (!context) throw new Error('WebGL is unavailable for this study.');
+    renderer = new THREE.WebGLRenderer({ canvas, context, ...attributes });
   } catch (error) {
     let cancelled = false;
     queueMicrotask(() => { if (!cancelled) onError?.(error); });
