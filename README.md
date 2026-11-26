@@ -2,6 +2,8 @@
 
 [Open the portfolio](https://carryistic.vercel.app/) · [Offline screening kit](https://drive.google.com/drive/folders/1qjbQmd1ob6WyTthBDtWGXcai26FL3Zgz) · [Google Drive reference library](https://drive.google.com/drive/folders/1fbso1aN0VT27E0wNxjwqrTS4eapcjhkn)
 
+[![The hand-drawn texture of the Afterimage title crosses Carry’s blue and orange oil portrait.](handoff/entrance.jpg)](https://carryistic.vercel.app/)
+
 *Afterimage* opens on a sideways glance. The photograph becomes a line drawing, then an oil painting. In *Fly*, four poses break free of the waterfront and land as four blocks of color. The blue block opens on the red cap. Under its printed echoes are a camera frame and two hands holding records. One record label turns into the gold opening of a sculpture. The film ends in the studio with the basketball portrait and a number 30 jersey. These connections are the director’s reading of Carry’s published work.
 
 After the 22-second film, play a study or drag through it by hand. *The fall* lifts four waterfront poses into relief. In *The room*, watch the bouquet as a paper cutout gives way to a crowded photograph. Three hinged strips open onto an empty hall. *The orbit* follows the camera through 24 photographed views of the sculpture. All three studies play on devices without WebGL. [Open The room](https://carryistic.vercel.app/#room-study) · [See how the photographs align](direction/artist-reading.md#a-room-held-together-by-a-bouquet)
