@@ -170,7 +170,6 @@ function openWork(i, { k = null, cut = false } = {}) {
   mode = 'reel';
   closeWorks();
   landing.hidden = true;
-  landing.classList.remove('entering');
   light.hide();
   reelUI.hidden = false;
   document.body.dataset.mode = 'reel';
@@ -182,6 +181,7 @@ function backToLight() {
   reel.hide();
   showHeld(false);
   reelUI.hidden = true;
+  landing.classList.remove('entering');
   landing.hidden = false;
   document.body.dataset.mode = 'light';
   document.documentElement.dataset.ink = 'light';
