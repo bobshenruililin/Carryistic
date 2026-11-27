@@ -1,0 +1,611 @@
+<title>Pre-Worn Storyboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; the storyboard opens into a two-up grid of 16:9 frames drawn in the proposed deck style. */
+:root{
+  --bg:#ffffff; --ink:#10141d; --muted:#586174; --rule:#e2e6ed; --panel:#f3f5f9; --accent:#2b4a7e;
+  --copper:#a9592a; --tab:#c0202e; --ok:#2f7a4a; --warn:#9a5f0c; --cut:#a3303a;
+  /* deck colours, sampled placeholders until we photograph our pair */
+  --f-paper:#ffffff; --f-ink:#10141d; --f-raw:#1b2a47; --f-raw2:#22355a; --f-mid:#45689a; --f-pale:#a8bed8;
+  --f-black:#07090d; --f-weft:#eceae4; --f-copper:#c27434; --f-tab:#c8202f; --f-grey:#8b95a7; --f-photo:#2a3448; --f-photo2:#3b4862; --f-skin:#5b4a44;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1018; --ink:#e7ebf2; --muted:#9aa4b6; --rule:#232b39; --panel:#141a26; --accent:#9db8e6;
+  --copper:#d58d52; --tab:#ea5866; --ok:#62c088; --warn:#e2aa4c; --cut:#e86e78; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1018; --ink:#e7ebf2; --muted:#9aa4b6; --rule:#232b39; --panel:#141a26; --accent:#9db8e6;
+  --copper:#d58d52; --tab:#ea5866; --ok:#62c088; --warn:#e2aa4c; --cut:#e86e78; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-0.01em}
+h2{font-size:clamp(28px,4vw,40px);font-weight:700;font-stretch:112%;line-height:1.1}
+h3{font-size:19px;font-weight:650;font-stretch:100%;line-height:1.25}
+p{margin:0}
+.mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em}
+.muted{color:var(--muted)}
+section{padding-block:72px 8px;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0}
+.lead{max-width:68ch;font-size:18px;color:var(--ink)}
+.prose{max-width:68ch}
+.prose p+p{margin-top:12px}
+.sechead{display:grid;gap:14px;margin-bottom:32px}
+.sechead p{max-width:68ch;color:var(--muted)}
+
+/* hero */
+.hero{padding-block:56px 40px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:40px;align-items:center}
+.hero h1{font-size:clamp(64px,11vw,132px);font-weight:800;font-stretch:118%;line-height:.88;letter-spacing:-0.035em}
+.hero .kick{margin-bottom:18px}
+.hero .lead{margin-top:22px}
+.status{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.pill{font-family:var(--mono);font-size:12px;border:1px solid var(--rule);border-radius:999px;padding:5px 11px;background:var(--panel)}
+.pill b{font-weight:500;color:var(--tab)}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:22px;font-size:14px}
+@media (max-width:820px){.hero{grid-template-columns:1fr}}
+
+/* the story */
+.thesis{font-family:var(--display);font-size:clamp(22px,3vw,30px);font-weight:600;font-stretch:104%;line-height:1.22;max-width:30ch;text-wrap:balance}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:820px){.two,.three{grid-template-columns:1fr}}
+.arc{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin-top:28px;border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.arc div{padding:14px 14px 16px;min-width:0;border-left:1px solid var(--rule)}
+.arc div:first-child{border-left:0}
+.arc .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.arc .t{font-family:var(--display);font-weight:650;font-size:17px;margin-top:4px;line-height:1.2}
+.arc .s{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+.arc .sw{height:6px;margin:-14px -14px 12px}
+@media (max-width:820px){.arc{grid-template-columns:1fr}.arc div{border-left:0;border-top:1px solid var(--rule)}.arc div:first-child{border-top:0}}
+
+/* rubric */
+.rub{display:grid;gap:10px;max-width:760px}
+.rub .row{display:grid;grid-template-columns:minmax(0,230px) minmax(0,1fr) 40px;gap:12px;align-items:center;font-size:14.5px}
+.rub .bar{height:14px;background:var(--panel);border-radius:2px;overflow:hidden}
+.rub .bar i{display:block;height:100%;background:var(--accent)}
+.rub .bar i.r{background:var(--muted)}
+.rub .v{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+@media (max-width:560px){.rub .row{grid-template-columns:1fr 36px}.rub .bar{grid-column:1/-1;grid-row:2}}
+
+/* Park */
+.park{display:grid;gap:0;border-top:1px solid var(--rule)}
+.park .p{display:grid;grid-template-columns:36px minmax(0,1fr) minmax(0,1.1fr) minmax(0,1.2fr);gap:18px;padding:16px 0;border-bottom:1px solid var(--rule)}
+.park .p>*{min-width:0}
+.park .k{font-family:var(--mono);color:var(--muted);font-size:13px;padding-top:2px}
+.park h3{font-size:16.5px}
+.park .q{font-size:14px;color:var(--muted);font-style:normal}
+.park .q::before{content:"Course doc: ";font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.park .m{font-size:14.5px}
+.park .m::before{content:"Our move: ";font-family:var(--mono);font-size:11.5px;color:var(--copper)}
+@media (max-width:820px){.park .p{grid-template-columns:28px minmax(0,1fr)}.park .q,.park .m{grid-column:2}}
+
+/* style */
+.lineage{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.lin{border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column}
+.lin .im{display:flex;gap:2px;background:var(--panel);aspect-ratio:3/1.25;overflow:hidden}
+.lin .im img{flex:1;min-width:0;object-fit:cover;height:100%;width:100%}
+.lin .im .ph{flex:1;display:flex;align-items:flex-end;padding:10px;font-family:var(--mono);font-size:11px;color:#e9edf4;background:var(--f-photo)}
+.lin .tx{padding:14px 14px 16px;display:grid;gap:6px}
+.lin .tx p{font-size:14px;color:var(--muted)}
+.lin .tx .use{color:var(--ink)}
+.lin .tx .use::before{content:"In our deck: ";font-family:var(--mono);font-size:11.5px;color:var(--copper)}
+.rules{counter-reset:r;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 32px;margin-top:8px}
+.rules li{list-style:none;padding-left:34px;position:relative;font-size:15px}
+.rules li::before{counter-increment:r;content:counter(r);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:12px;color:var(--muted);border:1px solid var(--rule);border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
+@media (max-width:820px){.rules{grid-template-columns:1fr}}
+.rules ul,ul.rules{padding:0;margin:0}
+.palette{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-radius:6px;overflow:hidden;margin-top:28px;border:1px solid var(--rule)}
+.palette div{padding:56px 10px 10px;font-family:var(--mono);font-size:11px;line-height:1.35;min-width:0}
+@media (max-width:640px){.palette{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.key{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
+.key div{border:1px solid var(--rule);border-radius:6px;padding:12px;font-size:13.5px;min-width:0}
+.key b{display:block;font-family:var(--display);font-size:15px;margin-bottom:6px}
+.key .sample{height:44px;border-radius:3px;margin-bottom:10px}
+@media (max-width:820px){.key{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* draft sheet */
+.sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.sheet figure{margin:0;min-width:0}
+.sheet img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px;border:1px solid var(--rule);display:block}
+.sheet figcaption{font-size:12.5px;line-height:1.35;margin-top:6px;color:var(--muted)}
+.chip{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:3px;border:1px solid currentColor;margin-right:5px}
+.c-keep{color:var(--ok)} .c-rework{color:var(--warn)} .c-cut{color:var(--cut)} .c-move{color:var(--muted)}
+.diag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 32px;margin-bottom:32px;padding:0}
+.diag li{list-style:none;font-size:15px;padding-left:16px;border-left:2px solid var(--rule)}
+@media (max-width:820px){.diag{grid-template-columns:1fr}}
+
+/* timeline */
+.tl{display:flex;height:58px;border-radius:6px;overflow:hidden;border:1px solid var(--rule);margin-bottom:8px}
+.tl div{min-width:0;padding:7px 8px;font-size:12px;line-height:1.25;border-left:1px solid rgba(255,255,255,.35);overflow:hidden}
+.tl div:first-child{border-left:0}
+.tl b{display:block;font-family:var(--display);font-size:13px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl span{font-family:var(--mono);font-size:11px;opacity:.85;white-space:nowrap}
+.tl-scale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:28px}
+.spk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:36px}
+.spk div{border:1px solid var(--rule);border-radius:6px;padding:10px;min-width:0;font-size:13px}
+.spk b{display:block;font-family:var(--display);font-size:14.5px}
+.spk .mono{color:var(--muted);font-size:11.5px}
+@media (max-width:820px){.spk{grid-template-columns:repeat(2,minmax(0,1fr))}.tl span{display:none}}
+
+/* storyboard cards */
+.chap{display:flex;align-items:baseline;gap:14px;margin:48px 0 18px;flex-wrap:wrap}
+.chap h3{font-size:24px;font-stretch:110%}
+.chap .mono{color:var(--muted)}
+.chap .sw{width:28px;height:14px;border-radius:2px;align-self:center}
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px 32px}
+@media (max-width:820px){.board{grid-template-columns:1fr}}
+.card{min-width:0;display:grid;gap:12px;align-content:start}
+.card .top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.card .id{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card h4{margin:0;font-family:var(--display);font-size:18px;font-weight:650;line-height:1.25;text-wrap:balance}
+.card dl{margin:0;display:grid;grid-template-columns:72px minmax(0,1fr);gap:6px 12px;font-size:14px;line-height:1.5}
+.card dt{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px}
+.card dd{margin:0;min-width:0}
+.card .links{display:flex;flex-wrap:wrap;gap:6px}
+.tagl{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:3px;background:var(--panel);color:var(--ink)}
+.tagl.park{color:var(--accent)}
+.tagl.rub{color:var(--copper)}
+.tagl.cutfirst{color:var(--cut)}
+
+/* frames: drawn in the proposed deck style */
+.fr{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;overflow:hidden;border-radius:4px;background:var(--f-paper);color:var(--f-ink);container-type:inline-size;border:1px solid var(--rule);isolation:isolate}
+.fr *{position:absolute;margin:0}
+.fr p *,.fr .flow *{position:static}
+.fr .h{font-family:var(--display);font-weight:650;font-stretch:104%;letter-spacing:-0.01em;line-height:1.08;font-size:4.6cqw;left:6cqw;top:7cqw;width:60cqw}
+.fr .h.big{font-size:9cqw;font-weight:800;font-stretch:118%;letter-spacing:-0.03em;line-height:.9}
+.fr .h.c{left:0;right:0;width:auto;text-align:center}
+.fr .s{font-family:var(--mono);font-size:1.7cqw;letter-spacing:.03em;left:6cqw;bottom:4.5cqw;opacity:.75;width:80cqw}
+.fr .lab{font-family:var(--mono);font-size:1.6cqw;letter-spacing:.04em;line-height:1.25}
+.fr .tx{font-family:var(--body);font-size:2.2cqw;line-height:1.35}
+.fr .ph{background:linear-gradient(160deg,var(--f-photo2),var(--f-photo));border-radius:.4cqw}
+.fr .ph::after{content:attr(data-l);position:absolute;left:1.4cqw;bottom:1.2cqw;right:1.4cqw;font-family:var(--mono);font-size:1.45cqw;letter-spacing:.04em;color:#dfe5ee;line-height:1.3}
+.fr .ln{border:.28cqw solid currentColor;border-radius:.3cqw;background:transparent}
+.fr .pt{border-radius:50%;filter:blur(2.2cqw);opacity:.75}
+.fr .twill{inset:0;background:repeating-linear-gradient(118deg,var(--f-raw) 0 .55cqw,var(--f-raw2) .55cqw 1.1cqw)}
+.fr .twill.mid{background:repeating-linear-gradient(118deg,var(--f-mid) 0 .55cqw,#4f74a6 .55cqw 1.1cqw)}
+.fr .twill.pale{background:repeating-linear-gradient(118deg,var(--f-pale) 0 .55cqw,#b4c8df .55cqw 1.1cqw)}
+.fr .hole{border-radius:50%;background:repeating-linear-gradient(4deg,var(--f-weft) 0 .22cqw,var(--f-skin) .22cqw 1.1cqw);box-shadow:0 0 0 .7cqw rgba(236,234,228,.55),0 0 0 1.6cqw rgba(236,234,228,.18)}
+.fr .hole.dark{background:repeating-linear-gradient(4deg,var(--f-weft) 0 .22cqw,#0e1424 .22cqw 1.1cqw)}
+.fr .tab{width:1.3cqw;height:3.2cqw;background:var(--f-tab);border-radius:.2cqw}
+.fr .flow{right:5cqw;top:7cqw;width:38cqw;display:grid;gap:1.1cqw;font-size:1.9cqw;line-height:1.3;position:absolute}
+.fr .flow p{position:static;font-family:var(--body);border-top:.12cqw solid rgba(255,255,255,.35);padding-top:.8cqw}
+.fr .flow p b{font-family:var(--mono);font-weight:500;font-size:1.45cqw;letter-spacing:.05em;display:block;opacity:.75}
+.fr .stack{display:grid;gap:.9cqw}
+.fr .stack>*{position:static}
+.fr svg{overflow:visible}
+.fr img{object-fit:cover;border-radius:.3cqw}
+.fr .dots{display:grid;grid-template-columns:repeat(10,1fr);gap:.75cqw;width:22cqw}
+.fr .dots i{position:static;display:block;aspect-ratio:1;border-radius:50%;border:.18cqw solid var(--f-grey)}
+.fr .dots i.on{background:var(--f-tab);border-color:var(--f-tab)}
+.fr .dots.grey i.on{background:var(--f-grey);border-color:var(--f-grey)}
+.fr .sq{background:var(--f-ink)}
+.fr .row{display:flex;gap:1.2cqw;align-items:flex-end}
+.fr .row>*{position:static}
+.g-black{background:var(--f-black);color:#eef1f6}
+.g-raw{background:var(--f-raw);color:#eef1f6}
+.g-mid{background:var(--f-mid);color:#f4f7fb}
+.g-pale{background:var(--f-pale);color:var(--f-ink)}
+
+/* reels, bench, research, schedule */
+.reels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:820px){.reels{grid-template-columns:1fr}}
+.reel{border:1px solid var(--rule);border-radius:6px;padding:16px;display:grid;gap:8px;min-width:0}
+.reel .id{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.reel dl{margin:0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 12px;font-size:14px}
+.reel dt{font-family:var(--mono);font-size:11.5px;color:var(--muted);padding-top:2px}
+.reel dd{margin:0;min-width:0}
+.bench{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 40px}
+@media (max-width:820px){.bench{grid-template-columns:1fr}}
+.bench h3{display:flex;justify-content:space-between;gap:8px;align-items:baseline;border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:10px}
+.bench h3 span{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+.bench ul{margin:0;padding:0;display:grid;gap:8px}
+.bench li{list-style:none;font-size:14.5px;padding-left:24px;position:relative}
+.bench li::before{content:"";position:absolute;left:0;top:5px;width:12px;height:12px;border:1.5px solid var(--muted);border-radius:2px}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:6px}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl th{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--muted);background:var(--panel)}
+.tbl tr:last-child td{border-bottom:0}
+.src{display:grid;gap:0;border-top:1px solid var(--rule)}
+.src li{list-style:none;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;padding:10px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.src li>*{min-width:0}
+.src ul,ul.src{padding:0;margin:0}
+@media (max-width:820px){.src li{grid-template-columns:1fr;gap:4px}}
+.check{padding:0;margin:0;display:grid;gap:8px}
+.check li{list-style:none;font-size:14.5px;padding-left:24px;position:relative}
+.check li::before{content:"";position:absolute;left:0;top:5px;width:12px;height:12px;border:1.5px solid var(--warn);border-radius:50%}
+.days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.days{grid-template-columns:1fr}}
+.day{border:1px solid var(--rule);border-radius:6px;padding:14px;min-width:0}
+.day h3{font-size:16px;margin-bottom:8px}
+.day ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:6px}
+.shots{columns:2;column-gap:32px;font-size:14px;padding-left:20px;margin:0}
+.shots li{break-inside:avoid;margin-bottom:4px}
+@media (max-width:640px){.shots{columns:1}}
+.question{border:1px solid var(--rule);border-left:0;border-right:0;padding-block:32px;margin-top:8px}
+.question .thesis{max-width:34ch}
+footer{padding-block:56px 72px;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="jean" viewBox="0 0 40 60"><path d="M6 1h28v6H6z"/><path d="M6 8h28l2.5 51H23.2L20 24.5 16.8 59H3.5z"/></symbol>
+  <symbol id="star" viewBox="0 0 100 100">{{STAR}}</symbol>
+</svg>
+
+<div class="wrap">
+
+<header class="hero" id="top">
+  <div>
+    <p class="mono muted kick">GHAD2001 Globalisation and Health · group presentation · plan and storyboard, version 1 · Friday 27 November 2026</p>
+    <h1>Pre-Worn</h1>
+    <p class="lead">One pair of Levi’s 501 Original jeans, PC9 005013599 “Teach Me Destructed”, followed from the cotton field to a market in Accra. We tell it by reading the pair’s wear pattern. Every fade and every hole is a process, and every process has a place, a person and a health cost. What we found is that the costs land where the record stops.</p>
+    <div class="status">
+      <span class="pill"><b>Mon 30 Nov</b> · present · 20 min ± 2 · 7 speakers</span>
+      <span class="pill"><b>Fri 4 Dec 23:59</b> · methodology report · 1,500 words ± 10%</span>
+      <span class="pill">Today · Fri 27 Nov · three days</span>
+    </div>
+    <nav class="toc" aria-label="Sections">
+      <a href="#story">The story</a><a href="#marks">What earns marks</a><a href="#park">What Park listens for</a><a href="#style">Our style</a><a href="#draft">The draft, re-read</a><a href="#board">Storyboard</a><a href="#reels">Reels</a><a href="#bench">The bench</a><a href="#research">Research</a><a href="#report">Report</a><a href="#next">Next 72 hours</a>
+    </nav>
+  </div>
+  <div class="fr g-black" role="img" aria-label="Title frame: the knee hole of our pair, with the word Pre-Worn">
+    <div class="twill" style="opacity:.9"></div>
+    <div class="hole" style="left:30cqw;top:22cqw;width:40cqw;height:30cqw"></div>
+    <p class="h big c" style="top:62cqw;color:#f3f5f9">Pre-Worn</p>
+    <p class="s" style="color:#cfd6e2">PHOTO 01 · our pair · knee hole · raking light</p>
+  </div>
+</header>
+
+<section id="story">
+  <div class="sechead">
+    <h2>The story in one breath</h2>
+    <p>Park keeps things simple and rewards a story told well. So the deck has one object, one question and one answer, and it follows the five sections of the brief in order.</p>
+  </div>
+  <div class="two">
+    <div class="prose">
+      <p class="mono muted">Thesis, said aloud in the first two minutes</p>
+      <p class="thesis" style="margin-top:10px">Globalisation made this pair cheap and everywhere by spreading its making, wearing and discarding across borders. Its health costs land where its record stops.</p>
+    </div>
+    <div class="prose">
+      <p class="mono muted">The question the room carries</p>
+      <p class="thesis" style="margin-top:10px">Who made the hole, and who paid for it?</p>
+      <p style="margin-top:16px">Our judgement test, stated once: <strong>does the person who bears the health cost have a record of, or a say in, the decision that caused it?</strong> The course asks for a criterion, and this one follows from what we found.</p>
+    </div>
+  </div>
+  <div class="two" style="margin-top:36px">
+    <div class="prose">
+      <h3>The mode: read the wear pattern</h3>
+      <p style="margin-top:8px">Denim collectors read fades the way a doctor reads an X-ray. Whiskers at the hip, honeycombs behind the knee and a frayed hem are the record of one body. A factory-made fade is a record too, of someone else’s work. So we read our pair the same way: each feature points to a process, a place and the person exposed to it.</p>
+      <p>The method has an academic name, which goes in the report: an object biography (Kopytoff 1986), or “following the thing” (Marcus 1995; Cook 2004). Pietra Rivoli’s <em>Travels of a T-Shirt in the Global Economy</em> (2005) and Miller and Woodward’s <em>Global Denim</em> (2011) are the closest models.</p>
+    </div>
+    <div class="prose">
+      <h3>Title</h3>
+      <p style="margin-top:8px"><strong>Pre-Worn</strong> is recommended. Levi’s sells this pair already worn, and the deck asks who did the wearing. <em>Unravelled</em> is the fallback. It is accurate, but it is also a word AI writing tools reach for.</p>
+      <h3 style="margin-top:20px">Opening hook</h3>
+      <p style="margin-top:8px">In 2022 a pair of 1880s Levi’s found in a mine shaft sold for US$87,400. A miner’s real wear made them valuable. Its pocket reads “The only kind made by White Labor”. Our pair’s US listing says “Made in China”, and its Hong Kong page says nothing. Labels have always told buyers who made the clothes when the seller thought it would sell.</p>
+    </div>
+  </div>
+  <div class="arc" aria-label="Five chapters">
+    <div><div class="sw" style="background:var(--f-black)"></div><span class="n">1 · Introduction · 2:00</span><p class="t">Two pairs</p><p class="s">A miner’s wear sold for $87,400; a factory’s wear sold by product code. The label, the trail and the thesis.</p></div>
+    <div><div class="sw" style="background:var(--f-raw)"></div><span class="n">2 · Before consumption · 8:20</span><p class="t">Who made the wear</p><p class="s">Field, harvest, finishing, sewing, shipping. Lungs, rivers, injury cover, port air.</p></div>
+    <div><div class="sw" style="background:var(--f-mid)"></div><span class="n">3 · Usage &amp; consumption · 3:35</span><p class="t">Who sells the wear</p><p class="s">The launderette ads, who they target, how people wash, what leaves the drum.</p></div>
+    <div><div class="sw" style="background:var(--f-pale)"></div><span class="n">4 · After consumption · 3:05</span><p class="t">Who carries it next</p><p class="s">A Hong Kong bin, the export trade, a porter in Accra, the sorting table.</p></div>
+    <div><div class="sw" style="background:var(--f-weft);border-bottom:1px solid var(--rule)"></div><span class="n">5 · Conclusion &amp; suggestions · 2:35</span><p class="t">Mend</p><p class="s">Where the costs landed, and three stitches with a payer and a checker each.</p></div>
+  </div>
+</section>
+
+<section id="marks">
+  <div class="sechead">
+    <h2>What earns the marks</h2>
+    <p>The presentation is worth 60 of 80 marks, and half of those 60 are for understanding, research and critical engagement. The report’s largest line, 15 marks, is for a reflective narrative, so what we record this weekend counts as much as what we show on Monday.</p>
+  </div>
+  <div class="rub" role="img" aria-label="Marking rubric: understanding and critical engagement 30, structure and timing 15, presentation skills 15, report narrative and reflexivity 15, report structure 5; total 80">
+    <div class="row"><span>Understanding, research &amp; critical engagement</span><span class="bar"><i style="width:100%"></i></span><span class="v">30</span></div>
+    <div class="row"><span>Structure &amp; timing</span><span class="bar"><i style="width:50%"></i></span><span class="v">15</span></div>
+    <div class="row"><span>Presentation skills</span><span class="bar"><i style="width:50%"></i></span><span class="v">15</span></div>
+    <div class="row"><span>Report · narrative &amp; reflexivity</span><span class="bar"><i class="r" style="width:50%"></i></span><span class="v">15</span></div>
+    <div class="row"><span>Report · structure &amp; word limit</span><span class="bar"><i class="r" style="width:16.7%"></i></span><span class="v">5</span></div>
+  </div>
+  <p class="mono muted" style="margin-top:14px">Blue: presentation, 60. Grey: written methodology report, 20. Source: GHAD2001 Group Project Details, part III.</p>
+</section>
+
+<section id="park">
+  <div class="sechead">
+    <h2>What Park will listen for</h2>
+    <p>These are predictions taken from the revision guide built on his lectures and exam guidance. Each one becomes a specific move in the deck, so the marker hears his own frameworks applied to our jeans rather than repeated back.</p>
+  </div>
+  <div class="park">
+    <div class="p"><span class="k">01</span><h3>Flows, named precisely</h3><p class="q">“What moves? Through which route? Who controls it? What conditions shape its effects? Who benefits or bears harm?”</p><p class="m">Chapters 2, 3 and 4 open on a five-line flow card in exactly those words.</p></div>
+    <div class="p"><span class="k">02</span><h3>Diffusion: circulation is not effect</h3><p class="q">“A pathogen arriving does not guarantee an outbreak.”</p><p class="m">A ban is not clean lungs (F12). Insurance is not covered costs (F15). Collection is not recycling (F26).</p></div>
+    <div class="p"><span class="k">03</span><h3>Mechanism over listing</h3><p class="q">Claim, mechanism, example, implication, plus a qualification. “Defend the arrows.”</p><p class="m">Each headline is a claim and each image is its evidence. The speaker supplies the mechanism, and each chapter ends on one qualification.</p></div>
+    <div class="p"><span class="k">04</span><h3>Topics joined, not listed</h3><p class="q">The exam asks for four of seven topics connected by mechanisms.</p><p class="m">The pair is a junction where six course flows cross: goods, people, a pathogen shock, ideas, pollution and forced labour (F27).</p></div>
+    <div class="p"><span class="k">05</span><h3>No mini-histories</h3><p class="q">“Avoid tangents, mini-histories and isolated case studies.”</p><p class="m">History stays only where it explains a mechanism: quotas moved production, and a label told buyers who made the jeans. The etymology and the 1873 patent go to backup.</p></div>
+    <div class="p"><span class="k">06</span><h3>A stated criterion</h3><p class="q">“‘There are advantages and disadvantages’ is an opening observation.”</p><p class="m">One test, said aloud in F04: does the person who bears the cost have a record of, or a say in, the decision?</p></div>
+    <div class="p"><span class="k">07</span><h3>Scientific myopia</h3><p class="q">The whole versus the part: “learning to define our problems widely enough.”</p><p class="m">Levi’s life-cycle study counts water and carbon and has no row for lungs (F07). The laser solved the dust problem and created a capital problem (F12).</p></div>
+    <div class="p"><span class="k">08</span><h3>Costs sit in different accounts</h3><p class="q">Birnbaum: company profits, health-system spending, lost income and unpaid care are recorded separately.</p><p class="m">The conclusion places each cost in the account where it lands: a worker’s lungs, Bangladesh’s clinics, Accra’s drains (F27).</p></div>
+    <div class="p"><span class="k">09</span><h3>His own fashion example</h3><p class="q">Brooks’ polyester shirt in the pollution lecture follows extraction, production, fibre pollution and disposal.</p><p class="m">We test that example on cotton. 100% cotton still sheds indigo fibres that reach Arctic sediment (F21), and Brooks’ second-hand trade leads to Kantamanto (F25).</p></div>
+    <div class="p"><span class="k">10</span><h3>Keep the benefit, change who pays</h3><p class="q">Plan B, “Who pays for affordable consumption”, and “equity can help make collective action effective”.</p><p class="m">We say why a boycott would hurt workers (F14). Every recommendation names a payer and a checker, and none relies on consumer guilt (F28).</p></div>
+  </div>
+</section>
+
+<section id="style">
+  <div class="sechead">
+    <h2>Our style: Wear Pattern</h2>
+    <p>The look comes from the way we tell the story. The pair is read like an archive, so the deck behaves like one: an object on a plain ground, the evidence shown in the medium that matches how sure we are, and colour taken from the pair itself. It draws on three sources: Carry’s storyboards, Apple’s restraint and seventy years of denim on album covers and in ads.</p>
+  </div>
+  <div class="lineage">
+    <div class="lin"><div class="im"><img alt="Carry, Fly: four positions of a figure in jeans falling over a waterfront" src="{{c-P05-01}}"><img alt="Carry, Fly: the four poses cut out on white" src="{{c-P05-02}}"><img alt="Carry, Fly: four coloured squares of increasing size" src="{{c-P05-03}}"></div><div class="tx"><h3>Carry · <em>Fly</em></h3><p>Four positions of one figure fall down a diagonal. The water drops away, then the body, and four squares sampled from the photograph keep the fall. The figure is wearing jeans.</p><p class="use">The echo that opens and closes the deck (F04, F27), and swatch squares sized by real data (F07).</p></div></div>
+    <div class="lin"><div class="im"><img alt="Carry, Dusk til Dawn: source photograph" src="{{c-P01-09}}"><img alt="Carry, Dusk til Dawn: pencil contour" src="{{c-P01-08}}"><img alt="Carry, Dusk til Dawn: oil painting" src="{{c-P01-02}}"></div><div class="tx"><h3>Carry · <em>Dusk til Dawn</em></h3><p>One glance carried from photograph to pencil line to oil paint. The further from the photograph, the more of her own reading it holds.</p><p class="use">The evidence code. A photograph means someone saw it, a line drawing means a document says it, and paint means it is our extrapolation.</p></div></div>
+    <div class="lin"><div class="im"><img alt="Carry, Record-store portraits: red starburst over a strip of photos on blue" src="{{c-P10-08}}"><img alt="Carry, Streets of New York: two small photos on a pink field" src="{{c-P04-05}}"></div><div class="tx"><h3>Carry · starburst and window</h3><p>A starburst over a strip of poses, and small photographs set as windows in a flat field of colour. P10 photography is credited to @bigartparty.</p><p class="use">The advertising slide (F19), and the knee hole as the window each chapter opens through.</p></div></div>
+    <div class="lin"><div class="im"><span class="ph">One product · plain ground · one sentence</span></div><div class="tx"><h3>Apple product keynotes</h3><p>One object lit on a plain ground, one sentence, a pause, then a short film. Nothing on screen that the speaker is saying aloud.</p><p class="use">One claim per slide. Films only between chapters. Silence after each question.</p></div></div>
+    <div class="lin"><div class="im"><span class="ph">Warhol · <em>Sticky Fingers</em> · 1971 · denim cropped close, a real zip</span></div><div class="tx"><h3>Denim as pop object</h3><p>Warhol’s cover for the Rolling Stones and Leibovitz’s <em>Born in the U.S.A.</em> (1984) made jeans into a flat graphic icon by cropping in hard.</p><p class="use">Extreme crops of the pair’s hardware: the rivet, the button, the hole.</p></div></div>
+    <div class="lin"><div class="im"><span class="ph">Levi’s “Launderette” · 1985 · remade with Beyoncé · 2025</span></div><div class="tx"><h3>Levi’s scenes</h3><p>The 501 sold through a washing machine twice, forty years apart. The 1985 film is credited with a large sales rise (often quoted as 800%, an estimate).</p><p class="use">The usage chapter is set in the launderette, where the wash also turns out to be the pair’s largest share of climate impact.</p></div></div>
+    <div class="lin"><div class="im"><span class="ph">Boro · indigo cotton mended over generations</span></div><div class="tx"><h3>Boro and sashiko</h3><p>Japanese indigo cloth patched and re-stitched until the repairs become the pattern.</p><p class="use">The ending. Our own hands darn the hole in copper thread, filmed as stop-motion (F29).</p></div></div>
+  </div>
+
+  <h3 style="margin-top:48px">Eight rules</h3>
+  <ul class="rules" style="margin-top:14px">
+    <li>The pair is the only hero. Each chapter opens through its knee hole.</li>
+    <li>The medium tells the audience how sure we are: photograph, line drawing or paint. A small red tab marks facts about this exact pair.</li>
+    <li>Ground colours are sampled from our photographed pair: waistband, thigh, knee, then the white weft. The deck fades the way the jeans do.</li>
+    <li>One sentence per slide, written as a claim. Sources sit in one mono line at the foot, like a care label.</li>
+    <li>Real places get real, credited photographs, graded to the palette and never altered. Generated images only for our own object and for transitions.</li>
+    <li>Motion only between chapters and only on our own images. A documentary photograph never moves.</li>
+    <li>Numbers appear as quantities you can see, such as 74 dots or squares sized by share, rather than as a giant digit on its own.</li>
+    <li>One type family in two widths plus a mono for records. No italic serif accents, no cream paper, no accent bars.</li>
+  </ul>
+
+  <div class="key" aria-label="Evidence key">
+    <div><span class="sample" style="display:block;background:linear-gradient(160deg,var(--f-photo2),var(--f-photo))"></span><b>Photograph</b>Seen: by us, or by a named source we credit.</div>
+    <div><span class="sample" style="display:block;border:2px solid var(--ink)"></span><b>Line drawing</b>Documented: a Levi’s report, a law, a study.</div>
+    <div><span class="sample" style="display:block;background:radial-gradient(circle at 40% 50%,var(--f-mid),transparent 70%)"></span><b>Paint</b>Extrapolated: what probably happens where the record stops.</div>
+    <div><span class="sample" style="display:block;background:var(--bg);position:relative"><span style="position:absolute;left:12px;top:8px;width:8px;height:28px;background:var(--tab);border-radius:2px"></span></span><b>Red tab</b>A fact about PC9 005013599 itself.</div>
+  </div>
+
+  <div class="palette" aria-label="Deck palette">
+    <div style="background:var(--f-raw);color:#eef1f6">Waistband<br>chapter 2</div>
+    <div style="background:var(--f-mid);color:#f4f7fb">Thigh<br>chapter 3</div>
+    <div style="background:var(--f-pale);color:var(--f-ink)">Knee<br>chapter 4</div>
+    <div style="background:var(--f-paper);color:var(--f-ink)">Weft white<br>chapters 1, 5</div>
+    <div style="background:var(--f-copper);color:#fff">Copper stitch<br>the thread</div>
+    <div style="background:var(--f-tab);color:#fff">Red tab<br>this pair</div>
+    <div style="background:var(--f-ink);color:#fff">Ink<br>type</div>
+  </div>
+  <p class="mono muted" style="margin-top:10px">Placeholder values. On Saturday we sample the real colours from photos 05, 10 and 11 of our pair.</p>
+
+  <h3 style="margin-top:44px">Look test: a real image, graded</h3>
+  <div class="two" style="margin-top:14px;align-items:center">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+      <img src="{{c-aral-2000}}" alt="Aral Sea, August 2000, NASA Terra MODIS, graded indigo" style="width:100%;border-radius:3px">
+      <img src="{{c-aral-last}}" alt="Aral Sea, August 2018, NASA Terra MODIS, graded indigo" style="width:100%;border-radius:3px">
+    </div>
+    <div class="prose">
+      <p>NASA’s Terra images of the Aral Sea in August 2000 and August 2018, graded to the deck palette. NASA’s own outline of the 1960 shoreline survives the grade. That is the line we hold for every documentary image: grade the colour, change nothing in the picture, credit the source. NASA imagery is public domain.</p>
+      <p class="mono muted" style="margin-top:10px">Source: NASA Earth Observatory, World of Change: Shrinking Aral Sea.</p>
+    </div>
+  </div>
+</section>
+
+<section id="draft">
+  <div class="sechead">
+    <h2>The draft, re-read</h2>
+    <p>The current 31-page draft has real strengths, and most of its research survives. What it needs is a different surface, and the evidence put in front of the illustrations.</p>
+  </div>
+  <ul class="diag">
+    <li><strong>The look is the documented AI default.</strong> A slide-design guide names this exact combination as the tell of AI decks: warm cream canvas, an italic serif phrase on the end of titles, muted red accents.</li>
+    <li><strong>19 of 31 pages carry a generated watercolour,</strong> and several stand in for real places: the Aral Sea, Xintang, Rana Plaza, Kantamanto. A marker cannot tell the evidence from the illustration.</li>
+    <li><strong>One headline formula repeats,</strong> a statement followed by an italic reversal (“The exposure ended. <em>The disease didn’t.</em>”), on 9 pages.</li>
+    <li><strong>Nine pages lead with a giant number.</strong> Each works alone. Together they flatten the rhythm.</li>
+    <li><strong>Rubric gaps.</strong> There is no breakdown of components, shipping is a single page with no health impact, targeting rests on one campaign, and the immediate health effects of wearing are missing.</li>
+    <li><strong>Over-hedged.</strong> Footers repeat “not this pair”, but the brief tells us to extrapolate from the evidence. One evidence key can do this once.</li>
+    <li><strong>What stays:</strong> the exact product code, the failed trace, the silicosis dots, Fahim and his four institutions, who line-dries, price measured in wages, and the who-pays, who-checks logic.</li>
+  </ul>
+  <div class="sheet">{{SHEET}}</div>
+</section>
+
+<section id="board">
+  <div class="sechead">
+    <h2>Storyboard</h2>
+    <p>29 frames running 19 minutes 35 seconds. The handoffs bring the total to about 20:05, inside the 18 to 22 minute window. Each frame follows the Carryistic shot format: what is on screen, what is said, where the image comes from, the detail that must survive and the visible failure that sends it back. The frames are drawn in the proposed style. Dark boxes stand for photographs we have not taken yet.</p>
+  </div>
+  <div class="tl" role="img" aria-label="Timing: introduction 0 to 2:00; before consumption 2:00 to 10:20; usage 10:20 to 13:55; after 13:55 to 17:00; conclusion 17:00 to 19:35">
+    <div style="flex:120;background:var(--f-black);color:#eef1f6"><b>1 Intro</b><span>0:00–2:00</span></div>
+    <div style="flex:500;background:var(--f-raw);color:#eef1f6"><b>2 Before consumption</b><span>2:00–10:20</span></div>
+    <div style="flex:215;background:var(--f-mid);color:#f4f7fb"><b>3 Usage</b><span>10:20–13:55</span></div>
+    <div style="flex:185;background:var(--f-pale);color:var(--f-ink)"><b>4 After</b><span>13:55–17:00</span></div>
+    <div style="flex:155;background:var(--panel);color:var(--ink)"><b>5 Conclusion</b><span>17:00–19:35</span></div>
+  </div>
+  <div class="tl-scale"><span>0:00</span><span>5:00</span><span>10:00</span><span>15:00</span><span>19:35</span></div>
+  <div class="spk">
+    <div><b>Speaker 1</b>Bob<br><span class="mono">Intro · 2:00</span></div>
+    <div><b>Speaker 2</b>Fibre<br><span class="mono">F05–F09 · 2:55</span></div>
+    <div><b>Speaker 3</b>Finishing<br><span class="mono">F10–F13 · 2:40</span></div>
+    <div><b>Speaker 4</b>Work &amp; ships<br><span class="mono">F14–F17 · 2:45</span></div>
+    <div><b>Speaker 5</b>Usage<br><span class="mono">F18–F22 · 3:35</span></div>
+    <div><b>Speaker 6</b>After<br><span class="mono">F23–F26 · 3:05</span></div>
+    <div><b>Speaker 7</b>Hansen<br><span class="mono">Conclusion · 2:35</span></div>
+  </div>
+
+{{FRAMES}}
+</section>
+
+<section id="reels">
+  <div class="sechead">
+    <h2>Reels inside the deck</h2>
+    <p>The films run as MP4s embedded in PowerPoint, set to play on entry. Each one is requested the Carryistic way, with a start image, a landing image, a length, the motion, the detail that must survive and the visible failure that rejects a take. Every take goes into a ledger with the model, settings, decision and reason, which also feeds the methodology report.</p>
+  </div>
+  <div class="reels">
+    <div class="reel"><span class="id">V1 · opening A · 6 s · recommended</span><h3>Two pairs</h3><dl><dt>Start</dt><dd>Line drawing of the 1880s mine pair, traced from the auction photograph and credited</dd><dt>Landing</dt><dd>PHOTO 01, our knee hole in raking light</dd><dt>Changes</dt><dd>Real wear becomes manufactured wear</dd><dt>Resists us</dt><dd>The “White Labor” pocket stamp. It spoils a nostalgic reading of authentic wear, and we let it.</dd><dt>Must survive</dt><dd>The hole’s outline and its white weft threads</dd><dt>Reject if</dt><dd>The denim turns to smoke or liquid, or extra holes appear</dd><dt>Tool</dt><dd>Kling image-to-video with first and last frame, or a straight cut and push-in</dd></dl></div>
+    <div class="reel"><span class="id">V1 · opening B · 6 s · alternative</span><h3>Hole to label</h3><dl><dt>Start</dt><dd>PHOTO 01, the knee hole</dd><dt>Landing</dt><dd>PHOTO 02, the care label’s origin line</dd><dt>Changes</dt><dd>From the look to the record</dd><dt>Resists us</dt><dd>The white weft in the hole is the only undyed cotton you can see. The damage shows what the jeans are made of.</dd><dt>Must survive</dt><dd>Legible label text at the landing</dd><dt>Reject if</dt><dd>Any label text is generated or changed</dd><dt>Tool</dt><dd>Real camera move, two photos, a cross-dissolve</dd></dl></div>
+    <div class="reel"><span class="id">V2 · V3 · V4 · 3 s each</span><h3>Through the hole</h3><dl><dt>Start</dt><dd>PHOTO 01</dd><dt>Landing</dt><dd>The next chapter’s ground: raw twill (2), the launderette drum (3), a Hong Kong collection bin (4)</dd><dt>Motion</dt><dd>A slow push into the hole, which opens into the next ground</dd><dt>Must survive</dt><dd>The frayed edge until the push passes through it</dd><dt>Reject if</dt><dd>The hole changes shape before the push, or anything appears in it that is not ours</dd><dt>Tool</dt><dd>Kling first and last frame. Ask before each paid job.</dd></dl></div>
+    <div class="reel"><span class="id">V5 · 4 s</span><h3>The fall, after <em>Fly</em></h3><dl><dt>Start</dt><dd>Our pair cut out four times down a diagonal: field, factory, ship, Hong Kong</dd><dt>Landing</dt><dd>Four squares in the four chapter colours</dd><dt>Motion</dt><dd>The pairs drop out one at a time and their squares remain</dd><dt>Must survive</dt><dd>The order down the diagonal matches the speaking order</dd><dt>Reject if</dt><dd>The squares look like a chart</dd><dt>Tool</dt><dd>PowerPoint Morph or Keynote Magic Move. Nothing is generated.</dd></dl></div>
+    <div class="reel"><span class="id">V6 · 8–10 s</span><h3>Mend</h3><dl><dt>Start</dt><dd>The knee hole</dd><dt>Landing</dt><dd>The hole darned in copper thread</dd><dt>Motion</dt><dd>Stop-motion, one frame per stitch, played at 12 fps</dd><dt>Must survive</dt><dd>Real hands, real thread</dd><dt>Reject if</dt><dd>Any frame is generated</dd><dt>Tool</dt><dd>A phone on a tripod, filmed on Sunday afternoon</dd></dl></div>
+    <div class="reel"><span class="id">Tools on hand</span><h3>What makes what</h3><dl><dt>Camera</dt><dd>The most important tool. Every photo of our pair, a Hong Kong bin and the drying rack.</dd><dt>Kling</dt><dd>Image-to-video with a first and last frame, for V1 and V2 to V4. Charged per job.</dd><dt>OpenAI image</dt><dd>Photograph to contour line, and background clean-up on our own photos</dd><dt>ImageMagick</dt><dd>The indigo grade for documentary photos, as in the look test</dd><dt>Higgsfield</dt><dd>The connector here can browse but not generate. Generating goes through Codex, as in Carryistic.</dd></dl></div>
+  </div>
+</section>
+
+<section id="bench">
+  <div class="sechead">
+    <h2>The bench</h2>
+    <p>This is the bar for this project only. A slide that fails any line goes back. The four groups follow the rubric, then a test for not looking machine-made.</p>
+  </div>
+  <div class="bench">
+    <div><h3>Brief and timing <span>15 marks</span></h3><ul>
+      <li>All five sections named on screen in the brief’s own words, in its order</li>
+      <li>Every “point to consider” in the brief answered on a named frame (table below)</li>
+      <li>Two timed full run-throughs between 19:00 and 20:30, and a written cut list</li>
+      <li>Every member speaks for at least two minutes. Handoffs scripted word for word.</li></ul></div>
+    <div><h3>Understanding, research, critical engagement <span>30 marks</span></h3><ul>
+      <li>Every number carries a source code and an evidence medium</li>
+      <li>Each chapter has a claim, mechanism, example and qualification</li>
+      <li>At least one course concept per chapter, explained through its mechanism</li>
+      <li>One counter-argument taken seriously (F14) and one company claim tested (F12, F19)</li>
+      <li>Each recommendation names who pays and who checks, and traces to a finding</li>
+      <li>A real pair inspected, with dated photographs</li></ul></div>
+    <div><h3>Presentation skills <span>15 marks</span></h3><ul>
+      <li>One sentence per slide, 20 words at most besides the source line</li>
+      <li>Readable from the back row: body 24 pt or larger, sources 14 pt, contrast at least 4.5:1</li>
+      <li>Speakers face the room and use cue cards of five lines or fewer</li>
+      <li>An outsider can repeat the thesis and the hole afterwards (Sunday test)</li>
+      <li>Each speaker owns two likely questions</li></ul></div>
+    <div><h3>Not machine-made <span>the anti-slop test</span></h3><ul>
+      <li>No cream paper, italic serif accents, accent bars or labels above every block</li>
+      <li>The statement-then-reversal headline appears once at most</li>
+      <li>Three giant-number slides at most</li>
+      <li>No generated image of a real place, person or event</li>
+      <li>No faceless figures seen from behind standing in for people</li>
+      <li>No repeated disclaimers. The evidence key says it once.</li>
+      <li>None of: delve, tapestry, landscape, navigate, journey, unravel</li></ul></div>
+  </div>
+
+  <h3 style="margin-top:44px;margin-bottom:12px">Every question in the brief, mapped</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Section</th><th>The brief asks</th><th>Frames</th></tr></thead>
+    <tbody>
+      <tr><td>1 Introduction</td><td>Concise and engaging</td><td>F01–F04</td></tr>
+      <tr><td rowspan="5">2 Before</td><td>What is the item made from?</td><td>F06</td></tr>
+      <tr><td>Where do its component parts come from?</td><td>F06, F08, F09, F17</td></tr>
+      <tr><td>How is it assembled or processed?</td><td>F10, F12, F14</td></tr>
+      <tr><td>How is it shipped or distributed for sales?</td><td>F17</td></tr>
+      <tr><td>Impact on human health and society</td><td>F08, F09, F11, F13, F15, F16, F17</td></tr>
+      <tr><td rowspan="4">3 Usage</td><td>How is the product advertised?</td><td>F19</td></tr>
+      <tr><td>Which populations are targeted, and how?</td><td>F19</td></tr>
+      <tr><td>Do consumption and usage look the same globally?</td><td>F20, F22</td></tr>
+      <tr><td>Immediate impact on health and society</td><td>F21, F22</td></tr>
+      <tr><td rowspan="3">4 After</td><td>Mid- and long-term health impact</td><td>F11, F21, F25</td></tr>
+      <tr><td>Recycled, resold or thrown away?</td><td>F24, F26</td></tr>
+      <tr><td>Impact on environment, society and health</td><td>F24, F25, F26</td></tr>
+      <tr><td rowspan="2">5 Conclusion</td><td>Conclusions on globalisation’s role and global impact</td><td>F27</td></tr>
+      <tr><td>Suggestions for the problems found</td><td>F28</td></tr>
+    </tbody></table></div>
+
+  <h3 style="margin-top:44px;margin-bottom:12px">Questions Park is likely to ask</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Question</th><th>Short answer</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>How do you know where this pair was made or how it was finished?</td><td>We don’t, for the finish. The US listing says China. The evidence key shows what is recorded and what is extrapolated.</td><td>Speaker 1</td></tr>
+      <tr><td>Levi’s is better than fast fashion. Why pick on it?</td><td>Deliberately. Levi’s publishes more than most. If the trail goes dark even here, it goes dark sooner elsewhere.</td><td>Speaker 1</td></tr>
+      <tr><td>Wouldn’t a boycott help?</td><td>It would hit workers first: F14. Uzbekistan shows a targeted boycott with independent monitoring working (F09).</td><td>Speaker 4</td></tr>
+      <tr><td>Which recommendation comes first, and who would resist it?</td><td>Recording the finish, because the others depend on knowing where the work happens. Suppliers worry about competitors seeing their lists.</td><td>Speaker 7</td></tr>
+      <tr><td>Are cotton microfibres actually harmful?</td><td>Not established. We claim they persist and accumulate, not that they cause disease.</td><td>Speaker 5</td></tr>
+      <tr><td>How does this connect to the rest of the course?</td><td>Six flows cross in one pair: goods, people, a pathogen shock, ideas, pollution and forced labour (F27).</td><td>Speaker 7</td></tr>
+    </tbody></table></div>
+</section>
+
+<section id="research">
+  <div class="sechead">
+    <h2>Research</h2>
+    <p>New evidence found this week. The bibliography keeps codes R01 to R32 from the earlier work, and these become R33 onwards. Each needs one member to open the primary source before Monday.</p>
+  </div>
+  <ul class="src">
+    {{SOURCES}}
+  </ul>
+  <div class="two" style="margin-top:40px">
+    <div>
+      <h3 style="margin-bottom:12px">Check before Monday</h3>
+      <ul class="check">
+        <li>The life-cycle percentages against the 2015 deck itself. Several secondary sources mix in the 2009 study’s figures (49% and 45% of water, 58% of energy).</li>
+        <li>Whether the 2015 life-cycle study has any human-health category. F07 depends on it.</li>
+        <li>The listed Hong Kong price of PC9 005013599. The draft assumed HK$600.</li>
+        <li>The number of sourcing countries in the FY2025 10-K</li>
+        <li>Hong Kong textile landfill tonnage for 2024, and the “two-thirds exported” claim (EPD). The latest figure found is 404 tonnes a day, for 2021.</li>
+        <li>The EU export figure and its year (EEA)</li>
+        <li>A peer-reviewed source on health effects around the Aral Sea</li>
+        <li>Xintang’s distance from Hong Kong, and the title of the 2010 Greenpeace report</li>
+        <li>Levi’s own statement on the “White Labor” slogan: its wording and date</li>
+      </ul>
+    </div>
+    <div class="prose">
+      <h3 style="margin-bottom:12px">One deliberate omission</h3>
+      <p>The forced-labour case is Uzbekistan because it has an independently monitored ending (ILO, 2021 harvest) and a remedy we can learn from. Xinjiang cotton is the larger current story. Including it is a group decision, given where we are presenting. The storyboard leaves it out unless the group chooses otherwise.</p>
+      <h3 style="margin:24px 0 12px">Why the slides look like this</h3>
+      <p>In a controlled study with 110 students, assertion–evidence slides (a sentence headline over visual evidence) produced better comprehension and fewer misconceptions than topic-and-bullet slides (Garner and Alley 2013). This is the format the storyboard uses, and the report can cite it.</p>
+    </div>
+  </div>
+</section>
+
+<section id="report">
+  <div class="sechead">
+    <h2>The report: rebuilding Astra’s draft</h2>
+    <p>Astra’s draft is careful about sources and honest about limits. But it was written before the work happened, so most of it describes plans. The rebuild is in the same Google Doc, with the draft kept in the version history.</p>
+  </div>
+  <div class="two">
+    <ul class="diag" style="grid-template-columns:1fr;margin:0">
+      <li><strong>Tense.</strong> “Proposed”, “not yet agreed” and “remains unconfirmed” appear throughout. The final narrates what happened.</li>
+      <li><strong>Show reflexivity through decisions.</strong> The decision log supplies four or five short stories of what we believed, what changed it and who proposed the change.</li>
+      <li><strong>Name the method:</strong> following the thing, as an object biography. It gives the research a recognised design.</li>
+      <li><strong>Add primary research:</strong> inspect a real pair with dated photos, email Levi’s Hong Kong about origin and finishing method (log the date and any reply), photograph a street collection bin.</li>
+    </ul>
+    <ul class="diag" style="grid-template-columns:1fr;margin:0">
+      <li><strong>State AI use plainly:</strong> what the tools did, what we checked, and what they got wrong. This week, a search gave 2015 for the Water&lt;Less release when it was March 2016, and mixed 2009 life-cycle figures into the 2015 ones.</li>
+      <li><strong>Task sharing as a table:</strong> real names, sections, sources each person checked, rehearsal role.</li>
+      <li><strong>Headings mirror the brief’s four bullets.</strong> Aim for 1,500 words, and ask whether the bibliography counts.</li>
+      <li><strong>Bibliography:</strong> keep R01 to R32 and add the new sources from R33.</li>
+    </ul>
+  </div>
+  <h3 style="margin:36px 0 12px">Decision log, seeded with this week’s real decisions</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Starting idea</th><th>What changed</th><th>Proposed by</th><th>Evidence that moved us</th></tr></thead>
+    <tbody>
+      <tr><td>Generated watercolours on cream paper</td><td>Real photographs of a real pair, line drawings for documents, paint only for extrapolation</td><td>Group brief, then the planning pass with Claude</td><td>Guides name cream, italic serif and muted red as the AI-deck default, and markers could not tell illustration from evidence</td></tr>
+      <tr><td>The receipt: “Who pays beyond the checkout?”</td><td>The label and the wear pattern</td><td>Planning pass</td><td>The label is part of the product, and the 1880s pocket shows labels were always selective</td></tr>
+      <tr><td>Before / During / After headings</td><td>The brief’s own five section names</td><td>Planning pass</td><td>Structure and timing is worth 15 marks</td></tr>
+      <tr><td>A disclaimer on every slide</td><td>Extrapolate openly, with an evidence key shown once</td><td>Planning pass</td><td>The brief: “you must extrapolate based on the evidence you can find”</td></tr>
+      <tr><td>Bangladesh as the main production case</td><td>To be decided once we read a real label (the open question)</td><td>Open</td><td>The country on the label</td></tr>
+    </tbody></table></div>
+</section>
+
+<section id="next">
+  <div class="sechead">
+    <h2>The next 72 hours</h2>
+    <p>Plan, then prototype three frames, then build. The three prototypes test the riskiest parts first: the opening film, the data peak and the Carry-style advertising slide.</p>
+  </div>
+  <div class="days">
+    <div class="day"><h3>Fri 27 · tonight</h3><ul><li>30-minute call to approve the title, thesis, chapters and speaker map</li><li>Split the “check before Monday” list</li><li>Buy or borrow a 501. If it is not PC9 005013599, label it a comparison pair.</li><li>Email Levi’s Hong Kong about origin and finishing method</li></ul></div>
+    <div class="day"><h3>Sat 28</h3><ul><li>Morning: photo shoot, 60–90 minutes (list below)</li><li>Sample the ground colours from photos 05, 10 and 11</li><li>Prototype F01, F11 and F19, and review them as a group</li><li>Afternoon: build the rest, write cue cards, request reels V1 to V4</li></ul></div>
+    <div class="day"><h3>Sun 29</h3><ul><li>Morning: run-through 1, timed and recorded. Apply the cut list.</li><li>Afternoon: outsider test, where someone outside the course states the thesis and one mechanism</li><li>Film the darning (V6)</li><li>Run-through 2</li></ul></div>
+    <div class="day"><h3>Mon 30</h3><ul><li>Final run-through</li><li>Export the .pptx with embedded MP4s, a PDF fallback and the films on a USB stick</li><li>Arrive early to test the projector, sound and clicker</li></ul></div>
+  </div>
+  <h3 style="margin:36px 0 12px">Photo list for Saturday</h3>
+  <ol class="shots">
+    <li>Knee hole, macro, raking light</li><li>Care label, flat and legible</li><li>Leather patch</li><li>Back pocket and tab</li><li>Waistband (colour sample for chapter 2)</li><li>Rivet and top button</li><li>Whiskers and abrasion</li><li>Overhead flat-lay on white</li><li>The hole from inside</li><li>Thigh (colour sample for chapter 3)</li><li>Knee (colour sample for chapter 4)</li><li>The pair on a Hong Kong drying rack</li><li>A street textile collection bin</li><li>The darning, frame by frame</li>
+  </ol>
+
+  <div class="question" style="margin-top:48px">
+    <p class="mono muted">The one open question</p>
+    <p class="thesis" style="margin-top:10px">When we hold a real 501 this weekend, which country does its label name?</p>
+    <p class="prose" style="margin-top:14px">The answer changes chapter 2. Bangladesh makes F14 and F15 this pair’s own country, and they move up. China gives Xintang (F13) the longer slot and makes Bangladesh the comparison. Any other country swaps in its own regional case.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Prepared for the GHAD2001 group, Friday 27 November 2026. Sources are linked in the research section. Carry’s artworks are shown as references, credited to the artist. P10 photography is by @bigartparty.</p>
+</footer>
+</div>
