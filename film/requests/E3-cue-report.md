@@ -1,6 +1,6 @@
 # E3 · A score that follows the light
 
-Five 90-second chapter cues are in `public/motion/` and in the private score archive. They are an editorial shortlist for Opus’s review. The 38-second audition plays the cues in room order. The private score archive has all 20 takes and the signal measurements. [Audition](https://drive.google.com/file/d/1JQduzlsPkAdqE1Zrp0b64SrjYW2Np9s6/view) · [Score archive](https://drive.google.com/file/d/1OUHxV-oWlMGJJz056oQiHi8oPcROVCS8/view) · [Exact cue points](E3-cues.json)
+Five 90-second chapter cues are in `film/score/` (kept out of the public build until someone has listened and approved them) and in the private score archive. They are an editorial shortlist for Opus’s review. The 38-second audition plays the cues in room order. The private score archive has all 20 takes and the signal measurements. [Audition](https://drive.google.com/file/d/1JQduzlsPkAdqE1Zrp0b64SrjYW2Np9s6/view) · [Score archive](https://drive.google.com/file/d/1OUHxV-oWlMGJJz056oQiHi8oPcROVCS8/view) · [Exact cue points](E3-cues.json)
 
 | Chapter | Pick | Where it plays | What carries the join |
 | --- | --- | --- | --- |

@@ -1,5 +1,7 @@
 # Footage for Opus’s scroll
 
+*Screening notes by Astra, with Opus’s review at the end.*
+
 Opus’s [continuous scroll](scroll-direction.md) sets the pace. The four passes below use video where light, water or paper can change within a picture. They keep the sequence of her handoffs and the original images on either side. [Original requests and frames](astra-requests.md) · [Take ledger](../film/requests/ledger.csv) · [Private screening folder](https://drive.google.com/drive/folders/10KqTfryWejcJOwXEGmexX4aoq00gP2kg)
 
 | Where to look | Take in the review build | What to compare |
@@ -30,3 +32,28 @@ To re-cut *Fly*, run `python scripts/lock-fly-motion.py H5-B.mp4 public/motion/H
 - **E4, circles.** Two 10-second, 2880 × 2880 HLG masters follow the halo, sculpture opening, red record label and painted ball. The first adds holes and imagines a tube full of beads. The second keeps the four pictures more legible and uses the same luminous iris for each change. The separate originals support Opus’s distinct halo and record moves. Both renders stay in the edit room. [First SDR preview](https://drive.google.com/file/d/1Jqx8GrLQYtPEanKzwzUxJHiglYvmtFb4/view) · [Second SDR preview](https://drive.google.com/file/d/1ZB7g1eaoHoKUw21qEbBUrF82t7pVkw6t/view)
 
 Opus and the director can screen this branch locally before a Vercel build. The studio sequence lands on Carry beside her canvas in P07-10. The linen in P07-11 can be opened in All works, and any featured use waits for Carry’s decision.
+
+## Opus’s review
+
+The four clips are reviewed frame by frame against the discard conditions in [astra-requests.md](astra-requests.md). They are also scrubbed in place, forward and backward, at 1280 × 800.
+
+| Clip | Verdict | What I checked |
+| --- | --- | --- |
+| **H1** | Keep | The flecks hold their shapes and only gain light. No face appears in the black. The cut to the shutters lands before any generated lettering, so the first BLACKOUT anyone reads is Carry’s print. |
+| **H6** | Keep | The moon, tower, crane and seams stay fixed while the sky deepens and two windows warm. It is subtle, which is right for a held image. |
+| **H5** | Keep, re-encoded | Her four figures are pixel-identical in every frame, held by `lock-fly-motion.py`. I re-encoded the clip at CRF 26 with the same keyframe spacing. It drops from 18 MB to 9.5 MB at SSIM 0.98 against Astra’s encode, which matters on a phone. |
+| **M1** | Keep | The sheet lifts as paper. Nothing shows painting or drawing. It settles registered on P07-04 before the portrait takes over. |
+
+I agree with every rejection. The built moves for H2, H3, H4, H7, M2 and M3 stay.
+
+**Sculpture.** The three meshes are rendered from four sides with studio lighting, next to Carry’s photographs.
+
+- **Tripo** is the most convincing surface: the glossy red, the gold leaf, the bead pile, the dish and the striped cloth. It adds openings.
+- **Meshy** invents a split stem on the unseen side.
+- **Hunyuan** loses the beads.
+
+None is shown as her sculpture yet. Room 6 now lets visitors **drag Carry’s own filmed orbit** (P08-02) by hand, as well as scrubbing it with the scroll. That is real interactivity with no invented geometry. The next step is a Tripo viewer limited to the arc her camera actually covered, set beside her footage and labelled as a reconstruction, for the director and Carry to approve.
+
+**Score.** The five cues moved to `film/score/`. They stay out of the public build until someone has listened to the joins and the Gold pad, which I can’t do.
+
+**Linen.** P07-11 stays out of the ending until Carry answers. It remains in All works.

@@ -94,6 +94,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       if (layer.kind === 'exit' || layer.kind === 'flood') room.exit = layer;
       layer.el = makeLayer(layer, room);
       if (layer.el) el.append(layer.el);
+      if (layer.hintEl) el.append(layer.hintEl);
     }
     if (room.exit?.rendered) room.renderedExit = room.layers.find(layer => layer.file === room.exit.rendered);
     for (const layer of room.layers) {
@@ -122,6 +123,29 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       layer.aspect = w / h;
       layer.urls = assets[layer.set].times.map((_, i) => url(`scroll/${layer.set}/${String(i).padStart(3, '0')}.webp`));
       node.dataset.src = layer.urls[0];
+      if (layer.drag) {
+        // Turn Carry's own filmed orbit by hand; the scroll still moves it too.
+        node.classList.add('turnable');
+        layer.hintEl = doc.createElement('span');
+        layer.hintEl.className = 'turn-hint';
+        layer.hintEl.textContent = '← drag to turn →';
+        let grip = null;
+        node.addEventListener('pointerdown', event => {
+          if (event.button) return;
+          grip = { x: event.clientX, turn: layer.turn || 0, id: event.pointerId };
+          node.setPointerCapture(event.pointerId);
+          node.classList.add('turning');
+        });
+        node.addEventListener('pointermove', event => {
+          if (!grip || event.pointerId !== grip.id) return;
+          layer.turn = grip.turn + (event.clientX - grip.x) / Math.max(node.clientWidth, 1) * layer.urls.length * 1.2;
+          if (Math.abs(event.clientX - grip.x) > 6) layer.touched = true;
+          queue();
+        });
+        const release = () => { grip = null; node.classList.remove('turning'); };
+        node.addEventListener('pointerup', release);
+        node.addEventListener('pointercancel', release);
+      }
     } else if (layer.kind === 'video') {
       node = doc.createElement('video');
       node.muted = true;
@@ -239,6 +263,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       const node = layer.el;
       if (!v || v.o <= .001 || (!reduced && layer.motionReplacement?.hasFrame) || (replaceOutgoing && layer.holdToEnd)) {
         node.style.visibility = 'hidden';
+        layer.hintEl?.classList.remove('shown');
         continue;
       }
       if (layer.kind === 'video') {
@@ -268,9 +293,13 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
         continue;
       }
       if (layer.kind === 'flip' && layer.cache) {
-        const index = Math.round(v.f * (layer.urls.length - 1));
+        const last = layer.urls.length - 1;
+        const base = v.f * last;
+        if (layer.turn) layer.turn = clamp(layer.turn, -base, last - base);
+        const index = Math.round(base + (layer.turn || 0));
         if (layer.shown !== index) { layer.shown = index; node.src = layer.urls[index]; }
       }
+      if (layer.hintEl) layer.hintEl.classList.toggle('shown', v.o > .6 && !layer.touched);
       node.style.transform = `translate3d(${(v.x * W / 100).toFixed(1)}px,${(v.y * H / 100).toFixed(1)}px,0) scale(${v.s.toFixed(4)}) rotate(${v.r.toFixed(2)}deg)`;
       const [t, r, b, l] = v.c;
       node.style.clipPath = t || r || b || l ? `inset(${t.toFixed(2)}% ${r.toFixed(2)}% ${b.toFixed(2)}% ${l.toFixed(2)}%)` : '';

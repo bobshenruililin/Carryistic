@@ -18,7 +18,7 @@ Let Carry scroll at her own pace. **Leave a note** at the end turns her words in
 
 ## Generated passages
 
-Four clips are ready for review on this branch. Glints in the oil painting lead into Opus’s shutters. Clouds and water move behind the four frozen poses in *Fly*. Dusk darkens inside the *Domus Dei* collage. A real-looking paper fold leads from the RISD light table into the original basketball photograph. The other handoffs play with Opus’s own choreography. [Screen the footage with Opus](direction/opus-footage-review.md) · [Requests, frames and encoding](direction/astra-requests.md) · [Private takes and masters](https://drive.google.com/drive/folders/10KqTfryWejcJOwXEGmexX4aoq00gP2kg)
+Four clips are ready for review on this branch. Glints in the oil painting lead into Opus’s shutters. Clouds and water move behind the four frozen poses in *Fly*. Dusk darkens inside the *Domus Dei* collage. A real-looking paper fold leads from the RISD light table into the original basketball photograph. The other handoffs play with Opus’s own choreography. In *To Bleed in Liquid Gold*, visitors can drag Carry’s own filmed orbit to turn the sculpture. [Screen the footage with Opus](direction/opus-footage-review.md) · [Requests, frames and encoding](direction/astra-requests.md) · [Private takes and masters](https://drive.google.com/drive/folders/10KqTfryWejcJOwXEGmexX4aoq00gP2kg)
 
 ## Working with Opus
 
@@ -37,6 +37,6 @@ npm run build
 
 The rooms are written in `src/rooms.js`, one beat per move, with durations in screen heights. The engine is `src/scroll.js`. `scripts/prepare-scroll.py` rebuilds the sharp stills, strip thumbnails, reel and orbit flipbooks, and Astra’s request frames from `archive/artworks`. It needs Python 3 with Pillow, and FFmpeg.
 
-The Vercel project `carryistic` builds `main`. Open this branch locally or in the offline edition for editorial review. [Current Vercel portfolio](https://carryistic.vercel.app/) · [GitHub Pages](https://bobshenruililin.github.io/Carryistic/)
+The Vercel project `carryistic` builds `main`, which serves the scroll. Review branches are not deployed (`vercel.json`). [Vercel portfolio](https://carryistic.vercel.app/) · [GitHub Pages](https://bobshenruililin.github.io/Carryistic/)
 
 `dist/Carryistic.html` is the offline review edition. It embeds the stills, the reel and orbit frames, the review clips, fonts and the first film. Full-length source movies and full-resolution originals open online. [Download the review edition](handoff/Carryistic.html) · [Film and timecodes](film) · [Rhythm reference](direction/rhythm.md)

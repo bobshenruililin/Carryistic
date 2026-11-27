@@ -118,7 +118,7 @@ function zoomAt(zooms, t) {
 
 const flip = (set, dur, o = {}) => ({
   dur, lead: o.lead,
-  layers: [{ kind: 'flip', set, size: o.size || { fit: .9 }, sizeP: o.sizeP, keys: [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.06, { o: 1 }], [o.end ?? .96, { f: 1 }], [1, { f: 1 }], ...(o.out === 'none' ? [] : [[1.12, { o: 0 }]])] }],
+  layers: [{ kind: 'flip', set, drag: o.drag, size: o.size || { fit: .9 }, sizeP: o.sizeP, keys: [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.06, { o: 1 }], [o.end ?? .96, { f: 1 }], [1, { f: 1 }], ...(o.out === 'none' ? [] : [[1.12, { o: 0 }]])] }],
 });
 
 // Every slide of the post, in one of Carry's own layouts: a band across the field
@@ -261,7 +261,7 @@ export const rooms = [
     id: 'P08', title: 'To Bleed in Liquid Gold', ground: '#940103', ink: 'light', handoff: 'spin',
     beats: [
       show('P08-04', .9, { from: 'none', size: { fit: .84 } }),
-      flip('orbit', 1.5, { size: { fit: .84 } }),
+      flip('orbit', 2, { size: { fit: .84 }, drag: true }),
       show('P08-03', .9, { size: { cover: 1 }, zoom: [1, 1.18] }),
       cascade(['P08-01', 'P08-05', 'P08-06'], 1.1),
       show('P08-07', .8, { size: { fit: .7 } }),
