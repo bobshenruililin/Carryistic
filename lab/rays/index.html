@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carryistic · rays</title>
+<style>
+@font-face{font-family:DM;src:url('../../node_modules/@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2') format('woff2');font-weight:100 1000}
+@font-face{font-family:Serif;font-style:italic;src:url('../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2') format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#05070a;color:#f4f1e9;font-family:DM,system-ui,sans-serif;-webkit-font-smoothing:antialiased;touch-action:none;user-select:none;-webkit-user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.mark{position:fixed;left:18px;top:16px;display:flex;align-items:center;gap:8px;font-weight:650;font-size:15px;letter-spacing:-.02em;z-index:5}
+.sq{position:relative;width:16px;height:16px}.sq i{display:block;background:currentColor;position:absolute}.sq i:nth-child(1){left:0;top:0;width:4px;height:4px}.sq i:nth-child(2){left:5px;top:5px;width:5px;height:5px}.sq i:nth-child(3){left:10px;top:10px;width:6px;height:6px}
+.sound{position:fixed;right:18px;top:18px;font-size:12px;font-weight:600;display:flex;gap:6px;align-items:center;z-index:5}
+.bars{display:flex;gap:2px;align-items:flex-end;height:11px}.bars b{display:block;width:2px;background:currentColor}
+.serif{font-family:Serif,Georgia,serif;font-style:italic;letter-spacing:-.02em;font-weight:400}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+#tips{position:fixed;inset:0;pointer-events:none;z-index:3}
+#tips span{position:absolute;white-space:nowrap;font-size:11px;font-weight:600;letter-spacing:.01em;transition:opacity .25s;color:#f4f1e9}
+#tips span b{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:500;font-size:9.5px;letter-spacing:.12em;margin-right:6px;opacity:.7}
+#label{position:fixed;left:32px;bottom:30px;z-index:6;pointer-events:none;opacity:0;transition:opacity .2s;max-width:460px}
+#label .t{font-size:46px;line-height:1}
+#label .m{margin-top:8px;opacity:.8}
+#label .go{pointer-events:auto;display:inline-block;margin-top:14px;font-weight:650;font-size:14px;padding:9px 14px}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:0 32px 30px;pointer-events:none;transition:opacity .25s}
+.cta .lede{max-width:440px;font-size:30px;line-height:1.1;transition:opacity .2s}
+.cta .lede .mono{display:block;margin-top:10px;opacity:.65}
+.cta .btns{display:flex;gap:10px;pointer-events:auto}
+.pill{padding:11px 18px;font-weight:650;font-size:14px;border:1px solid #f4f1e966}
+.pill.solid{background:#f4f1e9;color:#05070a;border-color:#f4f1e9}
+body.chosen .cta .lede{opacity:0}
+body.entering .cta,body.entering #tips,body.entering #label{opacity:0!important}
+#reel{position:fixed;inset:0;z-index:8;display:none}
+#reel .bar{position:absolute;left:12px;right:12px;top:10px;display:flex;gap:4px}
+#reel .bar i{flex:1;height:3px;background:currentColor;opacity:.3;position:relative}
+#reel .bar i:first-child{opacity:1}
+#reel .name{position:absolute;left:20px;bottom:30px}
+#reel .name .serif{font-size:34px}
+#reel .back{position:absolute;right:20px;bottom:30px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:700px){
+  .cta{flex-direction:column;align-items:stretch;padding:0 16px calc(18px + env(safe-area-inset-bottom))}
+  .cta .lede{font-size:22px;max-width:none}
+  .cta .btns .pill{flex:1;text-align:center}
+  #label{left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:none}
+  #label .t{font-size:32px}
+  #tips span{font-size:10.5px}
+  #reel .back{bottom:auto;top:34px;right:12px}
+}
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<div id="tips" aria-hidden="true"></div>
+<div class="mark"><span class="sq"><i></i><i></i><i></i></span>carryistic</div>
+<button class="sound" type="button"><span class="bars"><b style="height:5px"></b><b style="height:11px"></b><b style="height:7px"></b></span>Sound</button>
+<div id="label"><div class="mono n"></div><div class="serif t"></div><div class="mono m"></div><button class="go" type="button">Enter ↗</button></div>
+<div class="cta" id="cta">
+  <div class="lede serif">Her light, in fifteen works.<span class="mono">touch a ray · press again to enter</span></div>
+  <div class="btns"><button class="pill" type="button">≡ All works</button><button class="pill solid" type="button">▶ Play the film</button></div>
+</div>
+<div id="reel"><div class="bar"></div><div class="name"><span class="mono n"></span> <span class="serif t"></span> <span class="mono c"></span></div><button class="pill back" type="button">↺ Back to her light</button></div>
+<nav class="sr" id="links" aria-label="Works"></nav>
+<script>
+// Fifteen works, each a ray in a colour taken from the work itself. Round her head they run
+// from night to day: blues low in front of her face, through reds and earth, to gold, yellow and white.
+const WORKS = [
+  ['P01', 'Dusk til Dawn', 9, '#3a6fa0', '#040406', 'slow synth bloom, felt piano'],
+  ['P10', 'Record-store portraits', 12, '#0c15bd', '#0007ba', 'tape echo, one motif'],
+  ['P05', 'Fly', 6, '#2c7abc', '#0a80da', 'airy guitar, wind'],
+  ['P04', 'Streets of New York', 10, '#df5877', '#caeaff', 'street pulse, upright bass'],
+  ['P06', 'DC Chronicles', 11, '#922626', '#922626', 'museum hush, brushed jazz'],
+  ['P03', 'The Blackout Awaits', 1, '#6d2423', '#2e2c32', 'her film’s own soundtrack'],
+  ['P08', 'To Bleed in Liquid Gold', 7, '#b3150d', '#940103', 'glass beads, a slow heartbeat'],
+  ['P13', 'Artful and Grateful', 9, '#a84a32', '#060201', 'fire crackle, warm guitar'],
+  ['P14', 'Italy in motion', 18, '#b4531f', '#d0bda1', 'mandolin and strings'],
+  ['P07', 'Proud Daddy', 12, '#885529', '#8e8d8b', 'warm piano, a ball’s bounce'],
+  ['P11', 'Record-store shoot', 14, '#c28356', '#251202', 'vinyl crackle, boom-bap'],
+  ['P15', 'Domus Dei', 9, '#b8913f', '#264050', 'organ pad, distant bells'],
+  ['P09', 'Graphic pose studies', 14, '#f8fb04', '#f9ff01', 'glitchy synth-pop'],
+  ['P12', 'First Weeks at RISD', 8, '#b0aaa7', '#ffffff', 'pencil scratches, solo piano'],
+  ['P02', 'Blackout photographs', 13, '#fefefe', '#000000', 'a house beat through a wall'],
+].map(([id, title, slides, color, ground, track], i) => ({ id, title, slides, color, ground, track, i, num: id.slice(1) }));
+
+const SRC = window.__INLINE || {
+  photo: '../../archive/profile/carry-profile.jpg',
+  soft: '../../archive/profile/carry-person-soft.png',
+  cover: id => `../../public/scroll/h/${id}-01.webp`,
+};
+const LIGHT = [518 / 1080, 423 / 1080];      // the light on her cheek, in photo fractions
+const q = new URLSearchParams(location.search);
+const LOOK = q.get('look') === 'white' ? 'white' : 'colour';   // white: every ray is plain light until touched
+let ARC0 = 106, ARC = 228;                   // degrees, 0 = right and 90 = down
+const rgb = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16));
+const lum = h => rgb(h).reduce((s, v, k) => s + v * [.2126, .7152, .0722][k], 0);
+const ease = t => t * t * (3 - 2 * t);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const load = src => new Promise((ok, no) => { const im = new Image(); im.onload = () => ok(im); im.onerror = no; im.src = src; });
+
+const canvas = document.getElementById('c');
+let ctx = canvas.getContext('2d');
+const main = ctx, rays = document.createElement('canvas'), rctx = rays.getContext('2d');
+const tips = document.getElementById('tips'), label = document.getElementById('label'), reel = document.getElementById('reel');
+const state = { active: -1, hover: -1, intro: 0, enter: -1, e: 0, time: 0, frozen: false, k: WORKS.map(() => 0), dim: 0 };
+let W = 0, H = 0, DPR = 1, O = [0, 0], R = 0, rect = null, assets = null, FRAME = [0, 0];
+
+function layout() {
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  W = innerWidth; H = innerHeight;
+  canvas.width = rays.width = Math.round(W * DPR); canvas.height = rays.height = Math.round(H * DPR);
+  const wide = W / H > 1;
+  const size = wide ? H * 1.02 : W * 1.3;
+  O = wide ? [W * .63, H * .5] : [W * .62, H * .46];
+  // on a phone her head fills the space behind her, so the fan ends straight above it
+  [ARC0, ARC] = wide ? [106, 228] : [112, 178];
+  rect = [O[0] - LIGHT[0] * size, O[1] - LIGHT[1] * size, size];
+  FRAME = wide ? [56, 118] : [58, 196];   // clear bands for the header and for the words and buttons
+  R = Math.max(...[[0, 0], [W, 0], [0, H], [W, H]].map(([x, y]) => Math.hypot(x - O[0], y - O[1]))) * 1.05;
+  placeTips();
+}
+
+// The photo stays whole. Her figure is a soft mask that keeps the rays off her; on the side
+// she faces, its edge is the light on her face itself, so her profile stays crisp.
+function prepare(photo, soft) {
+  const S = photo.width, mk = () => { const c = document.createElement('canvas'); c.width = c.height = S; return c; };
+  const read = im => { const c = mk(), x = c.getContext('2d'); x.drawImage(im, 0, 0, S, S); return x.getImageData(0, 0, S, S); };
+  const P = read(photo), M = read(soft);
+  const room = mk(), occl = mk();
+  const out = [room, occl].map(c => c.getContext('2d').createImageData(S, S));
+  for (let y = 0, i = 0; y < S; y++) for (let x = 0; x < S; x++, i += 4) {
+    const fx = Math.min(x, S - 1 - x) / (S * .16), fy = Math.min(y, S - 1 - y) / (S * .16);
+    const feather = ease(clamp(Math.min(fx, 1))) * ease(clamp(Math.min(fy, 1)));
+    for (let k = 0; k < 3; k++) { out[0].data[i + k] = P.data[i + k]; out[1].data[i + k] = 0; }
+    out[0].data[i + 3] = 255 * feather;
+    out[1].data[i + 3] = M.data[i];
+  }
+  [room, occl].forEach((c, k) => c.getContext('2d').putImageData(out[k], 0, 0));
+  return { room, occl };
+}
+
+const angleOf = i => ARC0 + (i + .5) * ARC / WORKS.length;
+const baseWidth = w => 1.6 + Math.sqrt(w.slides) * .7;   // a work with more slides throws a slightly wider ray
+const grows = w => ease(clamp((state.intro - .3 - w.i * .03) / .25));
+
+function rayGeometry(w, t) {
+  const k = state.k[w.i];
+  const sway = Math.sin(t * .00025 + w.i * 1.7) * .35;
+  const half = baseWidth(w) * (1 + k * 3.4) * (1 - state.dim * (1 - k) * .2);
+  return [(angleOf(w.i) + sway) * Math.PI / 180, half * Math.PI / 180];
+}
+
+function wedge(c, a, half, len) {
+  c.beginPath(); c.moveTo(O[0], O[1]);
+  const n = Math.max(2, Math.ceil(half * 2 / .08));
+  for (let j = 0; j <= n; j++) { const b = a - half + (2 * half) * j / n; c.lineTo(O[0] + Math.cos(b) * len, O[1] + Math.sin(b) * len); }
+  c.closePath();
+}
+
+// A ray is a flat, hard-edged shape in one colour, like her cut paper. Chosen, it holds the work.
+function drawRay(c, w, t) {
+  const g = grows(w);
+  if (g <= 0 || state.enter === w.i) return;
+  const [a, half] = rayGeometry(w, t), k = state.k[w.i], len = R * g;
+  const colour = LOOK === 'white' ? (k > .5 ? w.color : '#f4f1e9') : w.color;
+  c.globalAlpha = (LOOK === 'white' ? .62 : .9) * (1 - state.dim * (1 - k) * .85);
+  c.fillStyle = colour; wedge(c, a, half, len); c.fill();
+  const img = assets.covers[w.id];
+  if (img && k > .01) {
+    c.save(); wedge(c, a, half * .94, len); c.clip();
+    c.globalAlpha = k;
+    const d = R * .5, size = R * 1.15;
+    c.drawImage(img, O[0] + Math.cos(a) * d - size / 2, O[1] + Math.sin(a) * d - size / 2, size, size);
+    c.restore();
+  }
+  c.globalAlpha = 1;
+}
+
+function frame(now) {
+  if (!state.frozen) state.time = now;
+  const t = state.time;
+  const target = state.enter >= 0 ? state.enter : state.active >= 0 ? state.active : state.hover;
+  state.k = state.k.map((v, i) => state.frozen ? (i === target ? 1 : 0) : v + ((i === target ? 1 : 0) - v) * .2);
+  state.dim = state.frozen ? (target >= 0 ? 1 : 0) : state.dim + ((target >= 0 ? 1 : 0) - state.dim) * .18;
+  const [x0, y0, s] = rect;
+  const on = ease(clamp(state.intro / .3));
+  // the rays, on their own layer, kept off her
+  rctx.setTransform(1, 0, 0, 1, 0, 0); rctx.clearRect(0, 0, rays.width, rays.height);
+  rctx.setTransform(DPR, 0, 0, DPR, 0, 0); rctx.globalCompositeOperation = 'source-over';
+  rctx.save(); rctx.beginPath(); rctx.rect(0, FRAME[0], W, H - FRAME[0] - FRAME[1]); rctx.clip();
+  WORKS.forEach(w => { if (w.i !== target) drawRay(rctx, w, t); });
+  if (target >= 0) drawRay(rctx, WORKS[target], t);
+  rctx.restore();
+  rctx.globalCompositeOperation = 'destination-out';
+  rctx.drawImage(assets.layers.occl, x0, y0, s, s);
+  rctx.globalCompositeOperation = 'source-over';
+  // the photo, then the rays over the room
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = (.15 + .85 * on) * (1 - state.dim * .4);
+  ctx.drawImage(assets.layers.room, x0, y0, s, s);
+  ctx.globalAlpha = 1;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(rays, 0, 0); ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  // entering: the chosen ray swings open until its colour is the whole page and the work lands on it
+  if (state.enter >= 0) {
+    const w = WORKS[state.enter], img = assets.covers[w.id];
+    const [a, half0] = rayGeometry(w, t);
+    const half = half0 + (Math.PI * 1.06 - half0) * ease(clamp(state.e / .7));
+    ctx.save(); wedge(ctx, a, half, R); ctx.clip();
+    ctx.fillStyle = w.ground; ctx.fillRect(0, 0, W, H);
+    const side0 = R * 1.15, d0 = R * .5, side1 = Math.min(W * .92, H * .78);
+    const c0 = [O[0] + Math.cos(a) * d0, O[1] + Math.sin(a) * d0], c1 = [W / 2, H / 2 - (W > H ? 0 : 20)];
+    const p = ease(clamp((state.e - .2) / .8)), side = side0 + (side1 - side0) * p;
+    ctx.drawImage(img, c0[0] + (c1[0] - c0[0]) * p - side / 2, c0[1] + (c1[1] - c0[1]) * p - side / 2, side, side);
+    ctx.restore();
+  }
+  updateLabel();
+  if (!state.frozen) {
+    if (state.intro < 1) state.intro = Math.min(1, state.intro + 1 / 170);
+    if (state.enter >= 0 && state.e < 1) { state.e = Math.min(1, state.e + 1 / 60); if (state.e >= 1) openReel(); }
+    requestAnimationFrame(frame);
+  }
+}
+
+// names written along their rays, near the edge of the page
+function placeTips() {
+  tips.innerHTML = '';
+  const phone = W < 700, top = FRAME[0] + 8, bottom = FRAME[1] + 8, m = phone ? 12 : 22;
+  WORKS.forEach(w => {
+    const deg = angleOf(w.i), a = deg * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a);
+    const ts = [dx > 0 ? (W - m - O[0]) / dx : dx < 0 ? (m - O[0]) / dx : Infinity, dy > 0 ? (H - bottom - O[1]) / dy : dy < 0 ? (top - O[1]) / dy : Infinity];
+    const edge = Math.min(...ts.filter(v => v > 0));
+    const el = document.createElement('span');
+    el.innerHTML = `<b>${w.num}</b>${w.title}`;
+    el.dataset.i = w.i;
+    tips.appendChild(el);
+    const len = el.offsetWidth, hgt = el.offsetHeight;
+    const leftward = dx < -.02 || (Math.abs(dx) <= .02 && dy > 0);
+    const rot = leftward ? deg - 180 : deg;
+    // the name sits just beside its ray, not on it
+    // keep the whole name inside the frame: step in along the ray by its sideways offset
+    const off0 = (baseWidth(w) * Math.PI / 180) * edge + hgt * .8;
+    const dist = leftward ? edge - off0 * 1.1 : Math.max(edge - len - 6 - off0, 60);
+    const off = (baseWidth(w) * Math.PI / 180) * (leftward ? dist : dist + len) + hgt * .8;
+    const ax = O[0] + dx * dist - dy * off, ay = O[1] + dy * dist + dx * off;
+    el.style.left = ax + 'px'; el.style.top = (ay - hgt / 2) + 'px';
+    el.style.transformOrigin = `0 ${hgt / 2}px`;
+    el.style.transform = `rotate(${rot}deg)`;
+  });
+}
+
+function updateLabel() {
+  const i = state.enter >= 0 ? state.enter : state.active >= 0 ? state.active : state.hover;
+  [...tips.children].forEach(el => { const w = WORKS[+el.dataset.i]; el.style.opacity = (i < 0 ? .72 : +el.dataset.i === i ? 1 : .2) * grows(w); });
+  document.body.classList.toggle('chosen', i >= 0);
+  document.body.classList.toggle('entering', state.enter >= 0);
+  if (i < 0) { label.style.opacity = 0; return; }
+  const w = WORKS[i];
+  if (label.dataset.i != i) {
+    label.dataset.i = i;
+    label.querySelector('.n').textContent = `${w.num} · ${w.slides} slide${w.slides > 1 ? 's' : ''}`;
+    label.querySelector('.t').textContent = w.title;
+    label.querySelector('.m').textContent = '♪ ' + w.track;
+    const go = label.querySelector('.go');
+    go.style.background = w.color; go.style.color = lum(w.color) > 140 ? '#05070a' : '#f4f1e9';
+  }
+  label.style.opacity = 1;
+}
+
+function pick(x, y) {
+  let deg = Math.atan2(y - O[1], x - O[0]) * 180 / Math.PI; if (deg < ARC0) deg += 360;
+  if (deg > ARC0 + ARC) return deg - (ARC0 + ARC) < ARC0 + 360 - deg ? WORKS.length - 1 : 0;
+  return clamp(Math.floor((deg - ARC0) / (ARC / WORKS.length)), 0, WORKS.length - 1);
+}
+function enter(i) { state.enter = i; state.e = 0; state.active = i; }
+function openReel() {
+  const w = WORKS[state.enter];
+  reel.style.display = 'block';
+  reel.querySelector('.bar').innerHTML = Array.from({ length: Math.max(w.slides, 1) }, () => '<i></i>').join('');
+  reel.querySelector('.n').textContent = w.num; reel.querySelector('.t').textContent = w.title; reel.querySelector('.c').textContent = `1 / ${w.slides} · ♪ ${w.track}`;
+  reel.style.color = document.body.style.color = lum(w.ground) > 150 ? '#05070a' : '#f4f1e9';
+}
+reel.querySelector('.back').addEventListener('click', () => { reel.style.display = 'none'; document.body.style.color = ''; state.enter = -1; state.e = 0; state.active = -1; });
+
+let touch = false;
+canvas.addEventListener('pointermove', e => {
+  if (state.enter >= 0) return;
+  if (e.pointerType === 'mouse') state.hover = pick(e.clientX, e.clientY);
+  else if (touch && e.buttons) state.active = pick(e.clientX, e.clientY);   // drag a finger round her head to run through the works
+});
+canvas.addEventListener('pointerleave', () => { state.hover = -1; });
+canvas.addEventListener('pointerdown', e => {
+  if (state.enter >= 0) return;
+  const i = pick(e.clientX, e.clientY);
+  if (e.pointerType === 'mouse' || state.active === i) enter(i); else { state.active = i; touch = true; }
+});
+canvas.addEventListener('pointerup', () => { touch = false; });
+label.querySelector('.go').addEventListener('click', () => state.active >= 0 && enter(state.active));
+addEventListener('keydown', e => {
+  if (state.enter >= 0) return;
+  const cur = state.active;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowUp') state.active = (cur + 1) % WORKS.length;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') state.active = (cur + WORKS.length - 1) % WORKS.length;
+  if (e.key === 'Enter' && cur >= 0) enter(cur);
+  if (e.key === 'Escape') state.active = -1;
+});
+addEventListener('resize', () => { layout(); label.dataset.i = ''; });
+document.getElementById('links').innerHTML = WORKS.map(w => `<a href="#work=${w.id}">${w.num} ${w.title}</a>`).join('');
+
+// for screenshots: ?still, ?active=P05, ?intro=.5, ?enter=P05&e=.4, and ?look=white
+(async () => {
+  const [photo, soft, ...covers] = await Promise.all([load(SRC.photo), load(SRC.soft), ...WORKS.map(w => load(SRC.cover(w.id)).catch(() => null))]);
+  assets = { layers: prepare(photo, soft), covers: Object.fromEntries(WORKS.map((w, i) => [w.id, covers[i]])) };
+  layout();
+  const find = id => WORKS.findIndex(w => w.id === id);
+  if (q.has('still') || q.has('active') || q.has('intro') || q.has('enter')) {
+    state.frozen = true; state.time = +(q.get('t') || 4000);
+    state.intro = q.has('intro') ? +q.get('intro') : 1;
+    if (q.has('active')) state.active = find(q.get('active'));
+    if (q.has('enter')) { state.enter = find(q.get('enter')); state.e = +(q.get('e') || 0); if (state.e >= 1) openReel(); }
+    frame(state.time);
+    document.title = 'ready';
+  } else {
+    requestAnimationFrame(frame);
+  }
+  window.carryRays = { state, WORKS, render: () => frame(state.time) };
+})();
+</script>
+</body>
+</html>

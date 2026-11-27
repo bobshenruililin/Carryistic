@@ -90,6 +90,28 @@
       "prompt": "Begins on this handmade red sculpture with gold leaf. The camera pushes into the gold-rimmed opening at its centre. The dark opening and its gold rim begin to turn slowly, like a record on a turntable, and become the red label of a vinyl record held up by two hands, landing exactly on the final image: a person in a blue PHILA 3 jersey holding two records over their face in a crowded record store. Keep the hands, the PHILA 3 lettering and both record labels exact in the last second. No new people, no extra text. Silent.",
       "protect": "The hands, the PHILA 3 lettering and the record labels in the landing frame",
       "discard_if": "The hands deform, the lettering changes, or a face appears behind the records"
+    },
+    {
+      "id": "L1",
+      "where": "Landing, her light: the photograph behind the rays (lab/rays)",
+      "start_image": "film/requests/L1-start.jpg",
+      "end_image": "film/requests/L1-start.jpg",
+      "duration": 6,
+      "prompt": "A six-second locked-off shot of this exact photograph that begins and ends on the same frame, so it loops. The camera does not move at all. Only a few loose strands of her hair stir as if in a faint draught, and the light on her face breathes very slightly, as from a handheld lamp. Her face, eyes, nose, mouth and profile stay exactly as in the photograph: she does not blink, speak or turn. The room and her shadow on the wall stay still. Keep the film grain and the soft focus. No new light, no colour change, no camera movement. Silent.",
+      "protect": "Her profile line (forehead, nose, lips, chin) pixel for pixel in every frame, because the rays meet it in code; her eyes and mouth. Lock them with the lock-fly-motion method.",
+      "discard_if": "Her profile or features move by more than two pixels at 1080, she blinks or her mouth moves, the frame drifts or zooms, or the first and last frames differ",
+      "output": "motion/L1.mp4"
+    },
+    {
+      "id": "L2",
+      "where": "Landing, her light: the first three seconds, before the rays grow",
+      "start_image": "film/requests/L2-start.jpg",
+      "end_image": "film/requests/L1-start.jpg",
+      "duration": 3,
+      "prompt": "Three seconds in a dark room. The frame begins almost black on this exact composition. A single handheld light switches on from the left, out of frame, where she is looking, and finds her face: the light rises quickly on her cheek, nose and forehead, then the room settles exactly into the final photograph. The camera does not move. Her pose, profile and expression never change. No flicker after the first second, no colour cast, no lens flare, no new objects. Silent.",
+      "protect": "The final photograph in the last half-second, exactly; her profile in every frame",
+      "discard_if": "Her face or pose changes, the light comes from the right, or the last frame differs from the photograph",
+      "output": "motion/L2.mp4"
     }
   ],
   "experiments": [

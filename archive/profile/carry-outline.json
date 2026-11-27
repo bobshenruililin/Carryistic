@@ -1,0 +1,96 @@
+{
+  "note": "Rough outline of Carry's head and shoulders in carry-profile.jpg (1080 x 1080 pixels), for the rays landing. Points run clockwise from her forehead. It is blurred by 'blur' pixels, so it only needs to be roughly right. On the side she faces it sits just inside her profile: there the edge comes from the light on her face, crisply.",
+  "light": [
+    518,
+    423
+  ],
+  "lightRadius": 360,
+  "blur": 10,
+  "figure": [
+    [
+      392,
+      330
+    ],
+    [
+      398,
+      255
+    ],
+    [
+      420,
+      208
+    ],
+    [
+      455,
+      182
+    ],
+    [
+      510,
+      170
+    ],
+    [
+      580,
+      175
+    ],
+    [
+      650,
+      200
+    ],
+    [
+      705,
+      245
+    ],
+    [
+      750,
+      320
+    ],
+    [
+      785,
+      420
+    ],
+    [
+      805,
+      560
+    ],
+    [
+      815,
+      700
+    ],
+    [
+      1080,
+      820
+    ],
+    [
+      1080,
+      1080
+    ],
+    [
+      200,
+      1080
+    ],
+    [
+      280,
+      760
+    ],
+    [
+      390,
+      690
+    ],
+    [
+      448,
+      612
+    ],
+    [
+      428,
+      548
+    ],
+    [
+      400,
+      472
+    ],
+    [
+      388,
+      400
+    ]
+  ],
+  "close": 31
+}
