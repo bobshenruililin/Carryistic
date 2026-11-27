@@ -1,0 +1,62 @@
+{
+  "contract": "Render each shot, encode it with the command in direction/astra-requests.md, save it as public/<output>, set ready to true for its key in src/motion.json, run npm test, and log the take in film/requests/ledger.csv. The scroll uses a clip only when ready is true; until then the straight cut plays.",
+  "defaults": {
+    "model": "seedance_2_5",
+    "mode": "omni_reference",
+    "aspect_ratio": "1:1",
+    "generate_audio": false,
+    "explore": { "draft": true, "note": "480p drafts first. Finalize the chosen draft with draft_job_id at 4k for the master." },
+    "cheaper_alternative": "magi_2 (1080p, first and last frame) for a second opinion on any shot that fails as a draft"
+  },
+  "shots": [
+    {
+      "id": "H1", "where": "End of room 1, Dusk til Dawn → Blackout photographs", "output": "motion/H1.mp4",
+      "start_image": "film/requests/H1-start.jpg", "end_image": "film/requests/H1-end.jpg", "duration": 5,
+      "prompt": "A five-second continuous shot that begins exactly on this oil painting: a black canvas with white paint flecks above a blue and orange painted head. The camera drifts slowly toward the white flecks at the upper right. One by one the flecks catch light and glint like reflections from a mirror ball while the painted head recedes into the dark. The glints spread across the black until the frame settles exactly on the final image: a black-and-white triptych of mirrored cowboy hats under the glowing word BLACKOUT. Keep the painted brushwork intact in the first second and the lettering BLACKOUT exact in the last second. No new faces, no figures appearing in the black, no other text, no strobing. Silent.",
+      "protect": "The painted head and flecks in the first second; the BLACKOUT lettering in the last second",
+      "discard_if": "The flecks rearrange before they glint, a face appears in the black, or the letters warp"
+    },
+    {
+      "id": "H2", "where": "Last image of room 2, Blackout photographs", "output": "motion/H2.mp4",
+      "start_image": "film/requests/H2-start.jpg", "end_image": null, "duration": 5,
+      "prompt": "A slow, steady dolly forward into this black-and-white photograph of an empty hall with tall windows and a polished floor. One small figure stands far away in the middle of the floor and stays completely still. Reflections on the floor shift a little as the camera moves. The window grid stays straight. The camera stops well before the figure. No new people, no text. Silent.",
+      "protect": "The lone figure, small and unmoving; the straight window grid",
+      "discard_if": "The figure moves, a second person appears, or the window grid bends"
+    },
+    {
+      "id": "H3", "where": "End of room 4, Artful and Grateful → Domus Dei", "output": "motion/H3.mp4",
+      "start_image": "film/requests/H3-start.jpg", "end_image": "film/requests/H3-end.jpg", "duration": 5,
+      "prompt": "Begins exactly on this night photograph of a flame burning above its soft reflection. The flame rises and flickers up out of the top of the frame. As the camera tilts up, its warm light settles on the gold tesserae of a dark church dome, and the shot lands exactly on the final image: a gilded mosaic dome interior in deep shadow with a small window of light. Keep the flame's reflection unchanged for the first second. No candles, no lamps, no people, no text. Silent.",
+      "protect": "The flame and its reflection in the first second; the dome's architecture in the last second",
+      "discard_if": "The flame becomes a candle or a lamp, a figure appears, or the dome's arches warp"
+    },
+    {
+      "id": "H4", "where": "End of room 5, Domus Dei → To Bleed in Liquid Gold", "output": "motion/H4.mp4",
+      "start_image": "film/requests/H4-start.jpg", "end_image": "film/requests/H4-end.jpg", "duration": 4,
+      "prompt": "Begins on this fresco: a starry blue vault with a glowing gold medallion that holds a painted face. The camera pushes slowly into the medallion's gold ring, keeping the ring centred and the same size on screen. As the push continues, the fresco gives way to a handmade red sculpture with torn gold leaf, and the ring becomes the gold-leafed rim of an opening in the sculpture, landing exactly on the final image. The painted face does not morph into anything; it passes out of frame with the push. Keep the gold leaf edges and the red surface. No people, no text. Silent.",
+      "protect": "The ring's position and size on screen; the gold leaf edges of the landing frame",
+      "discard_if": "The medallion's face morphs into the sculpture, the rim changes shape, or the ring jumps position"
+    },
+    {
+      "id": "H5", "where": "Room 10, Fly, after the blocks become the waterfront", "output": "motion/H5.mp4",
+      "start_image": "film/requests/H5-start.jpg", "end_image": "film/requests/H5-start.jpg", "image_references": ["film/requests/H5-reference.jpg"], "duration": 6,
+      "prompt": "This photograph shows four moments of one jump by the same person in a red hood and blue jeans, frozen in mid-air along a diagonal above a river. Keep all four figures completely frozen exactly as photographed: pose, hood, face, hands and feet do not move at all. Only the world around them moves: clouds drift slowly to the right, the river surface ripples and glints, leaves on the far trees stir. The camera does not move. End on the same frame as it began. No new figures, no text. Silent.",
+      "protect": "All four figures, every pixel of pose, hood, face, hands and shoes; the diagonal they make",
+      "discard_if": "Any figure moves, blurs or changes, a fifth figure appears, or the waterfront edge shifts"
+    },
+    {
+      "id": "H6", "where": "Room 5, Domus Dei, the dusk moon", "output": "motion/H6.mp4",
+      "start_image": "film/requests/H6-start.jpg", "end_image": null, "duration": 5,
+      "prompt": "This is a collage: a white field on the left, a grainy blue dusk sky on the right, and in the middle a photograph of a bell tower silhouette beside a construction crane, with a thin crescent moon and one bright star. Keep the collage layout and its borders exactly. Inside the photographs only, the sky slowly deepens from evening blue toward night, and a few windows on the building at the lower right begin to glow warm. The moon and the star stay exactly where they are. The crane stays. Nothing else moves. No added stars, no text. Silent.",
+      "protect": "The collage borders, the moon and star positions, the crane",
+      "discard_if": "The moon or star moves, extra stars appear, the collage edges shift, or the crane disappears"
+    },
+    {
+      "id": "H7", "where": "End of room 6, To Bleed in Liquid Gold → Record-store shoot", "output": "motion/H7.mp4",
+      "start_image": "film/requests/H4-end.jpg", "end_image": "film/requests/H7-end.jpg", "duration": 4,
+      "prompt": "Begins on this handmade red sculpture with gold leaf. The camera pushes into the gold-rimmed opening at its centre. The dark opening and its gold rim begin to turn slowly, like a record on a turntable, and become the red label of a vinyl record held up by two hands, landing exactly on the final image: a person in a blue PHILA 3 jersey holding two records over their face in a crowded record store. Keep the hands, the PHILA 3 lettering and both record labels exact in the last second. No new people, no extra text. Silent.",
+      "protect": "The hands, the PHILA 3 lettering and the record labels in the landing frame",
+      "discard_if": "The hands deform, the lettering changes, or a face appears behind the records"
+    }
+  ]
+}

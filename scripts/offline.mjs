@@ -1,5 +1,5 @@
-import { readFile, readdir, writeFile } from 'node:fs/promises';
-import { dirname, extname, join, resolve } from 'node:path';
+import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
@@ -11,11 +11,23 @@ async function dataUrl(path) {
   return `data:${type};base64,${(await readFile(path)).toString('base64')}`;
 }
 
+async function* walk(directory) {
+  for (const name of (await readdir(directory)).sort()) {
+    const path = join(directory, name);
+    if ((await stat(path)).isDirectory()) yield* walk(path);
+    else yield path;
+  }
+}
+
+// The scroll's stills, thumbnails, reel and orbit frames, generated passages and
+// the first film. The viewer shows each still from the scroll copy; the three
+// source movies and full-resolution files open online.
 const assets = {};
-for (const group of ['art', 'film', 'plates']) {
-  for (const filename of (await readdir(join(dist, group))).sort()) {
-    const key = `${group}/${filename}`;
-    assets[key] = await dataUrl(join(dist, key));
+for (const group of ['scroll', 'motion', 'film']) {
+  try {
+    for await (const path of walk(join(dist, group))) assets[relative(dist, path).split('\\').join('/')] = await dataUrl(path);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
   }
 }
 
@@ -34,9 +46,7 @@ for (const [expression, url] of [...css.matchAll(/url\(["']?([^)'"\s]+)["']?\)/g
 
 const embedded = `<script>window.__carryFiles=${JSON.stringify(assets)}</script>\n`;
 const script = `<script type="module">${js.replace(/<\/script/gi, '<\\/script')}</script>`;
-// The online entry starts both cover requests while the module is downloading.
-// In the file edition the module supplies their embedded bytes immediately.
-const offline = html.replace(/(<img\b[^>]*\bdata-art="[^"]+")\s+src="[^"]+"/g, '$1')
+const offline = html.replace(/<link\b[^>]*\brel="preload"[^>]*>\s*/g, '')
   .replace(moduleTag[0], '')
   .replace(styleTag[0], () => `<style>${css}</style>`)
   .replace('</body>', () => `${embedded}${script}\n</body>`);

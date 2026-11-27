@@ -1,6 +1,6 @@
 # One ground, handed on
 
-A direction for turning the portfolio into one continuous scroll through all 15 works. Opus wrote it after the [independent first look](opus-independent.md) and then the director’s record, the film, the live site and the reference reels. It is a proposal to discuss, not a build.
+A direction for turning the portfolio into one continuous scroll through all 15 works. Opus wrote it after the [independent first look](opus-independent.md) and then the director’s record, the film, the live site and the reference reels. The director approved it, and it is now built on this branch. [Watch the two-minute walkthrough](scroll-walkthrough.mp4) · [Generation handoff](astra-requests.md)
 
 ![Fifteen bands of color, one per work. Each holds a key image and a strip of every slide in that post.](scroll-storyboard.jpg)
 
@@ -48,7 +48,7 @@ The sequence follows the light in the photographs. It opens on a painting called
 | ---: | --- | --- | --- | --- | --- |
 | 1 | Dusk | *Dusk til Dawn* | P01-02 canvas black `#040406` | The shadow draws the line (P01-06), the line fills with oil (P01-08 → P01-02), then the canvas on the wall (P01-07). The source photograph P01-09 appears last, small. | White paint flecks above the head (P01-04) → disco sparkle (P02-01) |
 | 2 | Night | *Blackout photographs* | P02-01 `#000000` | The mirrored hat (P02-06). The bouquet registration from *The room*, now driven by scroll: P02-04 → P02-05 → the hall in P02-13. | The empty hall’s windows (P02-13) → the doorway silhouettes (P03-01) |
-| 3 | Night | *The Blackout Awaits* | P03-01 wall `#2e2c32` | The scroll scrubs the BLACK OUT sheet’s journey through the reel, including the existing two-print passage at 45.8–48.1 s. | The sheet floating on the stream (37.0–38.9 s) → the river at night (P13-05) |
+| 3 | Night | *The Blackout Awaits* | P03-01 wall `#2e2c32` | The scroll scrubs the BLACK OUT sheet’s journey through the reel, including the existing two-print passage at 45.8–48.1 s. | The reel’s own HAVE FUN end card fades into the night of P13-02. A hand lifts the sheet from the stream at 39 s, so the sheet is not sent downstream. |
 | 4 | Night | *Artful and Grateful* | P13-06 `#060201` | Flash-lit friends run past in a strip (P13-04), then a held pause on the flame (P13-06), as the director’s pacing note asks. | Flame (P13-06) → mosaic gold in a dark dome (P15-01) |
 | 5 | Gold | *Domus Dei* | P15-07 vault `#264050` | The view rises through the vaults (P15-01, 04, 05) to Giotto’s stars (P15-07/08). The dusk moon (P15-06) marks the turn. | Gold halo (P15-07) → gold-rimmed opening (P08-04) |
 | 6 | Gold | *To Bleed in Liquid Gold* | P08-01 red `#940103` | The orbit from P08-02 is driven by scroll, then the beads (P08-03), then the gold hand (P08-07). | Gold rim (P08-04) → record label (P11-01), the film’s circle reversed |
@@ -64,23 +64,17 @@ The sequence follows the light in the photographs. It opens on a painting called
 
 A **circle** runs through the middle of the sequence as well: the halo, the gold rim, the record, the starburst center, the basketball, and finally the faded ball on the linen. This is the director’s recurring circle, extended across the whole page.
 
-## What happens to the current build
+## What happened to the earlier build
 
-Astra’s work stays. It is regrouped so it reads as one path.
+Astra’s ideas are in the scroll. Their sliders and buttons are gone.
 
-- **Keep, now driven by scroll:**
-  - *The fall* → room 10
-  - *The room* → room 2
-  - *The orbit* → room 6
-  - the Blackout print scrub → room 3
-  - the 153-position viewer, opened by clicking any slide in any strip
-  - credits and originals
-- **Move:**
-  - the response notebook goes after room 15, for Carry’s review;
-  - the *Afterimage* film joins the index and film notes.
-- **Retire from the main path:** the “Enter the film” gate, the sliders, the play buttons and the separate section heads.
-- **Navigation:** a thin rail of 15 color squares, one per room, in its sampled ground color. It shows progress and lets visitors jump between rooms. It is the brand mark’s three growing squares extended to 15.
-- **Reduced motion and phones:** the same rooms in the same order, with crossfades in place of pinned motion and shorter pins.
+- ***The fall*** became room 10. *Fly* plays in reverse as two registered wipes, from block to cutout to waterfront. The 3D relief and three.js were removed.
+- ***The room*** became room 2. The bouquet holds still while the room assembles around the cutout, using the measured registration in `src/blackout-registration.json`.
+- ***The orbit*** became room 6. It is a 36-frame flipbook of Carry’s own camera arc (P08-02), driven by scroll.
+- **The Blackout print scrub** became room 3. The whole reel is a 93-frame flipbook, denser at the stream and at the two prints.
+- **The viewer** opens on any slide in any strip. A `#work-P05-01` link opens that slide over the scroll, and arrow keys step through all 153 positions.
+- **The ending holds the quiet things:** Instagram, all works, the *Afterimage* film, credits, and the notebook. Response links in the old `#response=` format still open.
+- **The entrance** is the painting, whole, on black. There is no button.
 
 ## Higgsfield: generate between her images, never instead of them
 
@@ -90,22 +84,15 @@ Higgsfield credits are effectively unlimited, so the question is where generatio
 2. **Generation never invents her process.** Nothing should look like footage of Carry painting, drawing or building. An admissions reader has to be able to trust every process image.
 3. **Faces, hands, gazes, lettering and her borders are protected in every shot.**
 4. **Every shot ships with a straight-cut fallback,** so the site is complete before any generation lands.
-5. **Clips are bound to scroll, not autoplayed.** The visitor’s hand drives them, and they are encoded with every frame a keyframe (or as frame atlases) so they scrub smoothly in both directions.
+5. **Clips are bound to scroll, not autoplayed.** The visitor’s hand drives them, and they are encoded with a keyframe every four frames and no B-frames, so they scrub smoothly in both directions.
 
-### First requests for Codex
+### Requests for Astra
 
-| ID | Start image | Landing image | Duration | Intended motion | Protected detail | Discard if |
-| --- | --- | --- | --- | --- | --- | --- |
-| H1 | P01-04 | P02-01 | 4 s | The white paint flecks catch light and start to glint like mirror-ball reflections. The canvas recedes into black and the sparkle settles into P02-01’s light. | The BLACKOUT lettering in the landing frame | The flecks change position before they glint, or any face appears in the black |
-| H2 | P03-01 at 38.0 s (sheet on the stream) | P13-05 | 5 s | The sheet stays where it floats. The daylight water darkens to night, and the camera tilts up off the sheet to the bridge lights. In her reel a hand lifts the sheet out at 39 s, so the sheet must not be sent downstream. | The sheet’s position and its BLACK OUT lettering | The sheet drifts, its letters warp, or a hand or new object enters the water |
-| H3 | P13-06 | P15-01 | 5 s | The flame rises out of frame. Its light settles on the gold tesserae of the dark dome as the camera tilts up. | The flame’s reflection in the first second | The flame turns into a candle or a lamp, or a figure appears |
-| H4 | P15-07 | P08-04 | 4 s | Push into the haloed medallion. The ring holds its place on screen as the painted vault gives way to the red and gold sculpture. | The ring’s position and the gold leaf’s edges | The halo’s face morphs instead of cutting, or the gold rim changes shape |
-| H5 | P05-01 | P05-01 | 6 s, scroll-scrubbed | In-between motion connecting the four photographed falls. The scroll passes through each real pose exactly at 0, 33, 66 and 100%. | Each of the four poses, hood and face at its own percentage | Any pose drifts from the photograph at its percentage. This is the most invented shot, so it is flagged as an editorial interpretation. |
-| H6 | P02-13 | P02-13 | 5 s | A slow dolly into the empty hall. The camera stops before the lone figure. | The lone figure stays still and small | The figure moves, a second person appears, or the window grid bends |
+The seven shots, their frames, prompts, protected details and discard conditions are in [astra-requests.md](astra-requests.md). Astra renders them and marks each one ready in `src/motion.json`. The scroll then uses the clip in place of its straight cut. These changed from the first list:
 
-Further candidates: the moon holding while the sky deepens in P15-06, the tiny figures walking inside the P06-01 insets, a slow rise into the dome of P15-05, and the BLACK OUT sheet lifting out of the reel and across the page in room 3. The baranbarahimi reel you shared is hand-drawn frame by frame. If you want that feel, the place for it is Carry’s own pencil contour in P01-08 and P12-03. Animate it only with her consent, because it would put movement into her line that she didn’t draw.
-
-These requests are ready to post to [issue 1](https://github.com/bobshenruililin/Carryistic/issues/1) once the direction is agreed.
+- The stream shot is dropped.
+- *Fly* now keeps her four poses frozen.
+- A sculpture-to-record shot is added.
 
 ## One challenge to the current film
 
@@ -122,12 +109,12 @@ These requests are ready to post to [issue 1](https://github.com/bobshenruililin
 
 ## Build order, so the site never waits on generation
 
-1. **Rooms 1–3, straight cuts only.** Prove the ground, window, strip and handoff on one desktop and one phone.
-2. **All 15 rooms with straight handoffs.** The site is complete at this point, and the current URL keeps working.
+1. ~~**Rooms 1–3, straight cuts only.**~~ Done.
+2. ~~**All 15 rooms with straight handoffs.**~~ Done, tested at 1440 × 900 and 390 × 844, with reduced motion and in the offline file.
 3. **Higgsfield pass.** Each generated shot replaces its straight cut only where it wins a side-by-side comparison.
 4. **Carry’s review.** Revise in response to her notebook entry.
 
-Weight matters because the offline single-file edition is already 64 MB. Generated clips go in as all-keyframe 720p or frame atlases, and they load per room.
+The offline single-file edition went from 64.7 MB to 41.6 MB, because the viewer now reuses the scroll’s images. Generated clips go in at 1080 × 1080 with a keyframe every four frames, and they load per room.
 
 ## Reference reels
 

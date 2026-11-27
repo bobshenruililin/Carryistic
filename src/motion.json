@@ -1,0 +1,9 @@
+{
+  "H1": { "file": "motion/H1.mp4", "aspect": 1, "ready": false },
+  "H2": { "file": "motion/H2.mp4", "aspect": 1, "ready": false },
+  "H3": { "file": "motion/H3.mp4", "aspect": 1, "ready": false },
+  "H4": { "file": "motion/H4.mp4", "aspect": 1, "ready": false },
+  "H5": { "file": "motion/H5.mp4", "aspect": 1, "ready": false },
+  "H6": { "file": "motion/H6.mp4", "aspect": 1, "ready": false },
+  "H7": { "file": "motion/H7.mp4", "aspect": 1, "ready": false }
+}

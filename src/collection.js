@@ -1,4 +1,4 @@
-import plates from './plates.json';
+import plates from './plates.json' with { type: 'json' };
 import './collection.css';
 
 const plateIndex = new Map(plates.map((plate, index) => [plate.id, index]));
@@ -75,8 +75,11 @@ export function mountCollection(root, { asset, onlineBase }) {
 
   function mediaUrl(name) {
     const path = 'plates/' + name;
-    if (window.__carryFiles && !window.__carryFiles[path] && onlineBase) {
-      return new URL(path, onlineBase.replace(/\/?$/, '/')).href;
+    // The single-file edition carries each still once, as the scroll's sharp copy.
+    const still = 'scroll/h/' + name.replace(/\.\w+$/, '.webp');
+    if (window.__carryFiles && !window.__carryFiles[path]) {
+      if (window.__carryFiles[still] && !/\.mp4$/.test(name)) return window.__carryFiles[still];
+      if (onlineBase) return new URL(path, onlineBase.replace(/\/?$/, '/')).href;
     }
     return asset(path);
   }
