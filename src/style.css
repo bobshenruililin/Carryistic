@@ -41,6 +41,7 @@ img.layer,video.layer{object-fit:fill}
 .turnable.turning{cursor:grabbing}
 .turn-hint{position:absolute;left:50%;bottom:calc(var(--edge) * 1.2);z-index:45;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--light);opacity:0;transition:opacity .5s;pointer-events:none}
 .turn-hint.shown{opacity:.8}
+.turn-hint{width:max-content;max-width:calc(100vw - 4 * var(--edge));text-align:center;line-height:1.6}
 .flashlight{position:absolute;inset:0;z-index:8;background:#fff;opacity:0;pointer-events:none}
 .flood{inset:0;pointer-events:none}
 .flood i{position:absolute;display:block}
@@ -56,6 +57,14 @@ img.layer,video.layer{object-fit:fill}
 .mark-squares i:nth-child(1){left:0;top:0;width:4px;height:4px}
 .mark-squares i:nth-child(2){left:5px;top:5px;width:5px;height:5px}
 .mark-squares i:nth-child(3){left:11px;top:11px;width:6px;height:6px}
+.sound{position:absolute;right:var(--edge);top:var(--edge);display:inline-flex;align-items:center;gap:8px;pointer-events:auto;color:var(--chrome);font-size:12.5px;font-weight:600;letter-spacing:.02em;transition:color .5s}
+.sound-bars{display:inline-flex;align-items:flex-end;gap:2px;height:12px}
+.sound-bars i{display:block;width:2px;height:4px;background:currentColor;transition:height .3s}
+.sound[aria-pressed="true"] .sound-bars i{animation:bars 1.1s ease-in-out infinite}
+.sound[aria-pressed="true"] .sound-bars i:nth-child(2){animation-delay:-.35s}
+.sound[aria-pressed="true"] .sound-bars i:nth-child(3){animation-delay:-.7s}
+.sound[aria-pressed="false"] .sound-label::after{content:' off';opacity:.6}
+@keyframes bars{0%,100%{height:3px}50%{height:12px}}
 .rail{position:fixed;right:var(--edge);top:50%;transform:translateY(-50%);display:grid;gap:7px;pointer-events:auto}
 .rail button{width:9px;height:9px;background:var(--swatch);box-shadow:0 0 0 1px color-mix(in srgb,var(--chrome) 40%,transparent);transition:transform .35s ease,box-shadow .35s}
 .rail button:hover{transform:scale(1.5)}
@@ -65,7 +74,7 @@ img.layer,video.layer{object-fit:fill}
 .label-n{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em}
 .label-t{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.1vw,30px);letter-spacing:-.02em;line-height:1}
 .cue{position:fixed;left:50%;bottom:calc(var(--edge) + 4px);z-index:60;width:1px;height:42px;background:linear-gradient(var(--light),transparent);transform-origin:top;animation:cue 2.4s ease-in-out infinite;transition:opacity .6s}
-body.moved .cue{opacity:0}
+body.moved .cue{animation:none;opacity:0}
 @keyframes cue{0%{transform:scaleY(0);opacity:0}30%{opacity:1}70%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
 
 /* The end of the film. */
@@ -110,5 +119,6 @@ body.moved .cue{opacity:0}
 }
 @media (prefers-reduced-motion:reduce){
   .cue{animation:none;opacity:.6;transform:none}
+  .sound-bars i{animation:none!important;height:8px}
   .label,.strip button{transition:none}
 }

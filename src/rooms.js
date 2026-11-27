@@ -123,6 +123,12 @@ const flip = (set, dur, o = {}) => ({
 
 // Every slide of the post, in one of Carry's own layouts: a band across the field
 // (P04-06, P09-01, P10-08), a column (P13-04, P14-16) or Fly's diagonal (P05-03).
+// The 3D reconstruction of a sculpture, turned a full circle by the scroll and by hand.
+const model = (file, dur, o = {}) => ({
+  dur, lead: o.lead,
+  layers: [{ kind: 'model', file, hint: o.hint, yaw: o.yaw, size: o.size || { fit: .9 }, z: 4, keys: [[0, { o: 0, f: 0 }], [.14, { o: 1 }], [1, { f: 1 }], [1.12, { o: 0 }]] }],
+});
+
 const strip = (post, dur, lead, o = {}) => ({
   dur, lead,
   layers: [{ kind: 'strip', ids: slidesOf(post).filter(id => id !== o.holdForReview), band: o.band, dir: o.dir, angle: o.angle, z: 40, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }],
@@ -262,6 +268,8 @@ export const rooms = [
     beats: [
       show('P08-04', .9, { from: 'none', size: { fit: .84 } }),
       flip('orbit', 2, { size: { fit: .84 }, drag: true }),
+      // Her film covers part of a turn; the reconstruction lifts the object onto her red and turns it all the way.
+      model('sculpture/sculpture.glb', 2.6, { lead: .25, size: { fit: .92 }, hint: '← drag to turn · a 3D reconstruction from Carry’s photographs →' }),
       show('P08-03', .9, { size: { cover: 1 }, zoom: [1, 1.18] }),
       cascade(['P08-01', 'P08-05', 'P08-06'], 1.1),
       show('P08-07', .8, { size: { fit: .7 } }),

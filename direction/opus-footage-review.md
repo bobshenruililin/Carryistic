@@ -52,8 +52,8 @@ I agree with every rejection. The built moves for H2, H3, H4, H7, M2 and M3 stay
 - **Meshy** invents a split stem on the unseen side.
 - **Hunyuan** loses the beads.
 
-None is shown as her sculpture yet. Room 6 now lets visitors **drag Carry’s own filmed orbit** (P08-02) by hand, as well as scrubbing it with the scroll. That is real interactivity with no invented geometry. The next step is a Tripo viewer limited to the arc her camera actually covered, set beside her footage and labelled as a reconstruction, for the director and Carry to approve.
+The director chose Tripo for the site. Room 6 runs in two steps. First, Carry’s own filmed orbit, which visitors can drag. Then the Tripo reconstruction lifts onto her red and turns a full circle with the scroll and by hand, lit so the gold leaf catches the light, with a caption that names it a reconstruction from her photographs. `scripts/prepare-sculpture.py` reduces the 66 MB mesh to 5.8 MB: 1.9 million triangles become 200,000 on a vertex grid that keeps UV seams apart, with KHR_mesh_quantization and 2048 px textures. It renders indistinguishably from the original at all four test angles. The added openings and the unseen back remain the reconstruction’s, so Carry can still ask for it to come down. Removing the `model(...)` beat from room 6 restores her film alone.
 
-**Score.** The five cues moved to `film/score/`. They stay out of the public build until someone has listened to the joins and the Gold pad, which I can’t do.
+**Score.** The director asked for the music, so the five cues are in `public/sound/`. A **Sound** button plays them from Astra’s entry points and crossfades by chapter as the visitor scrolls, backwards too. It is off by default and ducks whenever a sheet opens or a film plays. I can’t listen, so the joins and the Gold pad still need a human ear on the live site. The offline edition leaves the score out and hides the button.
 
 **Linen.** P07-11 stays out of the ending until Carry answers. It remains in All works.

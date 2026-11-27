@@ -4,6 +4,7 @@ import { rooms } from './rooms.js';
 import assets from './scroll-assets.json';
 import { mountCollection } from './collection.js';
 import { cleanReview, decodeReview, encodeReview } from './review.js';
+import { createScore } from './sound.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -39,6 +40,19 @@ const railButtons = rooms.map((room, index) => {
   return button;
 });
 
+// The score is off until a visitor asks for it, and follows the chapters of light.
+const score = createScore(url);
+const soundButton = $('#sound');
+if (!window.__carryFiles || window.__carryFiles['sound/E3-night.mp3']) soundButton.hidden = false;
+soundButton.addEventListener('click', async () => {
+  const on = await score.toggle();
+  soundButton.setAttribute('aria-pressed', String(on));
+  soundButton.setAttribute('aria-label', on ? 'Stop the score' : 'Play the score');
+});
+document.addEventListener('visibilitychange', () => (document.hidden ? score.pause() : score.resume()));
+// An original film with its own sound silences the score until its sheet closes.
+document.addEventListener('play', event => { if (event.target instanceof HTMLVideoElement && !event.target.classList.contains('layer')) score.pause(); }, true);
+
 const scroll = mountScroll({
   stage,
   track: $('#track'),
@@ -47,6 +61,7 @@ const scroll = mountScroll({
   url,
   onOpenPlate: id => openPlate(id),
   onRoom(room, index) {
+    score.setRoom(room.id);
     document.documentElement.dataset.ink = room.ink;
     document.querySelector('meta[name="theme-color"]').content = room.ground;
     railButtons.forEach((button, i) => button.toggleAttribute('aria-current', i === index));
@@ -84,7 +99,8 @@ function closeSheets(dialog) {
 for (const dialog of $$('dialog')) {
   $('.sheet-close', dialog).addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
-  dialog.addEventListener('close', () => closeSheets(dialog));
+  dialog.addEventListener('close', () => { closeSheets(dialog); score.duck(false); score.resume(); });
+  new MutationObserver(() => { if (dialog.open) score.duck(true); }).observe(dialog, { attributes: true, attributeFilter: ['open'] });
 }
 function linkedPlate() {
   return location.hash.match(/^#work-(P\d{2}-\d{2})$/)?.[1];
@@ -108,6 +124,7 @@ function showCredits() {
     'The record-store portraits credit @bigartparty for photography. The record-store shoot was posted by @bigartparty with help from @ca.m.z. The graphic pose studies credit @bigartparty as model.',
     'Museum works and architecture photographed in DC Chronicles, Streets of New York, Italy in motion and Domus Dei belong to their makers and appear as Carry saw them.',
     'Opus choreographed the scroll and its colour handoffs. Higgsfield generated the moving glints, dusk light, water and paper for this edition. The figures in Fly come from Carry’s original photograph throughout.',
+    'The turning sculpture in To Bleed in Liquid Gold is a 3D reconstruction (Tripo, through Higgsfield) from Carry’s photographs and filmed orbit, not a scan; her own film of the object plays first. The score is five instrumental cues generated with ElevenLabs Music through Higgsfield.',
   ]) list.append(element('li', line));
   const links = element('p', undefined, 'sheet-links');
   links.append(external('Direction', repository + '/blob/8e975c89700f0640addad0d477d7d71175931085/direction/scroll-direction.md'), external('Source archive', repository + '/tree/main/archive'));

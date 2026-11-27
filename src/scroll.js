@@ -104,6 +104,29 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     room.index = index;
   }
 
+  function turnable(node, layer, perWidth, hint) {
+    node.classList.add('turnable');
+    layer.hintEl = doc.createElement('span');
+    layer.hintEl.className = 'turn-hint';
+    layer.hintEl.textContent = hint;
+    let grip = null;
+    node.addEventListener('pointerdown', event => {
+      if (event.button) return;
+      grip = { x: event.clientX, turn: layer.turn || 0, id: event.pointerId };
+      node.setPointerCapture(event.pointerId);
+      node.classList.add('turning');
+    });
+    node.addEventListener('pointermove', event => {
+      if (!grip || event.pointerId !== grip.id) return;
+      layer.turn = grip.turn + (event.clientX - grip.x) / Math.max(node.clientWidth, 1) * perWidth;
+      if (Math.abs(event.clientX - grip.x) > 6) layer.touched = true;
+      queue();
+    });
+    const release = () => { grip = null; node.classList.remove('turning'); };
+    node.addEventListener('pointerup', release);
+    node.addEventListener('pointercancel', release);
+  }
+
   function makeLayer(layer, room) {
     let node;
     if (layer.kind === 'exit') return null;
@@ -123,29 +146,14 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       layer.aspect = w / h;
       layer.urls = assets[layer.set].times.map((_, i) => url(`scroll/${layer.set}/${String(i).padStart(3, '0')}.webp`));
       node.dataset.src = layer.urls[0];
-      if (layer.drag) {
-        // Turn Carry's own filmed orbit by hand; the scroll still moves it too.
-        node.classList.add('turnable');
-        layer.hintEl = doc.createElement('span');
-        layer.hintEl.className = 'turn-hint';
-        layer.hintEl.textContent = '← drag to turn →';
-        let grip = null;
-        node.addEventListener('pointerdown', event => {
-          if (event.button) return;
-          grip = { x: event.clientX, turn: layer.turn || 0, id: event.pointerId };
-          node.setPointerCapture(event.pointerId);
-          node.classList.add('turning');
-        });
-        node.addEventListener('pointermove', event => {
-          if (!grip || event.pointerId !== grip.id) return;
-          layer.turn = grip.turn + (event.clientX - grip.x) / Math.max(node.clientWidth, 1) * layer.urls.length * 1.2;
-          if (Math.abs(event.clientX - grip.x) > 6) layer.touched = true;
-          queue();
-        });
-        const release = () => { grip = null; node.classList.remove('turning'); };
-        node.addEventListener('pointerup', release);
-        node.addEventListener('pointercancel', release);
-      }
+      // Turn Carry's own filmed orbit by hand; the scroll still moves it too.
+      if (layer.drag) turnable(node, layer, layer.urls.length * 1.2, '← drag to turn →');
+    } else if (layer.kind === 'model') {
+      // The reconstruction turns a full circle with the scroll, and by hand.
+      node = doc.createElement('canvas');
+      layer.aspect = 1;
+      layer.src = url(layer.file);
+      turnable(node, layer, 360, layer.hint || '← drag to turn →');
     } else if (layer.kind === 'video') {
       node = doc.createElement('video');
       node.muted = true;
@@ -234,6 +242,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
           left: `${left}px`, top: `${top}px`,
           transformOrigin: (([ox, oy]) => `${ox * 100}% ${oy * 100}%`)(layer.origin || [ax, ay]),
         });
+        if (layer.kind === 'model') layer.view?.resize(w, h, Math.min(devicePixelRatio || 1, 2));
       }
     }
     queue();
@@ -248,6 +257,13 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     }
     for (const layer of room.layers) {
       if (layer.kind === 'flip') layer.cache = layer.urls.map(src => { const im = new Image(); im.src = src; return im; });
+      if (layer.kind === 'model' && !layer.view) {
+        import('./sculpture.js').then(({ createSculpture }) => {
+          layer.view = createSculpture(layer.el, layer.src, { onReady: () => { layer.ready = true; queue(); }, onError: () => { layer.failed = true; queue(); } });
+          if (!layer.view) layer.failed = true;
+          measure();
+        }).catch(() => { layer.failed = true; });
+      }
     }
   }
 
@@ -298,6 +314,10 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
         if (layer.turn) layer.turn = clamp(layer.turn, -base, last - base);
         const index = Math.round(base + (layer.turn || 0));
         if (layer.shown !== index) { layer.shown = index; node.src = layer.urls[index]; }
+      }
+      if (layer.kind === 'model') {
+        if (!layer.ready || layer.failed) { node.style.visibility = 'hidden'; layer.hintEl?.classList.remove('shown'); continue; }
+        layer.view.draw(+((layer.yaw ?? 0) + v.f * 360 + (layer.turn || 0)).toFixed(2));
       }
       if (layer.hintEl) layer.hintEl.classList.toggle('shown', v.o > .6 && !layer.touched);
       node.style.transform = `translate3d(${(v.x * W / 100).toFixed(1)}px,${(v.y * H / 100).toFixed(1)}px,0) scale(${v.s.toFixed(4)}) rotate(${v.r.toFixed(2)}deg)`;

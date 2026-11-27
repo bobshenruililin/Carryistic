@@ -3,7 +3,7 @@ import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
-const types = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg', '.woff2': 'font/woff2', '.vtt': 'text/vtt' };
+const types = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.mp4': 'video/mp4', '.mp3': 'audio/mpeg', '.glb': 'model/gltf-binary', '.woff2': 'font/woff2', '.vtt': 'text/vtt' };
 
 async function dataUrl(path) {
   const type = types[extname(path)];
@@ -23,7 +23,8 @@ async function* walk(directory) {
 // the first film. The viewer shows each still from the scroll copy; the three
 // source movies and full-resolution files open online.
 const assets = {};
-for (const group of ['scroll', 'motion', 'film']) {
+// The score stays online only; the sound button hides itself in this edition.
+for (const group of ['scroll', 'motion', 'sculpture', 'film']) {
   try {
     for await (const path of walk(join(dist, group))) assets[relative(dist, path).split('\\').join('/')] = await dataUrl(path);
   } catch (error) {
