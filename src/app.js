@@ -78,6 +78,7 @@ const light = mountLight($('#light'), {
     lit.setAttribute('aria-label', `Enter ${work.title}`);
   },
   onRay: i => score.note(i),
+  onShine: offset => score.effect('shine', offset),
   onEnter(work) {
     score.effect('open');
     score.setWork(work.id);

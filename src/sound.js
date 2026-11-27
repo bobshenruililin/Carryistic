@@ -23,7 +23,7 @@ const FADE = { night: 1.429, gold: 1.429, neon: 1.429, day: .714, studio: 1.429 
 // The version 1 cues sit at −23 LUFS, the version 2 tracks at −18; these gains even them out.
 const CUE_GAIN = 1.5, TRACK_GAIN = .85, LANDING = .55, DUCKED = .12;
 // D major pentatonic from D3, one note per ray, low (night) to high (daylight).
-const PITCHES = [38, 40, 42, 45, 47, 50, 52, 54, 57, 59, 62, 64, 66, 69, 71];
+const PITCHES = [50, 52, 54, 57, 59, 62, 64, 66, 69, 71, 74, 76, 78, 81, 83];
 const storageKey = 'carryistic.sound';
 
 export const chapterOf = room => Object.keys(CHAPTERS).find(name => CHAPTERS[name].includes(room));
@@ -98,20 +98,25 @@ export function createScore(url, slots) {
     }
     return (plucks[i] = buffer);
   }
-  async function sample(file) {
-    if (buffers[file] !== undefined) return buffers[file];
-    buffers[file] = null;
-    try { buffers[file] = await context.decodeAudioData(await (await fetch(url(file))).arrayBuffer()); } catch { buffers[file] = null; }
-    return buffers[file];
+  function sample(file) {
+    if (buffers[file]) return buffers[file];
+    const pending = fetch(url(file)).then(response => {
+      if (!response.ok) throw new Error(`Could not load ${file}`);
+      return response.arrayBuffer();
+    }).then(bytes => context.decodeAudioData(bytes)).catch(() => {
+      delete buffers[file];
+      return null;
+    });
+    return (buffers[file] = pending);
   }
-  function play(buffer, gain = .5) {
-    if (!buffer || !context || !on) return;
+  function play(buffer, gain = .5, offset = 0) {
+    if (!buffer || !context || !on || offset >= buffer.duration) return;
     const source = context.createBufferSource();
     const g = context.createGain();
     g.gain.value = gain;
     source.buffer = buffer;
     source.connect(g).connect(master);
-    source.start();
+    source.start(0, offset);
   }
 
   return {
@@ -129,6 +134,10 @@ export function createScore(url, slots) {
       for (const name of Object.keys(CHAPTERS)) {
         const cue = track(name);
         cue.element.play().then(() => { if (name !== current) cue.element.pause(); }).catch(() => {});
+      }
+      for (const name of ['shine', 'open']) {
+        const slot = slots.sounds[name];
+        if (slot?.ready) sample(slot.file);
       }
       context.resume();
       apply();
@@ -152,10 +161,12 @@ export function createScore(url, slots) {
       if (slot?.ready) sample(slot.file).then(buffer => play(buffer, .55));
       else play(pluck(i), .32);
     },
-    effect(name) {
+    effect(name, offset = 0) {
       const slot = slots.sounds[name];
-      if (!context || !on || !slot?.ready) return;
-      sample(slot.file).then(buffer => play(buffer, .5));
+      if (!context || !on || !slot?.ready) return false;
+      const started = context.currentTime;
+      sample(slot.file).then(buffer => play(buffer, .5, offset + context.currentTime - started));
+      return true;
     },
     duck(flag) { ducked = flag; apply(); },
     pause() { context?.suspend(); },

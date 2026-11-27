@@ -25,14 +25,14 @@ const rgb = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16));
 const towardWhite = (h, t) => `rgb(${rgb(h).map(v => Math.round(v + (255 - v) * t)).join(',')})`;
 const load = src => new Promise((ok, no) => { const im = new Image(); im.decoding = 'async'; im.onload = () => ok(im); im.onerror = no; im.src = src; });
 
-export function mountLight(canvas, { works, url, onLit, onRay, onEnter, onEntered }) {
+export function mountLight(canvas, { works, url, onLit, onRay, onShine, onEnter, onEntered }) {
   const ctx = canvas.getContext('2d');
   const rays = document.createElement('canvas'), rctx = rays.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const W_ = RAYS.map(([id, color], i) => ({ ...works[id], id, color, i }));
   const s = {
     W: 0, H: 0, DPR: 1, O: [0, 0], R: 0, rect: [0, 0, 0], arc: [106, 228],
-    born: 0, visible: false, k: W_.map(() => 0), dim: 0,
+    born: 0, visible: false, k: W_.map(() => 0), dim: 0, shone: false,
     hover: -1, active: -1, tour: -1, tourAt: 0, enter: -1, enterAt: 0, touch: false, frame: 0, assets: null,
   };
 
@@ -100,6 +100,7 @@ export function mountLight(canvas, { works, url, onLit, onRay, onEnter, onEntere
   function frame(now = performance.now()) {
     s.frame = 0;
     if (!s.visible || !s.assets) return;
+    if (!s.born) s.born = now;
     const t = (now - s.born) / 1000;
     const touched = s.enter >= 0 ? s.enter : s.active >= 0 ? s.active : s.hover;
     const target = touched >= 0 ? touched : s.tour;
@@ -116,6 +117,7 @@ export function mountLight(canvas, { works, url, onLit, onRay, onEnter, onEntere
     // the glint that carries the light across, right to left
     const sweep = (t - SWEEP_AT) / SWEEP;
     if (!reduced.matches && sweep > -.05 && sweep < 1.15) {
+      if (!s.shone && sweep >= 0 && s.enter < 0) s.shone = onShine?.(t - SWEEP_AT) === true;
       const deg = s.arc[0] + s.arc[1] * (1 - sweep);
       rctx.globalAlpha = .85 * (1 - ease(clamp((sweep - .9) / .25)));
       rctx.fillStyle = '#fffdf6';
@@ -246,7 +248,7 @@ export function mountLight(canvas, { works, url, onLit, onRay, onEnter, onEntere
     works: W_,
     show({ fresh = false } = {}) {
       s.visible = true;
-      if (fresh || !s.born) s.born = performance.now();
+      if (fresh || !s.born) { s.born = s.assets ? performance.now() : 0; s.shone = false; }
       else s.born = performance.now() - (SWEEP_AT + SWEEP + .8) * 1000;   // back from a work: the rays are already there
       s.enter = -1; s.active = -1; s.hover = -1; s.tour = -1; s.tourAt = performance.now() + 1800;
       layout();
