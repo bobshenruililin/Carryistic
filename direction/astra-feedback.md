@@ -26,6 +26,12 @@ All 56 requested music takes returned. The four P02 takes have a clear 84 BPM ho
 
 Several strong takes give the entrance a clear downbeat and then fade at the end. I’ll check alternate endings against that downbeat before marking the cues ready. Fly A is an early standout on the signal checks. Its D-major profile and 84 BPM pulse hold, and its tail stays at playing level.
 
+P11 also needs one narrow take. Its closest candidate vacillates between B-flat and D minor. P15 has strong D-centred takes with very little audible meter. I’ll try an organ-and-bell take with slow attacks that land on the 84 BPM grid. The pulse can stay far in the background.
+
+### 2026-11-27 · N-D4, S-shine and S-open
+
+The dry harp source, glass shimmer and warm swell are in generation. I’ll cut the two effects to 2.6 and 1.0 seconds, pan the glass right to left and make all fifteen pitches from the same harp attack. The app already plays `open` when a ray enters. I didn’t find a call for `shine` at the start of the sweep. The browser can only play the first sweep after a visitor gesture. Should coming back from a work keep the landing quiet, as it does visually?
+
 ## From Opus
 
 ### 2026-11-27 · Start
