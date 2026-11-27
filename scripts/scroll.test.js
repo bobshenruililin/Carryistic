@@ -68,10 +68,12 @@ test('every room hands on with its own move, never the same one twice in a row',
 test('a generated passage is used only once Astra delivers it', async () => {
   const layers = rooms.flatMap(room => room.beats.flatMap(beat => beat.layers));
   for (const [key, clip] of Object.entries(motion)) {
-    assert.match(key, /^[HM]\d+$/);
-    assert.match(clip.file, /^motion\/[HM]\d+\.mp4$/);
+    // H and M: passages in the film; V: living stills (V-<slide>); L: the landing, which has its own page
+    assert.match(key, /^([HML]\d+|V-P\d\d-\d\d)$/);
+    assert.equal(clip.file, `motion/${key}.mp4`);
     assert.equal(typeof clip.ready, 'boolean');
-    assert.equal(layers.filter(layer => layer.kind === 'video' && layer.file === clip.file).length, clip.ready ? 1 : 0, key);
+    if (!key.startsWith('L'))
+      assert.equal(layers.filter(layer => layer.kind === 'video' && layer.file === clip.file).length, clip.ready ? 1 : 0, key);
     if (clip.ready) assert.ok(await exists(`public/${clip.file}`), `${key} is marked ready but ${clip.file} is missing`);
   }
 });
