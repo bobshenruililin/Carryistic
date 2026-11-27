@@ -121,12 +121,27 @@ const flip = (set, dur, o = {}) => ({
   layers: [{ kind: 'flip', set, size: o.size || { fit: .9 }, sizeP: o.sizeP, keys: [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.06, { o: 1 }], [o.end ?? .96, { f: 1 }], [1, { f: 1 }], ...(o.out === 'none' ? [] : [[1.12, { o: 0 }]])] }],
 });
 
+// Every slide of the post, in one of Carry's own layouts: a band across the field
+// (P04-06, P09-01, P10-08), a column (P13-04, P14-16) or Fly's diagonal (P05-03).
 const strip = (post, dur, lead, o = {}) => ({
   dur, lead,
-  layers: [{ kind: 'strip', ids: slidesOf(post), band: o.band, z: 40, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }],
+  layers: [{ kind: 'strip', ids: slidesOf(post), band: o.band, dir: o.dir, angle: o.angle, z: 40, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }],
 });
 
-const flood = (color, dur) => ({ dur, layers: [{ kind: 'flood', color, z: 50, keys: [[0, { f: 0 }], [1, { f: 1 }]] }] });
+// The move that hands a room to the next one. It overlaps the room's last beat.
+const flood = (color, dur) => ({ dur, lead: dur * .45, layers: [{ kind: 'flood', color, z: 50, keys: [[0, { f: 0 }], [1, { f: 1 }]] }] });
+function exit(type, dur, params = {}) {
+  const keys = [[0, { f: 0 }], [1, { f: 1 }]];
+  const clip = params.clip && motion[params.clip];
+  // A rendered version of the move (Astra's M shots) replaces the code-built one once it is ready.
+  if (clip?.ready) {
+    return { dur, lead: dur * .45, layers: [
+      { kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: { fit: .84 }, z: 30, keys: [[0, { o: 1, f: 0 }], [.92, { f: 1 }], [1, { f: 1 }]] },
+      { kind: 'exit', type: 'cross', keys },
+    ] };
+  }
+  return { dur, lead: dur * .45, layers: [{ kind: 'exit', type, params, keys }] };
+}
 
 // A generated passage Astra renders between two of Carry's frames. Until the
 // clip is delivered and marked ready in motion.json, the straight cut plays:
@@ -137,7 +152,12 @@ function bridge(key, from, to, dur, o = {}) {
   if (clip?.ready) {
     return { dur, lead: o.lead, layers: [{ kind: 'video', file: clip.file, aspect: clip.aspect || 1, ...box, z: 5, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }], [1.1, { o: 0 }]] }] };
   }
-  const fromLayer = { kind: 'img', id: from.id, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [.62, { s: from.zoom || 1.5 }], [.9, { o: 0, s: (from.zoom || 1.5) * 1.06 }]] };
+  const name = `${from.id}@bridge`;
+  if (!to) {
+    // The next room is revealed by the room's exit move; this picture travels toward its landmark until then.
+    return { dur, lead: o.lead, layers: [{ kind: 'img', id: from.id, name, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [1, { s: from.zoom || 1.5 }]] }] };
+  }
+  const fromLayer = { kind: 'img', id: from.id, name, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [.62, { s: from.zoom || 1.5 }], [.9, { o: 0, s: (from.zoom || 1.5) * 1.06 }]] };
   const toLayer = { kind: 'img', id: to.id, crop: to.crop, pos: to.pos, origin: to.at, ...box, z: 6, keys: [[.5, { o: 0, s: to.zoom || 1.4 }], [.86, { o: 1 }], [1, { s: 1 }], [1.1, {}]] };
   return { dur, lead: o.lead, layers: [fromLayer, toLayer] };
 }
@@ -157,7 +177,7 @@ const BOUQUET = 1080;
 
 export const rooms = [
   {
-    id: 'P01', title: 'Dusk til Dawn', ground: '#040406', ink: 'light', handoff: 'cross',
+    id: 'P01', title: 'Dusk til Dawn', ground: '#040406', ink: 'light', handoff: 'shutters',
     beats: [
       // The entrance: the painting, whole, then the same glance in pencil and in the photograph it came from.
       peel([
@@ -169,11 +189,13 @@ export const rooms = [
       show('P01-06', .9, { size: { fit: .88 }, from: 'fade', zoom: [1, 1.05] }),
       cascade(['P01-01', 'P01-03', 'P01-05'], 1.1),
       strip('P01', 1.5, 1.2),
-      bridge('H1', { id: 'P01-04', crop: 1, pos: '50% 0%', at: [.64, .15], zoom: 2.2 }, { id: 'P02-01' }, 1.1),
+      // White flecks of paint, then the BLACKOUT triptych drops in panel by panel.
+      bridge('H1', { id: 'P01-04', crop: 1, pos: '50% 0%', at: [.64, .15], zoom: 2.4 }, null, 1.5),
+      exit('shutters', .95, { clip: 'M3' }),
     ],
   },
   {
-    id: 'P02', title: 'Blackout photographs', ground: '#000000', ink: 'light', handoff: 'cross',
+    id: 'P02', title: 'Blackout photographs', ground: '#000000', ink: 'light', handoff: 'window',
     beats: [
       show('P02-01', .7, { from: 'none', size: { fit: .84 }, zoom: [1, 1.05] }),
       show('P02-06', 1, { size: { cover: 1 }, zoom: [1.08, 1] }),
@@ -189,7 +211,9 @@ export const rooms = [
       cascade(['P02-10', 'P02-11'], .9, { path: 'pair' }),
       strip('P02', 1.7, 1.5),
       show('P02-12', .7, { size: { fit: .84 } }),
-      living('H2', 'P02-13', 1.2, { size: { cover: 1 }, zoom: [1, 1.3], out: 'none' }),
+      living('H2', 'P02-13', 1.4, { size: { cover: 1 }, zoom: [1, 1.3], out: 'none' }),
+      // The film opens in the far window of the empty hall.
+      exit('window', .9, { rect: [.41, .36, .18, .22], scale: 1.4 }),
     ],
   },
   {
@@ -197,24 +221,27 @@ export const rooms = [
     beats: [
       flip('reel', 3.4, { size: { cover: 1 }, sizeP: { fit: 1 }, from: 'none', out: 'none' }),
       strip('P03', 1, 1, { band: [.06, .14] }),
+      exit('cross', .5),
     ],
   },
   {
-    id: 'P13', title: 'Artful and Grateful', ground: '#060201', ink: 'light', handoff: 'cross',
+    id: 'P13', title: 'Artful and Grateful', ground: '#060201', ink: 'light', handoff: 'rise',
     beats: [
       show('P13-02', .9, { from: 'fade', size: { cover: 1 }, zoom: [1.12, 1] }),
       cascade(['P13-01', 'P13-03', 'P13-07'], 1.1),
       show('P13-04', .8, { size: { fit: .86 } }),
       show('P13-05', .9, { size: { cover: 1 }, zoom: [1, 1.08] }),
       cascade(['P13-08', 'P13-09'], .9, { path: 'pair' }),
-      strip('P13', 1.6, 1.4),
+      strip('P13', 1.6, 1.4, { dir: 'v', band: [.84, .1] }),
       // The quiet image: a flame over its reflection, held.
       show('P13-06', 1.1, { from: 'fade', size: { fit: .72 }, out: 'none' }),
-      bridge('H3', { id: 'P13-06', at: [.45, .4], zoom: 1.8 }, { id: 'P15-01' }, 1, { size: { fit: .72 } }),
+      // The flame's light rises into a gold dome.
+      bridge('H3', { id: 'P13-06', at: [.45, .4], zoom: 1.8 }, null, 1.1, { size: { fit: .72 } }),
+      exit('rise', .95),
     ],
   },
   {
-    id: 'P15', title: 'Domus Dei', ground: '#264050', ink: 'light', handoff: 'cross',
+    id: 'P15', title: 'Domus Dei', ground: '#264050', ink: 'light', handoff: 'iris',
     beats: [
       show('P15-01', .9, { from: 'none', size: { fit: .72 }, zoom: [1, 1.6] }),
       show('P15-04', .8, { size: { cover: 1 }, zoom: [1.08, 1] }),
@@ -224,11 +251,13 @@ export const rooms = [
       show('P15-08', .8, { size: { cover: 1 }, zoom: [1.06, 1] }),
       strip('P15', 1.5, 1.3),
       show('P15-07', .8, { size: { fit: .84 } }),
-      bridge('H4', { id: 'P15-07', at: [.5, .26], zoom: 2.6 }, { id: 'P08-04', at: [.62, .44], zoom: 2.6 }, 1.1),
+      // The halo's ring opens on the sculpture's gold rim.
+      bridge('H4', { id: 'P15-07', at: [.5, .26], zoom: 2.6 }, null, 1.2),
+      exit('iris', .85, { on: ['P15-07@bridge', .5, .26], from: 30 }),
     ],
   },
   {
-    id: 'P08', title: 'To Bleed in Liquid Gold', ground: '#940103', ink: 'light', handoff: 'cross',
+    id: 'P08', title: 'To Bleed in Liquid Gold', ground: '#940103', ink: 'light', handoff: 'spin',
     beats: [
       show('P08-04', .9, { from: 'none', size: { fit: .84 } }),
       flip('orbit', 1.5, { size: { fit: .84 } }),
@@ -238,17 +267,20 @@ export const rooms = [
       strip('P08', 1.4, 1.2),
       show('P08-02', .6, { size: { fit: .84 }, out: 'none' }),
       // The circle hands on: the gold rim of the opening becomes a record's red label.
-      bridge('H7', { id: 'P08-04', at: [.62, .44], zoom: 3 }, { id: 'P11-01', at: [.34, .26], zoom: 3 }, 1),
+      bridge('H7', { id: 'P08-04', at: [.62, .44], zoom: 2.4 }, null, 1.1),
+      exit('spin', .95, { on: ['P08-04@bridge', .62, .44] }),
     ],
   },
   {
-    id: 'P11', title: 'Record-store shoot', ground: '#251202', ink: 'light', handoff: 'cross',
+    id: 'P11', title: 'Record-store shoot', ground: '#251202', ink: 'light', handoff: 'flash',
     beats: [
       show('P11-01', .9, { from: 'none', size: { fit: .84 } }),
       flash(['P11-02', 'P11-03', 'P11-04', 'P11-05', 'P11-07', 'P11-08', 'P11-09', 'P11-11', 'P11-12', 'P11-13', 'P11-14'], 2.8),
       show('P11-10', .9, { size: { fit: .86 } }),
       strip('P11', 1.8, 1.6),
       show('P11-06', .8, { size: { fit: .84 }, out: 'none' }),
+      // A camera flash, as in the shoot.
+      exit('flash', .55),
     ],
   },
   {
@@ -260,12 +292,14 @@ export const rooms = [
       show('P09-10', .6, { size: { fit: .84 } }),
       show('P09-13', .6, { size: { fit: .84 }, from: 'fade' }),
       show('P09-14', .7, { size: { fit: .86 } }),
-      strip('P09', 1.6, 1.5),
+      strip('P09', 1.2, .3, { band: [.41, .18] }),
       show('P09-01', .9, { size: { fit: .84 }, out: 'none' }),
+      // The same template, violet into red.
+      exit('cross', .7),
     ],
   },
   {
-    id: 'P10', title: 'Record-store portraits', ground: '#0007ba', ink: 'light', handoff: 'flood',
+    id: 'P10', title: 'Record-store portraits', ground: '#0007ba', ink: 'light', handoff: 'star',
     beats: [
       show('P10-08', .7, { from: 'none', size: { fit: .84 } }),
       // The held cap, then its echoes arrive left to right.
@@ -274,8 +308,10 @@ export const rooms = [
       show('P10-05', .8, { size: { fit: .84 } }),
       flash(['P10-06', 'P10-11'], .8),
       cascade(['P10-10', 'P10-12'], .8, { path: 'pair' }),
-      strip('P10', 1.6, 1.5),
-      flood('#0a80da', .8),
+      strip('P10', 1.2, .3, { band: [.41, .18] }),
+      // The red starburst spins open on Fly's sky.
+      show('P10-08', 1.1, { size: { fit: .84 }, name: 'P10-08@end', out: 'none' }),
+      exit('star', 1, { on: ['P10-08@end', .72, .27] }),
     ],
   },
   {
@@ -292,12 +328,12 @@ export const rooms = [
       living('H5', 'P05-01', .9, { from: 'none', size: { fit: .84 } }),
       show('P05-01', 1, { from: 'fade', size: { cover: 1 }, zoom: [1, 1.1] }),
       cascade(['P05-04', 'P05-05', 'P05-06'], 1.3, { path: 'diag' }),
-      strip('P05', 1.2, 1),
-      flood('#922626', .8),
+      strip('P05', 1.3, .3, { dir: 'd', band: [0, .16] }),
+      flood('#922626', .9),
     ],
   },
   {
-    id: 'P06', title: 'DC Chronicles', ground: '#922626', ink: 'light', handoff: 'flood',
+    id: 'P06', title: 'DC Chronicles', ground: '#922626', ink: 'light', handoff: 'flip',
     beats: [
       show('P06-01', .9, { size: { fit: .84 } }),
       cascade(['P06-03', 'P06-04', 'P06-05'], 1.1),
@@ -307,37 +343,40 @@ export const rooms = [
       show('P06-08', 1, { size: { fit: .84 }, rotate: [0, 180, .25, .8] }),
       cascade(['P06-09', 'P06-10', 'P06-11'], 1.1, { path: 'steps' }),
       strip('P06', 1.5, 1.3),
-      show('P06-02', .7, { size: { fit: .84 }, out: 'none' }),
-      flood('#caeaff', .7),
+      show('P06-02', .9, { size: { fit: .84 }, out: 'none' }),
+      // The page turns over, as the bench turns between Carry's views.
+      exit('flip', .9, { clip: 'M2' }),
     ],
   },
   {
-    id: 'P04', title: 'Streets of New York', ground: '#caeaff', ink: 'dark', handoff: 'flood',
+    id: 'P04', title: 'Streets of New York', ground: '#caeaff', ink: 'dark', handoff: 'slices',
     beats: [
-      show('P04-02', .9, { from: 'fade', size: { fit: .84 } }),
+      show('P04-02', .9, { from: 'none', size: { fit: .84 } }),
       cascade(['P04-01', 'P04-03', 'P04-04'], 1.1),
       show('P04-05', .8, { size: { fit: .84 } }),
-      show('P04-06', .7, { size: { fit: .84 } }),
       cascade(['P04-07', 'P04-08'], .9, { path: 'pair' }),
       cascade(['P04-09', 'P04-10'], .8, { path: 'pair' }),
-      strip('P04', 1.5, 1.4),
-      flood('#d0bda1', .7),
+      strip('P04', 1.2, .3, { band: [.41, .18] }),
+      show('P04-06', .9, { size: { fit: .84 }, out: 'none' }),
+      // Her gallery strip becomes the cut: bands slide in from alternate sides.
+      exit('slices', .95, { bands: 7 }),
     ],
   },
   {
-    id: 'P14', title: 'Italy in motion', ground: '#d0bda1', ink: 'dark', handoff: 'flood',
+    id: 'P14', title: 'Italy in motion', ground: '#d0bda1', ink: 'dark', handoff: 'drain',
     beats: [
-      show('P14-16', 1, { size: { fit: .84 } }),
+      show('P14-16', 1, { from: 'none', size: { fit: .84 } }),
       show('P14-01', .7, { size: { fit: .84 } }),
       flash(['P14-02', 'P14-03', 'P14-04', 'P14-05', 'P14-06', 'P14-07', 'P14-08', 'P14-09', 'P14-10', 'P14-12', 'P14-13', 'P14-15', 'P14-17', 'P14-18'], 3.4),
       show('P14-11', .9, { size: { fit: .84 }, origin: [.47, .67], zoom: [1, 1.9] }),
-      strip('P14', 2, 1.8),
-      show('P14-14', .8, { size: { fit: .84 }, out: 'none' }),
-      flood('#ffffff', .7),
+      strip('P14', 2, 1.8, { dir: 'v', band: [.84, .1] }),
+      show('P14-14', 1, { size: { fit: .84 }, out: 'none' }),
+      // Colour drains to graphite and paper.
+      exit('drain', 1),
     ],
   },
   {
-    id: 'P12', title: 'First Weeks at RISD', ground: '#ffffff', ink: 'dark', handoff: 'flood',
+    id: 'P12', title: 'First Weeks at RISD', ground: '#ffffff', ink: 'dark', handoff: 'unfold',
     beats: [
       show('P12-03', .9, { from: 'fade', size: { fit: .84 } }),
       cascade(['P12-01', 'P12-02'], .9, { path: 'pair' }),
@@ -345,14 +384,15 @@ export const rooms = [
       cascade(['P12-05', 'P12-06'], .8, { path: 'pair' }),
       show('P12-08', .8, { size: { cover: 1 }, zoom: [1, 1.06] }),
       strip('P12', 1.4, 1.2),
-      show('P12-07', .8, { size: { fit: .84 }, out: 'none' }),
-      flood('#8e8d8b', .7),
+      show('P12-07', .9, { size: { fit: .84 }, out: 'none' }),
+      // A pencil line opens into a page.
+      exit('unfold', .95, { clip: 'M1' }),
     ],
   },
   {
     id: 'P07', title: 'Proud Daddy', ground: '#8e8d8b', ink: 'light', handoff: 'end',
     beats: [
-      show('P07-04', .8, { from: 'fade', size: { fit: .86 } }),
+      show('P07-04', .8, { from: 'none', size: { fit: .86 } }),
       flash(['P07-05', 'P07-06', 'P07-01'], 1.8, { size: { fit: .9 } }),
       cascade(['P07-03', 'P07-07', 'P07-08', 'P07-09'], 1.2),
       show('P07-02', .7, { size: { fit: .88 } }),

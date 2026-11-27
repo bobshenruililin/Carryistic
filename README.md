@@ -8,7 +8,7 @@ The portfolio is one continuous scroll through Carry’s 15 posts, and the scrol
 
 - **The entrance** is *Dusk til Dawn*, whole, on black. Scrolling moves into the painted eye, peels the oil back to its pencil line and the photograph it came from, then steps back to the canvas on the wall.
 - **The order follows the light** in her pictures: nights with friends, candlelit gold, a neon record store, daylight on the waterfront in *Fly*, travel, and finally the studio. It ends on Carry beside *Proud Daddy*.
-- **One colour runs through the page.** Each work’s ground is sampled from one of her slides. Each handoff is an object or colour that appears in both works: a gold halo becomes the sculpture’s gold rim, and a violet starburst becomes the red one on the same template. [Watch the two-minute walkthrough](direction/scroll-walkthrough.mp4) · [Direction and storyboard](direction/scroll-direction.md)
+- **One colour runs through the page.** Each work’s ground is sampled from one of her slides. Each handoff is a different move taken from her own pictures, and no move repeats back to back. The BLACKOUT triptych drops in as three panels. The halo irises open on the sculpture’s gold rim. The sculpture spins away like a record. Her red starburst opens onto the sky in *Fly*. [Watch the walkthrough](direction/scroll-walkthrough.mp4) · [Direction, storyboard and the twelve moves](direction/scroll-direction.md)
 
 Every one of the 153 published positions appears large in its room and again in a strip of that post. Click any slide to open it with its credit, Instagram post and original file, then use the arrow keys to move through all 153. Each position has its own link, such as `#work-P07-11`. Credits, the first film (*Afterimage*), and a notebook for Carry wait quietly at the end. [Originals](archive/artworks) · [36-page atlas](archive/Reference%20atlas.pdf) · [Slide index](archive/Image%20index.csv)
 
@@ -18,7 +18,13 @@ Let Carry scroll at her own pace. **Leave a note** at the end turns her words in
 
 ## Generated passages
 
-Seven Higgsfield shots can deepen the handoffs. Each one starts and lands on Carry’s own frames, or moves inside a single frame without changing her figures. Until Astra delivers a shot and marks it ready in `src/motion.json`, its straight cut plays, so the site never waits on generation. [Requests, frames and encoding](direction/astra-requests.md) · [Earlier Seedance bead test](film/experiments)
+The Higgsfield requests are rendered natively in 4K:
+
+- seven bridges and living stills, each starting and landing on Carry’s own frames;
+- three rendered versions of the code-built moves;
+- five experiments: her footage upscaled to 4K, the sculpture in 3D, a score that follows the light, and the recurring circle as one 4K HDR shot.
+
+Until Astra delivers a clip and marks it ready in `src/motion.json`, the code-built move plays, so the site never waits on generation. [Requests, frames and encoding](direction/astra-requests.md) · [Earlier Seedance bead test](film/experiments)
 
 ## Working with Opus
 

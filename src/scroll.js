@@ -12,9 +12,14 @@ const DEFAULTS = { o: 1, s: 1, x: 0, y: 0, r: 0, f: 0, c: [0, 0, 0, 0] };
 function buildRoom(room) {
   let cursor = 0;
   const layers = [];
+  let previous = [];
   for (const beat of room.beats) {
     const start = cursor - (beat.lead || 0);
-    for (const layer of beat.layers) layers.push({ ...layer, start, dur: beat.dur });
+    const placed = beat.layers.map(layer => ({ ...layer, start, dur: beat.dur }));
+    // The picture a room ends on stays whole until its exit move has finished.
+    if (beat.layers.some(layer => layer.kind === 'exit' || layer.kind === 'flood')) for (const layer of previous) layer.holdToEnd = true;
+    layers.push(...placed);
+    previous = placed;
     cursor = start + beat.dur;
   }
   const length = cursor;
@@ -25,6 +30,8 @@ function buildRoom(room) {
       previous = filled;
       return [(layer.start + t * layer.dur) / length, filled];
     });
+    const last = layer.keys.at(-1);
+    if (layer.holdToEnd && last[1].o > 0 && last[0] < 1) layer.keys.push([1, { ...last[1] }]);
   }
   return { ...room, length, layers };
 }
@@ -84,8 +91,9 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     el.hidden = true;
     room.el = el;
     for (const layer of room.layers) {
+      if (layer.kind === 'exit' || layer.kind === 'flood') room.exit = layer;
       layer.el = makeLayer(layer, room);
-      el.append(layer.el);
+      if (layer.el) el.append(layer.el);
     }
     stage.append(el);
     room.index = index;
@@ -93,6 +101,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
 
   function makeLayer(layer, room) {
     let node;
+    if (layer.kind === 'exit') return null;
     if (layer.kind === 'img') {
       node = doc.createElement('img');
       node.alt = '';
@@ -118,10 +127,17 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       layer.aspect ??= 1;
     } else if (layer.kind === 'strip') {
       node = doc.createElement('div');
-      node.className = 'strip';
+      node.className = `strip strip-${layer.dir || 'h'}`;
       const [top, height] = layer.band || [.755, .15];
-      node.style.top = `${top * 100}%`;
-      node.style.height = `${height * 100}%`;
+      if (layer.dir === 'v') {
+        node.style.left = `${top * 100}%`;
+        node.style.width = `${height * 100}%`;
+      } else if (layer.dir === 'd') {
+        node.style.height = `${height * 100}vmin`;
+      } else {
+        node.style.top = `${top * 100}%`;
+        node.style.height = `${height * 100}%`;
+      }
       for (const id of layer.ids) {
         const button = doc.createElement('button');
         button.type = 'button';
@@ -156,7 +172,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     for (const room of rooms) {
       const placed = new Map();
       for (const layer of room.layers) {
-        if (layer.kind === 'flood' || layer.kind === 'strip') continue;
+        if (layer.kind === 'flood' || layer.kind === 'strip' || layer.kind === 'exit') continue;
         const { W, H } = state;
         const portrait = W < H * .9;
         const size = (portrait && layer.sizeP) || layer.size || { fit: .84 };
@@ -181,6 +197,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
           top = base.top + v * base.h - ay * h;
         }
         placed.set(layer.name || layer.id, { w, h, left, top });
+        room.placed = placed;
         Object.assign(layer.el.style, {
           width: `${w}px`, height: `${h}px`,
           left: `${left}px`, top: `${top}px`,
@@ -208,17 +225,23 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     const { W, H } = state;
     room.el.hidden = false;
     room.el.classList.toggle('under', under);
-    if (room.handoff === 'cross' && !under) room.el.style.opacity = String(1 - smooth(clamp((p - .9) / .1)));
-    else room.el.style.opacity = '';
     for (const layer of room.layers) {
+      if (!layer.el) continue;
       const v = sample(layer.keys, p, reduced);
       const node = layer.el;
       if (!v || v.o <= .001) { node.style.visibility = 'hidden'; continue; }
       node.style.visibility = 'visible';
       node.style.opacity = v.o.toFixed(3);
       if (layer.kind === 'strip') {
-        const width = node.scrollWidth;
-        node.style.transform = `translate3d(${(W - v.f * (W + width)).toFixed(1)}px,0,0)`;
+        if (layer.dir === 'v') {
+          node.style.transform = `translate3d(0,${(H - v.f * (H + node.scrollHeight)).toFixed(1)}px,0)`;
+        } else if (layer.dir === 'd') {
+          // Along Fly's diagonal: top left to bottom right.
+          const D = Math.hypot(W, H);
+          node.style.transform = `translate(${W / 2}px,${H / 2}px) rotate(${layer.angle ?? 32}deg) translate(${(D / 2 - v.f * (D + node.scrollWidth)).toFixed(1)}px,-50%)`;
+        } else {
+          node.style.transform = `translate3d(${(W - v.f * (W + node.scrollWidth)).toFixed(1)}px,0,0)`;
+        }
         continue;
       }
       if (layer.kind === 'flood') {
@@ -276,17 +299,167 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     const room = rooms[index];
     const next = rooms[index + 1];
     load(room); load(next); load(rooms[index + 2]);
-    const showNext = next && p > .86;
+    const exit = room.exit ? sample(room.exit.keys, p, false) : null;
+    const f = !room.exit ? 0 : exit ? exit.f : (p >= room.exit.keys.at(-1)[0] ? 1 : 0);
+    const showNext = next && f > 0;
     for (const other of rooms) {
       if (other !== room && !(showNext && other === next)) other.el.hidden = true;
     }
     paint(room, p, false);
     if (showNext) paint(next, 0, true);
+    handoff(room, showNext ? next : null, f);
     if (state.active !== index) {
       state.active = index;
       onRoom?.(room, index);
     }
     stage.style.setProperty('--progress', p.toFixed(4));
+  }
+
+  // Each handoff reveals the next room through a shape or move from Carry's own work.
+  const flashlight = doc.createElement('div');
+  flashlight.className = 'flashlight';
+  stage.append(flashlight);
+  const IRREGULAR = [1, .8, 1.12, .9, 1.04, .76, 1.14, .86, .97, 1.02];
+  const rect = (x, y, w, h) => `M${x.toFixed(1)} ${y.toFixed(1)}h${w.toFixed(1)}v${h.toFixed(1)}h${(-w).toFixed(1)}Z`;
+  const circle = (cx, cy, r) => `M${(cx - r).toFixed(1)} ${cy.toFixed(1)}a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0Z`;
+  function star(cx, cy, R, turn) {
+    const points = [];
+    for (let i = 0; i < 20; i++) {
+      const r = i % 2 ? R * .44 : R * IRREGULAR[i / 2];
+      const a = turn + i * Math.PI / 10 - Math.PI / 2;
+      points.push(`${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`);
+    }
+    return `M${points.join('L')}Z`;
+  }
+  function point(room, params = {}) {
+    const { W, H } = state;
+    if (params.on && room.placed?.get(params.on[0])) {
+      const box = room.placed.get(params.on[0]);
+      return [box.left + params.on[1] * box.w, box.top + params.on[2] * box.h];
+    }
+    const [x, y] = params.at || [.5, .5];
+    return [x * W, y * H];
+  }
+  function clear(r) {
+    if (!r) return;
+    Object.assign(r.el.style, { opacity: '', clipPath: '', transform: '', transformOrigin: '', filter: '', maskImage: '', webkitMaskImage: '', zIndex: '' });
+  }
+  function handoff(room, next, f) {
+    for (const r of rooms) if (r === room || r === next) clear(r);
+    flashlight.style.opacity = '0';
+    stage.style.background = room.ground;
+    if (!next || f <= 0) return;
+    const { W, H } = state;
+    const out = room.el.style, inn = next.el.style;
+    const e = smooth(f);
+    let type = room.exit.kind === 'flood' ? 'flood' : room.exit.type;
+    if (reducedQuery.matches && type !== 'flood') type = 'cross';
+    const params = room.exit.params || {};
+    const on = top => { inn.zIndex = top ? '3' : '0'; out.zIndex = '2'; };
+    switch (type) {
+      case 'flood':
+        on(false);
+        break;
+      case 'cross':
+        on(false); out.opacity = String(1 - e);
+        break;
+      case 'shutters': {
+        // The three panels of the BLACKOUT triptych (P02-01), split at its own gutters, drop in turn.
+        on(true);
+        const cuts = [0, .433, .693, 1];
+        let path = '';
+        for (let k = 0; k < 3; k++) {
+          const drop = smooth(clamp((f - k * .18) / .64)) * H;
+          if (drop > .5) path += rect(cuts[k] * W, 0, (cuts[k + 1] - cuts[k]) * W + 1, drop);
+        }
+        inn.clipPath = path ? `path('${path}')` : 'inset(50%)';
+        break;
+      }
+      case 'window': {
+        // An inset in the outgoing picture grows until it is the whole page.
+        on(true);
+        const [x, y, w, h] = params.rect || [.38, .32, .24, .3];
+        inn.clipPath = `path('${rect(mix(x * W, 0, e), mix(y * H, 0, e), mix(w * W, W, e), mix(h * H, H, e))}')`;
+        inn.transform = `scale(${mix(params.scale ?? 1.25, 1, e).toFixed(4)})`;
+        inn.transformOrigin = `${(x + w / 2) * 100}% ${(y + h / 2) * 100}%`;
+        break;
+      }
+      case 'rise': {
+        on(true);
+        const edge = mix(-25, 105, e);
+        const mask = `linear-gradient(to top, #000 ${edge.toFixed(1)}%, transparent ${(edge + 22).toFixed(1)}%)`;
+        inn.maskImage = mask; inn.webkitMaskImage = mask;
+        break;
+      }
+      case 'iris': {
+        on(true);
+        const [cx, cy] = point(room, params);
+        const r = mix(params.from ?? 0, Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)) + 2, e);
+        inn.clipPath = `path('${circle(cx, cy, Math.max(r, .1))}')`;
+        break;
+      }
+      case 'spin': {
+        // The outgoing picture turns like a record and closes into its centre.
+        on(false);
+        const [cx, cy] = point(room, params);
+        const R = Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy));
+        out.transformOrigin = `${cx}px ${cy}px`;
+        out.transform = `rotate(${(e * (params.turn ?? 300)).toFixed(2)}deg)`;
+        out.clipPath = `path('${circle(cx, cy, Math.max(mix(R, 0, e), .1))}')`;
+        break;
+      }
+      case 'flash': {
+        on(f >= .5);
+        if (f < .5) inn.opacity = '0';
+        flashlight.style.opacity = String(Math.max(0, 1 - Math.abs(f - .5) * 2.6).toFixed(3));
+        break;
+      }
+      case 'star': {
+        // Carry's starburst (P09-01, P10-08) spins open on the next room.
+        on(true);
+        const [cx, cy] = point(room, params);
+        const R = mix(0, Math.hypot(W, H) * 1.35, smooth(clamp(f * 1.08)));
+        inn.clipPath = `path('${star(cx, cy, Math.max(R, .1), e * Math.PI * .9)}')`;
+        break;
+      }
+      case 'flip': {
+        // The page turns over like the bench in P06-08.
+        stage.style.background = next.ground;
+        const persp = `perspective(${Math.max(W, H) * 1.6}px)`;
+        if (f < .5) { on(false); inn.opacity = '0'; out.transform = `${persp} rotateY(${(e * 180).toFixed(2)}deg)`; }
+        else { on(true); out.opacity = '0'; inn.transform = `${persp} rotateY(${((e - 1) * 180).toFixed(2)}deg)`; }
+        break;
+      }
+      case 'slices': {
+        // Horizontal bands slide in from alternate sides, like the gallery strip in P04-06.
+        on(true);
+        const n = params.bands || 6;
+        let path = '';
+        for (let k = 0; k < n; k++) {
+          const w = smooth(clamp((f - k * .06) / .7)) * W;
+          const y = k * H / n;
+          if (w > .5) path += rect(k % 2 ? W - w : 0, y, w, H / n + 1);
+        }
+        inn.clipPath = path ? `path('${path}')` : 'inset(50%)';
+        break;
+      }
+      case 'drain': {
+        on(false);
+        out.filter = `grayscale(${smooth(clamp(f / .55)).toFixed(3)}) brightness(${mix(1, 1.9, smooth(clamp((f - .35) / .65))).toFixed(3)})`;
+        out.opacity = String(1 - smooth(clamp((f - .55) / .45)));
+        break;
+      }
+      case 'unfold': {
+        // A pencil line opens into a page.
+        on(true);
+        const a = smooth(clamp(f / .42)), b = smooth(clamp((f - .38) / .62));
+        const w = a * W, h = Math.max(2, b * H);
+        inn.clipPath = `path('${rect((W - w) / 2, (H - h) / 2, w, h)}')`;
+        break;
+      }
+      default:
+        on(false); out.opacity = String(1 - e);
+    }
   }
 
   function queue() {

@@ -44,23 +44,26 @@ test('every still, thumbnail and flipbook frame the scroll asks for is on disk',
   }
 });
 
-test('rooms change ground through a flood or a crossfade, and the last one ends the film', () => {
+test('every room hands on with its own move, never the same one twice in a row', () => {
+  const moves = ['cross', 'flood', 'shutters', 'window', 'rise', 'iris', 'spin', 'flash', 'star', 'flip', 'slices', 'drain', 'unfold'];
   for (const [i, room] of rooms.entries()) {
-    const last = room.beats.at(-1).layers;
+    const layers = room.beats.flatMap(beat => beat.layers);
     if (i === rooms.length - 1) { assert.equal(room.handoff, 'end'); continue; }
-    if (room.handoff === 'flood') {
-      const flood = last.find(layer => layer.kind === 'flood');
-      assert.equal(flood?.color, rooms[i + 1].ground, `${room.id} floods into ${rooms[i + 1].id}`);
-    } else {
-      assert.equal(room.handoff, 'cross', room.id);
-    }
+    const exit = layers.find(layer => layer.kind === 'exit' || layer.kind === 'flood');
+    assert.ok(exit, `${room.id} has no exit beat`);
+    assert.equal(exit.kind === 'flood' ? 'flood' : exit.type, room.handoff, room.id);
+    assert.ok(moves.includes(room.handoff), room.handoff);
+    if (exit.kind === 'flood') assert.equal(exit.color, rooms[i + 1].ground, `${room.id} floods into ${rooms[i + 1].id}`);
+    if (i) assert.notEqual(room.handoff, rooms[i - 1].handoff, `${rooms[i - 1].id} and ${room.id} use the same move`);
   }
+  const used = rooms.slice(0, -1).map(room => room.handoff);
+  assert.ok(new Set(used).size >= 12, 'at least twelve different moves across fourteen handoffs');
 });
 
 test('a generated passage is used only once Astra delivers it', async () => {
   for (const [key, clip] of Object.entries(motion)) {
-    assert.match(key, /^H\d+$/);
-    assert.match(clip.file, /^motion\/H\d+\.mp4$/);
+    assert.match(key, /^[HM]\d+$/);
+    assert.match(clip.file, /^motion\/[HM]\d+\.mp4$/);
     assert.equal(typeof clip.ready, 'boolean');
     if (clip.ready) assert.ok(await exists(`public/${clip.file}`), `${key} is marked ready but ${clip.file} is missing`);
   }

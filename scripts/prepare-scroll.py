@@ -114,6 +114,11 @@ frames_for_requests = {
     'H5-reference.jpg': square('P05-02'),
     'H6-start.jpg': square('P15-06'),
     'H7-end.jpg': square('P11-01'),
+    'E4-end.jpg': square('P07-01', top=1008),
+    'M1-start.jpg': square('P12-07'),
+    'M1-end.jpg': square('P07-04'),
+    'M2-start.jpg': square('P06-02'),
+    'M2-end.jpg': square('P04-02'),
 }
 for name, image in frames_for_requests.items():
     image.save(requests / name, 'JPEG', quality=92)

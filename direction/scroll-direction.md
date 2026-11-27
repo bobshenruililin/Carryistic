@@ -38,7 +38,30 @@ Every room uses the same small vocabulary. That shared vocabulary is what makes 
 | **Layer** | The scroll peels photograph, line and paint apart. | P01-09/08/02, P07-04/05/01, P12 |
 | **Strip** | Every slide in the post crosses the ground as one horizontal band, so all 153 positions are in the scroll. | P04-06, P09-01, P10-08 |
 
-The transition between rooms is also hers. The sampled color grows as squares along the *Fly* diagonal, small to large, until it fills the screen (P05-03).
+## Fourteen handoffs, twelve moves, all hers
+
+The director asked for a page that never repeats itself, with its most impressive moments at the start, the peak and the end, since those are what people remember. Each handoff is a different move, and every move comes from something Carry made:
+
+| Handoff | Move | Where the move comes from |
+| --- | --- | --- |
+| *Dusk til Dawn* → *Blackout* | **Shutters.** Three panels drop in turn. | The vertical panels of the BLACKOUT triptych, split at its own gutters (P02-01) |
+| *Blackout* → *The Blackout Awaits* | **Window.** The film opens in the hall’s far window and grows. | Her insets on flat fields (P04-05, P09-13) |
+| *The Blackout Awaits* → *Artful and Grateful* | **Fade through black.** A breath after the reel’s own end card. | Her reel ends on black |
+| *Artful and Grateful* → *Domus Dei* | **Rise.** The flame’s light climbs the screen into the gold dome. | The flame over its reflection (P13-06) |
+| *Domus Dei* → *To Bleed in Liquid Gold* | **Iris.** The halo’s ring opens on the sculpture’s gold rim. | The halo (P15-07) and the rim (P08-04) |
+| *To Bleed in Liquid Gold* → *Record-store shoot* | **Spin.** The sculpture turns like a record and closes into the label. | The records held over the face (P11-01) |
+| *Record-store shoot* → *Graphic pose studies* | **Flash.** | The flash-lit shoot |
+| *Graphic pose studies* → *Record-store portraits* | **Template crossfade.** Violet starburst into red. | The same layout in two colours (P09-01, P10-08) |
+| *Record-store portraits* → *Fly* | **Starburst.** The red star spins open on the sky. | Her starburst (P10-08) |
+| *Fly* → *DC Chronicles* | **Flood.** Squares grow down the diagonal. | The swatch card in *Fly* (P05-03) |
+| *DC Chronicles* → *Streets of New York* | **Flip.** The page turns over like a card. | The bench flipping between views (P06-08) |
+| *Streets of New York* → *Italy in motion* | **Slices.** Bands slide in from alternate sides. | Her gallery strip (P04-06) |
+| *Italy in motion* → *First Weeks at RISD* | **Drain.** Colour runs out to graphite and paper. | Marble to pencil (P14-14 → P12-03) |
+| *First Weeks at RISD* → *Proud Daddy* | **Unfold.** A pencil line opens into a page. | The taped sheet on the light table (P12-07) |
+
+The strips vary in the same way. Some are a band across the colour field (P04-06, P09-01, P10-08). Some are a column (P13-04, P14-16). In *Fly*, the strip runs down her diagonal.
+
+The start is the painting, the triptych dropping in, the film opening in the hall’s window, and the mirror-hat portrait, all within the first two minutes of scrolling. The peak runs from the halo through the spin and the starburst into daylight on the waterfront. The end is the ghost on the linen, Carry beside her painting, and her name.
 
 ## The order: dusk to night to gold to neon to day to the studio
 

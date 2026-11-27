@@ -1,62 +1,232 @@
 {
-  "contract": "Render each shot, encode it with the command in direction/astra-requests.md, save it as public/<output>, set ready to true for its key in src/motion.json, run npm test, and log the take in film/requests/ledger.csv. The scroll uses a clip only when ready is true; until then the straight cut plays.",
+  "contract": "Render each shot natively in 4K, encode a 1440 x 1440 web copy with the command in direction/astra-requests.md, save it as public/<output>, set ready to true for its key in src/motion.json, run npm test, and log the take in film/requests/ledger.csv. The scroll uses a clip only when ready is true; until then its straight cut or code-built move plays.",
   "defaults": {
     "model": "seedance_2_5",
     "mode": "omni_reference",
+    "resolution": "4k",
+    "bitrate_mode": "high",
     "aspect_ratio": "1:1",
     "generate_audio": false,
-    "explore": { "draft": true, "note": "480p drafts first. Finalize the chosen draft with draft_job_id at 4k for the master." },
-    "cheaper_alternative": "magi_2 (1080p, first and last frame) for a second opinion on any shot that fails as a draft"
+    "takes": "Render two or three 4K takes per shot and keep the best; no drafts.",
+    "second_opinion": "kling4_0 image-to-video at 4k with the same start_image and end_image, for any shot Seedance cannot land"
   },
   "shots": [
     {
-      "id": "H1", "where": "End of room 1, Dusk til Dawn → Blackout photographs", "output": "motion/H1.mp4",
-      "start_image": "film/requests/H1-start.jpg", "end_image": "film/requests/H1-end.jpg", "duration": 5,
+      "id": "H1",
+      "where": "End of room 1, Dusk til Dawn → Blackout photographs",
+      "output": "motion/H1.mp4",
+      "start_image": "film/requests/H1-start.jpg",
+      "end_image": "film/requests/H1-end.jpg",
+      "duration": 5,
       "prompt": "A five-second continuous shot that begins exactly on this oil painting: a black canvas with white paint flecks above a blue and orange painted head. The camera drifts slowly toward the white flecks at the upper right. One by one the flecks catch light and glint like reflections from a mirror ball while the painted head recedes into the dark. The glints spread across the black until the frame settles exactly on the final image: a black-and-white triptych of mirrored cowboy hats under the glowing word BLACKOUT. Keep the painted brushwork intact in the first second and the lettering BLACKOUT exact in the last second. No new faces, no figures appearing in the black, no other text, no strobing. Silent.",
       "protect": "The painted head and flecks in the first second; the BLACKOUT lettering in the last second",
       "discard_if": "The flecks rearrange before they glint, a face appears in the black, or the letters warp"
     },
     {
-      "id": "H2", "where": "Last image of room 2, Blackout photographs", "output": "motion/H2.mp4",
-      "start_image": "film/requests/H2-start.jpg", "end_image": null, "duration": 5,
+      "id": "H2",
+      "where": "Last image of room 2, Blackout photographs",
+      "output": "motion/H2.mp4",
+      "start_image": "film/requests/H2-start.jpg",
+      "end_image": null,
+      "duration": 5,
       "prompt": "A slow, steady dolly forward into this black-and-white photograph of an empty hall with tall windows and a polished floor. One small figure stands far away in the middle of the floor and stays completely still. Reflections on the floor shift a little as the camera moves. The window grid stays straight. The camera stops well before the figure. No new people, no text. Silent.",
       "protect": "The lone figure, small and unmoving; the straight window grid",
       "discard_if": "The figure moves, a second person appears, or the window grid bends"
     },
     {
-      "id": "H3", "where": "End of room 4, Artful and Grateful → Domus Dei", "output": "motion/H3.mp4",
-      "start_image": "film/requests/H3-start.jpg", "end_image": "film/requests/H3-end.jpg", "duration": 5,
+      "id": "H3",
+      "where": "End of room 4, Artful and Grateful → Domus Dei",
+      "output": "motion/H3.mp4",
+      "start_image": "film/requests/H3-start.jpg",
+      "end_image": "film/requests/H3-end.jpg",
+      "duration": 5,
       "prompt": "Begins exactly on this night photograph of a flame burning above its soft reflection. The flame rises and flickers up out of the top of the frame. As the camera tilts up, its warm light settles on the gold tesserae of a dark church dome, and the shot lands exactly on the final image: a gilded mosaic dome interior in deep shadow with a small window of light. Keep the flame's reflection unchanged for the first second. No candles, no lamps, no people, no text. Silent.",
       "protect": "The flame and its reflection in the first second; the dome's architecture in the last second",
       "discard_if": "The flame becomes a candle or a lamp, a figure appears, or the dome's arches warp"
     },
     {
-      "id": "H4", "where": "End of room 5, Domus Dei → To Bleed in Liquid Gold", "output": "motion/H4.mp4",
-      "start_image": "film/requests/H4-start.jpg", "end_image": "film/requests/H4-end.jpg", "duration": 4,
+      "id": "H4",
+      "where": "End of room 5, Domus Dei → To Bleed in Liquid Gold",
+      "output": "motion/H4.mp4",
+      "start_image": "film/requests/H4-start.jpg",
+      "end_image": "film/requests/H4-end.jpg",
+      "duration": 4,
       "prompt": "Begins on this fresco: a starry blue vault with a glowing gold medallion that holds a painted face. The camera pushes slowly into the medallion's gold ring, keeping the ring centred and the same size on screen. As the push continues, the fresco gives way to a handmade red sculpture with torn gold leaf, and the ring becomes the gold-leafed rim of an opening in the sculpture, landing exactly on the final image. The painted face does not morph into anything; it passes out of frame with the push. Keep the gold leaf edges and the red surface. No people, no text. Silent.",
       "protect": "The ring's position and size on screen; the gold leaf edges of the landing frame",
       "discard_if": "The medallion's face morphs into the sculpture, the rim changes shape, or the ring jumps position"
     },
     {
-      "id": "H5", "where": "Room 10, Fly, after the blocks become the waterfront", "output": "motion/H5.mp4",
-      "start_image": "film/requests/H5-start.jpg", "end_image": "film/requests/H5-start.jpg", "image_references": ["film/requests/H5-reference.jpg"], "duration": 6,
+      "id": "H5",
+      "where": "Room 10, Fly, after the blocks become the waterfront",
+      "output": "motion/H5.mp4",
+      "start_image": "film/requests/H5-start.jpg",
+      "end_image": "film/requests/H5-start.jpg",
+      "image_references": [
+        "film/requests/H5-reference.jpg"
+      ],
+      "duration": 6,
       "prompt": "This photograph shows four moments of one jump by the same person in a red hood and blue jeans, frozen in mid-air along a diagonal above a river. Keep all four figures completely frozen exactly as photographed: pose, hood, face, hands and feet do not move at all. Only the world around them moves: clouds drift slowly to the right, the river surface ripples and glints, leaves on the far trees stir. The camera does not move. End on the same frame as it began. No new figures, no text. Silent.",
       "protect": "All four figures, every pixel of pose, hood, face, hands and shoes; the diagonal they make",
       "discard_if": "Any figure moves, blurs or changes, a fifth figure appears, or the waterfront edge shifts"
     },
     {
-      "id": "H6", "where": "Room 5, Domus Dei, the dusk moon", "output": "motion/H6.mp4",
-      "start_image": "film/requests/H6-start.jpg", "end_image": null, "duration": 5,
+      "id": "H6",
+      "where": "Room 5, Domus Dei, the dusk moon",
+      "output": "motion/H6.mp4",
+      "start_image": "film/requests/H6-start.jpg",
+      "end_image": null,
+      "duration": 5,
       "prompt": "This is a collage: a white field on the left, a grainy blue dusk sky on the right, and in the middle a photograph of a bell tower silhouette beside a construction crane, with a thin crescent moon and one bright star. Keep the collage layout and its borders exactly. Inside the photographs only, the sky slowly deepens from evening blue toward night, and a few windows on the building at the lower right begin to glow warm. The moon and the star stay exactly where they are. The crane stays. Nothing else moves. No added stars, no text. Silent.",
       "protect": "The collage borders, the moon and star positions, the crane",
       "discard_if": "The moon or star moves, extra stars appear, the collage edges shift, or the crane disappears"
     },
     {
-      "id": "H7", "where": "End of room 6, To Bleed in Liquid Gold → Record-store shoot", "output": "motion/H7.mp4",
-      "start_image": "film/requests/H4-end.jpg", "end_image": "film/requests/H7-end.jpg", "duration": 4,
+      "id": "H7",
+      "where": "End of room 6, To Bleed in Liquid Gold → Record-store shoot",
+      "output": "motion/H7.mp4",
+      "start_image": "film/requests/H4-end.jpg",
+      "end_image": "film/requests/H7-end.jpg",
+      "duration": 4,
       "prompt": "Begins on this handmade red sculpture with gold leaf. The camera pushes into the gold-rimmed opening at its centre. The dark opening and its gold rim begin to turn slowly, like a record on a turntable, and become the red label of a vinyl record held up by two hands, landing exactly on the final image: a person in a blue PHILA 3 jersey holding two records over their face in a crowded record store. Keep the hands, the PHILA 3 lettering and both record labels exact in the last second. No new people, no extra text. Silent.",
       "protect": "The hands, the PHILA 3 lettering and the record labels in the landing frame",
       "discard_if": "The hands deform, the lettering changes, or a face appears behind the records"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "E1",
+      "title": "Carry's own footage in 4K",
+      "model": "topaz_video",
+      "settings": {
+        "resolution": "2160p",
+        "enhancement": {
+          "model": "prob-4"
+        }
+      },
+      "alternative": {
+        "model": "bytedance_video_upscale",
+        "settings": {
+          "resolution": "4k",
+          "preset": "ugc",
+          "model_version": "pro"
+        }
+      },
+      "inputs": [
+        "archive/artworks/P08 - To Bleed in Liquid Gold/P08-02.mp4",
+        "archive/artworks/P08 - To Bleed in Liquid Gold/P08-07.mp4",
+        "archive/artworks/P03 - The Blackout Awaits/P03-01.mp4"
+      ],
+      "output": "film/upscaled/<id>.mp4 (outside public/; Opus re-cuts the orbit and reel flipbooks from it)",
+      "protect": "Faces, the BLACK OUT lettering, bead edges and gold-leaf tears exactly as filmed",
+      "discard_if": "Faces or letters look repainted, skin is smoothed, or new texture appears in the beads"
+    },
+    {
+      "id": "E2",
+      "title": "The sculpture in three dimensions",
+      "model": "tripo_h3_1_multiview_to_3d",
+      "settings": {
+        "texture": true,
+        "pbr": true,
+        "texture_quality": "detailed",
+        "geometry_quality": "detailed",
+        "texture_alignment": "original_image"
+      },
+      "alternatives": [
+        "meshy_multi_image_to_3d with should_texture and enable_pbr",
+        "hunyuan3d_v3_image_to_3d with 4 views"
+      ],
+      "inputs": [
+        "P08-01",
+        "P08-04",
+        "P08-05",
+        "P08-06",
+        "and up to two frames from P08-02.mp4 at 0 s and 5.5 s"
+      ],
+      "output": "public/motion/E2-sculpture.glb",
+      "use": "Room 6 would let the visitor turn the sculpture with the scroll or a drag. Opus adds a lazy-loaded viewer only after Carry approves showing a reconstruction of her object.",
+      "protect": "The positions of every gold-leaf patch and opening as seen in the four photographs, the bead pile, the orange dish, the striped cloth",
+      "discard_if": "Rendered from the four photographed angles, the model disagrees with any photograph about where the gold sits or how many openings there are"
+    },
+    {
+      "id": "E3",
+      "title": "A score that follows the light",
+      "model": "elevenlabs_music_v2_5",
+      "settings": {
+        "duration": 90,
+        "force_instrumental": true,
+        "batch_size": 4
+      },
+      "stems": {
+        "night": "Instrumental, 84 BPM, D minor. Late-night city air, soft sub bass, brushed hi-hats far away, a warm Rhodes chord that never resolves. Sparse, intimate, a party heard through a wall.",
+        "gold": "Instrumental, 84 BPM, D minor. A slow organ-like pad in a stone church, one sustained choir-like vowel synthesised (no words), a single bell every eight bars. Reverent but modern.",
+        "neon": "Instrumental, 84 BPM, D minor. Dusty boom-bap drums, vinyl crackle, a chopped soul sample feel, playful bass. A record store at closing time.",
+        "day": "Instrumental, 84 BPM, D major. Bright guitar arpeggios, open air, light percussion like footsteps, a wide sky. A jump into sunlight over water.",
+        "studio": "Instrumental, 84 BPM, D major. Solo piano and soft room tone, a fan humming, pencil-like brush textures. Quiet pride, the end of a long day in the studio."
+      },
+      "output": "public/motion/E3-<chapter>.mp3 (192 kbps, loudness matched to -23 LUFS)",
+      "use": "Off by default. One small sound toggle beside the mark; the scroll crossfades stems by chapter. Opus integrates it.",
+      "discard_if": "Any vocals or words, a tempo or key that does not match the other stems, or anything that sounds like a named artist"
+    },
+    {
+      "id": "E4",
+      "title": "The circle, in one 4K HDR shot",
+      "model": "kling4_0",
+      "settings": {
+        "mode": "image-to-video",
+        "resolution": "4k",
+        "dynamic_range": "hdr",
+        "duration": 10
+      },
+      "inputs": {
+        "start_image": "film/requests/H4-start.jpg",
+        "image_references (ordered middle frames)": [
+          "film/requests/H4-end.jpg",
+          "film/requests/H7-end.jpg"
+        ],
+        "end_image": "film/requests/E4-end.jpg"
+      },
+      "prompt": "One continuous camera push through four circles, landing exactly on each supplied frame in order: a gold halo on a starry blue fresco, the gold-leafed rim of an opening in a red handmade sculpture, the red label of a vinyl record held up by two hands, and an orange painted basketball held by a child. Each circle holds the centre of the frame as the material around it changes. No new people, no text. Silent.",
+      "output": "public/motion/E4-circle.mp4",
+      "use": "Compared against H4 and H7. If it wins, it could open the coda as the film's recurring circle, or replace both bridges.",
+      "discard_if": "Any of the four landing frames is missed, or hands or lettering deform"
+    },
+    {
+      "id": "E5",
+      "title": "Material versions of the code-built moves",
+      "model": "seedance_2_5",
+      "settings": {
+        "resolution": "4k",
+        "bitrate_mode": "high",
+        "aspect_ratio": "1:1",
+        "generate_audio": false,
+        "duration": 4
+      },
+      "shots": [
+        {
+          "key": "M1",
+          "move": "unfold",
+          "start": "film/requests/M1-start.jpg",
+          "end": "film/requests/M1-end.jpg",
+          "prompt": "The sheet taped to the light table lifts by itself, folds open like paper, and becomes the photograph of a child holding a basketball in front of an orange armchair, landing exactly on the final image. Real paper, real light, one continuous move."
+        },
+        {
+          "key": "M2",
+          "move": "flip",
+          "start": "film/requests/M2-start.jpg",
+          "end": "film/requests/M2-end.jpg",
+          "prompt": "The square print turns over in real space like a card on a table, its back revealing the second print: a woman with a raised arm on the same pale blue field, landing exactly on the final image."
+        },
+        {
+          "key": "M3",
+          "move": "shutters",
+          "start": "film/requests/H1-start.jpg",
+          "end": "film/requests/H1-end.jpg",
+          "prompt": "Three tall black panels fall into frame one after another like stage flats, covering the painting and landing exactly as the three vertical panels of the BLACKOUT triptych."
+        }
+      ],
+      "output": "public/motion/<key>.mp4",
+      "use": "Each replaces its code-built move only if it looks better in context; otherwise the code move stays.",
+      "discard_if": "The landing frame is missed, or her picture changes before the move begins"
     }
   ]
 }
