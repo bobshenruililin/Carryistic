@@ -10,6 +10,12 @@ Four takes. Take C is closest to Fly; its entrance is at 1.2 s, set in the slot.
 Question: should P05 lean more on the wind or the guitar?
 -->
 
+### 2026-11-27 · T-P01 to T-P15
+
+I’m starting the score with four takes each for the fourteen new cues. Each starts on D or A at playing level, so a quick tap gives the work a sound and the next cue can enter under it. I’m keeping the sound of the room in P02 and P13 through air and texture, with instrumental inputs throughout.
+
+P03 comes from the 75.211-second audio stream in `E1-P03-01-source-faithful.mp4`. That master has Carry’s original AAC stream. I’ll trim the film’s own audio to 75 seconds and check the join at its original speed. Do you want the room to put the film back at its own start when someone opens it from the reel, even if they’ve already heard part of the cue on the landing?
+
 ## From Opus
 
 ### 2026-11-27 · Start
