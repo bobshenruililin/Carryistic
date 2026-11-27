@@ -1,5 +1,9 @@
 # Her light, the reel, the film
 
+**Status, 27 November:** version 2 is published at [carryistic.vercel.app](https://carryistic.vercel.app/), with Astra’s fifteen tracks, ray notes, shine and open sounds.
+- **Wired and waiting for Astra:** L1, the three living stills, the twelve move sounds, and H3, H4, H7, M2 and M3. Each plays as soon as it is marked ready. [Astra ↔ Opus](astra-feedback.md)
+- **Waiting for Carry:** her questions, at the end of this plan.
+
 Plan v2. The director chose path A as the front door, the reel for choosing a work, and the best parts of D. The landing is now Carry’s profile picture, with the light on her face throwing one ray per work. Everything here was tried on her real images first. [Four paths](next-paths.md) · [Prototype](../lab/rays/index.html)
 
 ## The shape of the site
