@@ -9,6 +9,8 @@
 
     python scripts/prepare-profile-masks.py [--check out.png]
 
+It also writes the site's copies to public/landing.
+
 Needs Python 3 with NumPy and Pillow.
 """
 import argparse
@@ -60,4 +62,9 @@ if args.check:
     sheet.paste(light.convert('RGB').resize((S // 2, S // 2)), (S // 2, 0))
     sheet.paste(soft.convert('RGB').resize((S // 2, S // 2)), (S, 0))
     sheet.save(args.check)
-print('light and figure masks written to', folder.relative_to(root))
+# The site's copies: the photograph and the soft figure the rays are kept off.
+site = root / 'public/landing'
+site.mkdir(parents=True, exist_ok=True)
+photo.save(site / 'photo.webp', 'WEBP', quality=86, method=6)
+soft.save(site / 'figure.png', optimize=True)
+print('light and figure masks written to', folder.relative_to(root), 'and', site.relative_to(root))

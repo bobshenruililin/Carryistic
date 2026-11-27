@@ -2,19 +2,22 @@
 
 [Open the portfolio](https://carryistic.vercel.app/) · [Offline screening kit](https://drive.google.com/drive/folders/1qjbQmd1ob6WyTthBDtWGXcai26FL3Zgz) · [Google Drive reference library](https://drive.google.com/drive/folders/1fbso1aN0VT27E0wNxjwqrTS4eapcjhkn)
 
-[![Carry’s Dusk til Dawn, whole, on black: the entrance to the scroll.](handoff/entrance.jpg)](https://carryistic.vercel.app/)
+![Her light: Carry’s profile picture, with fifteen rays of colour coming from the light on her face.](direction/paths/rays-landing.jpg)
 
-The portfolio is one continuous scroll through Carry’s 15 posts, and the scroll is the film.
+**Version 2** (on `review/frontend-narrative`) opens on Carry’s profile picture. The light on her face throws fifteen flat rays, one per work, each in a colour taken from that work. Its only words are *Hi, I’m Carry.*, *All works* and *Play the film*.
+- **The opening:** the picture comes first, then the light sweeps across the rays from right to left.
+- **Choosing a work:** touch a ray to see its work inside it, and touch again to open the ray into it.
+- **Inside a work:** it plays like her stories.
+  - Tap or click for the next picture, hold to pause.
+  - Swipe sideways for another work, swipe down to return to her light.
+  - Version 1’s twelve moves carry you from work to work.
+- **Sound and addresses:** sound is on from the first touch, and every work and picture has its own address (`#P05`, `#P05/3`).
 
-- **The entrance** is *Dusk til Dawn*, whole, on black. Scrolling moves into the painted eye, peels the oil back to its pencil line and the photograph it came from, then steps back to the canvas on the wall.
-- **The order follows the light** in her pictures: nights with friends, candlelit gold, a neon record store, daylight on the waterfront in *Fly*, travel, and finally the studio. It ends on Carry beside *Proud Daddy*.
-- **One colour runs through the page.** Each work’s ground is sampled from one of her slides. Each handoff is a different move taken from her own pictures, and no move repeats back to back. The BLACKOUT triptych drops in as three panels. The halo irises open on the sculpture’s gold rim. The sculpture spins away like a record. Her red starburst opens onto the sky in *Fly*. [Watch the walkthrough](direction/scroll-walkthrough.mp4) · [Direction, storyboard and the twelve moves](direction/scroll-direction.md)
+[Plan](direction/plan-v2.md) · [Handoff for Astra](direction/astra-v2.md) · [Astra ↔ Opus](direction/astra-feedback.md)
 
-The scroll and its strips bring 152 positions into the sequence. All 153 remain in **All works** with credits, Instagram links and originals. Carry can decide whether to bring the linen in P07-11 into the studio ending. Credits, the first film (*Afterimage*), and Carry’s notebook sit at the end. [Originals](archive/artworks) · [36-page atlas](archive/Reference%20atlas.pdf) · [Slide index](archive/Image%20index.csv)
+**Version 1**, live at [carryistic.vercel.app](https://carryistic.vercel.app/) until version 2 is published, is one continuous scroll through the same rooms. [Direction, storyboard and the twelve moves](direction/scroll-direction.md) · [Walkthrough](direction/scroll-walkthrough.mp4)
 
-## Reviewing with Carry
-
-Let Carry scroll at her own pace. **Leave a note** at the end turns her words into a link she can send to whoever she chooses, or a JSON file she can save. Opening the link restores her words. Links in the earlier `#response=` format still open. A draft stays in the current browser. The portfolio collects no microphone, camera or analytics data.
+All 153 slides remain one click away with credits, Instagram links and originals. Carry can decide whether to bring the linen in P07-11 into the studio ending. [Originals](archive/artworks) · [36-page atlas](archive/Reference%20atlas.pdf) · [Slide index](archive/Image%20index.csv)
 
 ## Generated passages
 
@@ -35,7 +38,7 @@ npm test
 npm run build
 ```
 
-The rooms are written in `src/rooms.js`, one beat per move, with durations in screen heights. The engine is `src/scroll.js`. `scripts/prepare-scroll.py` rebuilds the sharp stills, strip thumbnails, reel and orbit flipbooks, and Astra’s request frames from `archive/artworks`. It needs Python 3 with Pillow, and FFmpeg.
+The rooms are written in `src/rooms.js`, one beat per move. `src/stage.js` draws them; `src/reel.js` plays them like stories and `src/light.js` is the landing. `scripts/prepare-profile-masks.py` rebuilds the landing’s photograph and figure mask from `archive/profile`. `scripts/prepare-scroll.py` rebuilds the sharp stills, strip thumbnails, reel and orbit flipbooks, and Astra’s request frames from `archive/artworks`. It needs Python 3 with Pillow, and FFmpeg.
 
 The Vercel project `carryistic` builds `main`, which serves the scroll. Review branches are not deployed (`vercel.json`). [Vercel portfolio](https://carryistic.vercel.app/) · [GitHub Pages](https://bobshenruililin.github.io/Carryistic/)
 

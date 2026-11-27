@@ -1,6 +1,14 @@
-// The score: five instrumental cues, one per chapter of light, generated with
-// ElevenLabs Music through Higgsfield (film/requests/E3-cue-report.md). Silent
-// until a visitor turns it on; then it follows the scroll from chapter to chapter.
+// Sound, on by default. Browsers only allow it after a touch, a click or a key,
+// so it begins with the visitor's first gesture.
+//
+// Music: each work plays its own track once Astra delivers it (src/v2-assets.json);
+// until then it plays the closest of the five cues generated for version 1, one
+// per chapter of light (film/requests/E3-cue-report.md). Her light, the landing,
+// plays the night cue.
+// Notes: each ray is a string. Astra's tuned harp notes replace a plucked string
+// synthesised here (Karplus–Strong) in the same fifteen pitches.
+// Moves: each move between works, the shine and the ray opening get a sound
+// once Astra delivers it, and are silent until then.
 
 export const CHAPTERS = {
   night: ['P01', 'P02', 'P03', 'P13'],
@@ -12,83 +20,145 @@ export const CHAPTERS = {
 // Entry points and crossfade lengths from the 84 BPM audition (film/requests/E3-cues.json).
 const ENTRY = { night: 2.917, gold: 2.857, neon: 11.459, day: 5.774, studio: .08 };
 const FADE = { night: 1.429, gold: 1.429, neon: 1.429, day: .714, studio: 1.429 };
-const LEVEL = .9, DUCKED = .12;
+// The version 1 cues sit at −23 LUFS, the version 2 tracks at −18; these gains even them out.
+const CUE_GAIN = 1.5, TRACK_GAIN = .85, LANDING = .55, DUCKED = .12;
+// D major pentatonic from D3, one note per ray, low (night) to high (daylight).
+const PITCHES = [38, 40, 42, 45, 47, 50, 52, 54, 57, 59, 62, 64, 66, 69, 71];
+const storageKey = 'carryistic.sound';
 
 export const chapterOf = room => Object.keys(CHAPTERS).find(name => CHAPTERS[name].includes(room));
 
-export function createScore(url) {
-  let context, master, on = false, current = null, room = null, ducked = false;
-  const tracks = {};
+export function createScore(url, slots) {
+  let context = null, master = null, music = null, current = null, want = null, level = 1, ducked = false;
+  let on = true;
+  try { on = localStorage.getItem(storageKey) !== 'off'; } catch { /* default on */ }
+  const tracks = {}, buffers = {}, plucks = [];
 
-  function track(name) {
-    if (tracks[name]) return tracks[name];
-    const element = new Audio(url(`sound/E3-${name}.mp3`));
-    element.loop = true;
-    element.preload = 'auto';
-    // A gain node per cue, because iOS ignores the volume of media elements.
-    const gain = context.createGain();
-    gain.gain.value = 0;
-    context.createMediaElementSource(element).connect(gain).connect(master);
-    return (tracks[name] = { element, gain, started: false });
-  }
+  const nameFor = work => (work === 'light' ? 'night' : slots.tracks[work]?.ready ? work : chapterOf(work));
+  const fileFor = name => (CHAPTERS[name] ? `sound/E3-${name}.mp3` : slots.tracks[name].file);
+  const entryFor = name => (CHAPTERS[name] ? ENTRY[name] : slots.tracks[name].entry || 0);
+  const fadeFor = name => FADE[name] ?? 1.2;
+
   function ramp(param, value, seconds) {
     const now = context.currentTime;
     param.cancelScheduledValues(now);
     param.setValueAtTime(param.value, now);
     param.linearRampToValueAtTime(value, now + seconds);
   }
+  function track(name) {
+    if (tracks[name]) return tracks[name];
+    const element = new Audio(url(fileFor(name)));
+    element.loop = true;
+    element.preload = 'auto';
+    // A gain node per track, because iOS ignores the volume of media elements.
+    const gain = context.createGain();
+    gain.gain.value = 0;
+    context.createMediaElementSource(element).connect(gain).connect(music);
+    return (tracks[name] = { element, gain, started: false, base: CHAPTERS[name] ? CUE_GAIN : TRACK_GAIN });
+  }
   function fadeTo(name) {
+    if (!context || !name) return;
+    const seconds = fadeFor(name);
     for (const [key, other] of Object.entries(tracks)) {
       if (key === name) continue;
-      ramp(other.gain.gain, 0, FADE[name]);
-      setTimeout(() => { if (current !== key) other.element.pause(); }, FADE[name] * 1000 + 250);
+      ramp(other.gain.gain, 0, seconds);
+      setTimeout(() => { if (current !== key) other.element.pause(); }, seconds * 1000 + 250);
     }
     const next = track(name);
-    if (!next.started) { next.element.currentTime = ENTRY[name]; next.started = true; }
+    if (!next.started) { next.element.currentTime = entryFor(name); next.started = true; }
     next.element.play().catch(() => {});
-    ramp(next.gain.gain, 1, FADE[name]);
+    ramp(next.gain.gain, next.base, seconds);
     current = name;
+  }
+  function apply() {
+    if (!context) return;
+    ramp(master.gain, on ? (ducked ? DUCKED : 1) : 0, .5);
+    ramp(music.gain, level, .8);
+  }
+
+  // A plucked string, synthesised once per ray until Astra's notes arrive.
+  function pluck(i) {
+    if (plucks[i]) return plucks[i];
+    const rate = context.sampleRate, seconds = 2.2;
+    const frequency = 440 * 2 ** ((PITCHES[i] - 69) / 12);
+    const buffer = context.createBuffer(1, Math.round(rate * seconds), rate);
+    const out = buffer.getChannelData(0);
+    const period = Math.max(2, Math.round(rate / frequency));
+    const line = new Float32Array(period);
+    for (let j = 0; j < period; j++) line[j] = (Math.random() * 2 - 1) * .5;
+    // a softer attack: smooth the burst, like a finger rather than a pick
+    for (let pass = 0; pass < 2; pass++) for (let j = 1; j < period; j++) line[j] = (line[j] + line[j - 1]) / 2;
+    const decay = .996 - (i / PITCHES.length) * .002;
+    for (let n = 0, j = 0; n < out.length; n++) {
+      const next = (j + 1) % period;
+      const value = line[j];
+      out[n] = value * Math.min(1, n / 40);
+      line[j] = (value + line[next]) * .5 * decay;
+      j = next;
+    }
+    return (plucks[i] = buffer);
+  }
+  async function sample(file) {
+    if (buffers[file] !== undefined) return buffers[file];
+    buffers[file] = null;
+    try { buffers[file] = await context.decodeAudioData(await (await fetch(url(file))).arrayBuffer()); } catch { buffers[file] = null; }
+    return buffers[file];
+  }
+  function play(buffer, gain = .5) {
+    if (!buffer || !context || !on) return;
+    const source = context.createBufferSource();
+    const g = context.createGain();
+    g.gain.value = gain;
+    source.buffer = buffer;
+    source.connect(g).connect(master);
+    source.start();
   }
 
   return {
     get on() { return on; },
-    async toggle() {
-      on = !on;
-      if (on) {
-        if (!context) {
-          context = new (window.AudioContext || window.webkitAudioContext)();
-          master = context.createGain();
-          master.connect(context.destination);
-          // Start every cue inside this click, silently, so later chapters may play on phones.
-          for (const name of Object.keys(CHAPTERS)) {
-            const cue = track(name);
-            cue.element.play().then(() => { if (name !== current) cue.element.pause(); }).catch(() => {});
-          }
-        }
-        await context.resume();
-        ramp(master.gain, ducked ? DUCKED : LEVEL, .4);
-        current = null;
-        fadeTo(chapterOf(room) || 'night');
-      } else if (context) {
-        ramp(master.gain, 0, .6);
-        setTimeout(() => {
-          if (on) return;
-          for (const cue of Object.values(tracks)) cue.element.pause();
-          context.suspend();
-        }, 700);
+    // The first gesture anywhere: open the audio and start every cue silently inside it,
+    // so later works may play on phones.
+    unlock() {
+      if (context) return;
+      context = new (window.AudioContext || window.webkitAudioContext)();
+      master = context.createGain();
+      master.gain.value = 0;
+      music = context.createGain();
+      music.gain.value = level;
+      music.connect(master).connect(context.destination);
+      for (const name of Object.keys(CHAPTERS)) {
+        const cue = track(name);
+        cue.element.play().then(() => { if (name !== current) cue.element.pause(); }).catch(() => {});
       }
+      context.resume();
+      apply();
+      fadeTo(want);
+    },
+    toggle() {
+      on = !on;
+      try { localStorage.setItem(storageKey, on ? 'on' : 'off'); } catch { /* fine */ }
+      if (context) { if (on) context.resume(); apply(); if (on && want !== current) fadeTo(want); }
       return on;
     },
-    setRoom(id) {
-      room = id;
-      const name = chapterOf(id);
-      if (on && context && name && name !== current) fadeTo(name);
+    // 'light' for the landing, or a work's id.
+    setWork(work, quieter = false) {
+      want = nameFor(work);
+      level = work === 'light' || quieter ? LANDING : 1;
+      if (context) { apply(); if (want !== current) fadeTo(want); }
     },
-    duck(flag) {
-      ducked = flag;
-      if (on && context) ramp(master.gain, flag ? DUCKED : LEVEL, .5);
+    note(i) {
+      if (!context || !on) return;
+      const slot = slots.notes[String(i + 1).padStart(2, '0')];
+      if (slot?.ready) sample(slot.file).then(buffer => play(buffer, .55));
+      else play(pluck(i), .32);
     },
-    pause() { if (on && context) context.suspend(); },
-    resume() { if (on && context) context.resume(); },
+    effect(name) {
+      const slot = slots.sounds[name];
+      if (!context || !on || !slot?.ready) return;
+      sample(slot.file).then(buffer => play(buffer, .5));
+    },
+    duck(flag) { ducked = flag; apply(); },
+    pause() { context?.suspend(); },
+    resume() { if (on) context?.resume(); },
   };
 }

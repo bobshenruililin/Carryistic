@@ -1,20 +1,24 @@
-// One fixed stage, driven by scroll. Each room is a list of beats laid end to
-// end in screen heights; each beat contributes layers whose keyframes are
-// written in the beat's own 0–1 time. The engine converts them to room time,
+// The stage: fifteen rooms on one fixed picture plane. Each room is a list of
+// beats laid end to end; each beat contributes layers whose keyframes are
+// written in the beat's own 0–1 time. The stage converts them to room time,
 // interpolates, and writes transforms only for the room on screen (and the
-// next one, underneath, during a crossfade handoff).
+// next one, underneath, during a handoff). What moves the position is up to
+// the driver: the reel (reel.js) plays them like her stories. (Version 1 drove the
+// same rooms with the page scroll.)
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const mix = (a, b, t) => a + (b - a) * t;
 const smooth = t => t * t * (3 - 2 * t);
 const DEFAULTS = { o: 1, s: 1, x: 0, y: 0, r: 0, f: 0, c: [0, 0, 0, 0] };
 
-function buildRoom(room) {
+export function buildRoom(spec) {
+  const room = { ...spec, beats: spec.beats.map(beat => ({ ...beat })) };
   let cursor = 0;
   const layers = [];
   let previous = [];
   for (const beat of room.beats) {
     const start = cursor - (beat.lead || 0);
+    beat.at = start;
     const placed = beat.layers.map(layer => ({ ...layer, start, dur: beat.dur }));
     // The picture a room ends on stays whole until its exit move has finished.
     if (beat.layers.some(layer => layer.kind === 'exit' || layer.kind === 'flood')) for (const layer of previous) layer.holdToEnd = true;
@@ -23,6 +27,18 @@ function buildRoom(room) {
     cursor = start + beat.dur;
   }
   const length = cursor;
+  // Where a reel stops: the moment each beat hands over to the next, which is
+  // also where an exit move begins. A room that ends without an exit stops at its end.
+  const holds = [];
+  for (const [i, beat] of room.beats.entries()) {
+    if (!i) continue;
+    const at = beat.at / length;
+    if (!holds.length || at - holds.at(-1) > .02) holds.push(at);
+  }
+  const last = room.beats.at(-1);
+  const exits = last.layers.some(layer => layer.kind === 'exit' || layer.kind === 'flood');
+  if (!exits && 1 - (holds.at(-1) ?? 0) > .02) holds.push(1);
+  const exitAt = exits ? last.at / length : 1;
   for (const layer of layers) {
     let previous = { ...DEFAULTS };
     layer.keys = layer.keys.map(([t, values]) => {
@@ -33,10 +49,10 @@ function buildRoom(room) {
     const last = layer.keys.at(-1);
     if (layer.holdToEnd && last[1].o > 0 && last[0] < 1) layer.keys.push([1, { ...last[1] }]);
   }
-  return { ...room, length, layers };
+  return { ...room, length, layers, holds, exitAt };
 }
 
-function sample(keys, p, reduced) {
+export function sample(keys, p, reduced) {
   if (p < keys[0][0] || p > keys[keys.length - 1][0]) return null;
   let i = 0;
   while (i < keys.length - 2 && p > keys[i + 1][0]) i++;
@@ -50,40 +66,17 @@ function sample(keys, p, reduced) {
   return value;
 }
 
-export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpenPlate, onRoom, pace = .78 }) {
+export function createStage({ stage, rooms: roomSpecs, assets, url, onOpenPlate, onChange }) {
   const reducedQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const rooms = roomSpecs.map(buildRoom);
   const doc = document;
-  const state = { W: innerWidth, H: innerHeight, active: -1, loaded: new Set(), frame: 0 };
+  const state = { W: innerWidth, H: innerHeight, loaded: new Set() };
+  const queue = () => onChange?.();
 
   const aspectOf = id => { const [w, h] = assets.hero[id]; return w / h; };
   const heroUrl = id => url(`scroll/h/${id}.webp`);
 
   for (const [index, room] of rooms.entries()) {
-    const spacer = doc.createElement('section');
-    spacer.className = 'spacer';
-    spacer.id = room.id.toLowerCase();
-    // One beat unit is `pace` screen heights of scrolling.
-    spacer.style.setProperty('--length', (room.length * pace).toFixed(3));
-    spacer.setAttribute('aria-labelledby', `title-${room.id}`);
-    const heading = doc.createElement('h2');
-    heading.id = `title-${room.id}`;
-    heading.className = 'sr-only';
-    heading.textContent = room.title;
-    const list = doc.createElement('ul');
-    list.className = 'sr-only';
-    for (const id of room.slides) {
-      const item = doc.createElement('li');
-      const link = doc.createElement('a');
-      link.href = `#work-${id}`;
-      link.textContent = `${room.title}, slide ${Number(id.slice(4))}`;
-      item.append(link);
-      list.append(item);
-    }
-    spacer.append(heading, list);
-    track.append(spacer);
-    room.spacer = spacer;
-
     const el = doc.createElement('div');
     el.className = 'room';
     el.style.background = room.ground;
@@ -353,13 +346,8 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     }
   }
 
-  function frame() {
-    state.frame = 0;
-    let index = rooms.length - 1, p = 1;
-    for (const room of rooms) {
-      const rect = room.spacer.getBoundingClientRect();
-      if (rect.bottom > 0) { index = room.index; p = clamp(-rect.top / rect.height); break; }
-    }
+  // Draw the stage at a position: room `index`, room time `p` (0–1).
+  function render(index, p) {
     const room = rooms[index];
     const next = rooms[index + 1];
     load(room); load(next); load(rooms[index + 2]);
@@ -372,11 +360,8 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     paint(room, p, false, f);
     if (showNext) paint(next, 0, true);
     handoff(room, showNext ? next : null, f);
-    if (state.active !== index) {
-      state.active = index;
-      onRoom?.(room, index);
-    }
     stage.style.setProperty('--progress', p.toFixed(4));
+    return { room, f };
   }
 
   // Each handoff reveals the next room through a shape or move from Carry's own work.
@@ -539,23 +524,8 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     }
   }
 
-  function queue() {
-    if (!state.frame) state.frame = requestAnimationFrame(frame);
-  }
-
-  addEventListener('scroll', queue, { passive: true });
   addEventListener('resize', measure);
   reducedQuery.addEventListener?.('change', queue);
-  measure();
-  frame();
 
-  return {
-    rooms,
-    jump(index) {
-      const target = rooms[index]?.spacer;
-      if (!target) return;
-      const top = target.getBoundingClientRect().top + scrollY + 2;
-      scrollTo({ top, behavior: reducedQuery.matches ? 'instant' : 'smooth' });
-    },
-  };
+  return { rooms, render, measure, load, reduced: () => reducedQuery.matches };
 }
