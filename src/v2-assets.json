@@ -33,7 +33,7 @@
     },
     "P07": {
       "file": "sound/track-P07.mp3",
-      "entry": 0,
+      "entry": 8.57,
       "ready": true
     },
     "P08": {
@@ -48,7 +48,7 @@
     },
     "P10": {
       "file": "sound/track-P10.mp3",
-      "entry": 0,
+      "entry": 8.6,
       "ready": true
     },
     "P11": {
@@ -68,12 +68,12 @@
     },
     "P14": {
       "file": "sound/track-P14.mp3",
-      "entry": 0,
+      "entry": 8.4,
       "ready": true
     },
     "P15": {
       "file": "sound/track-P15.mp3",
-      "entry": 0,
+      "entry": 5.6,
       "ready": true
     }
   },

@@ -25,6 +25,8 @@ const CUE_GAIN = 1.5, TRACK_GAIN = .85, LANDING = .55, DUCKED = .12;
 // D major pentatonic from D3, one note per ray, low (night) to high (daylight).
 const PITCHES = [50, 52, 54, 57, 59, 62, 64, 66, 69, 71, 74, 76, 78, 81, 83];
 const storageKey = 'carryistic.sound';
+// Tracks that never overlap another: her film's own soundtrack.
+const ALONE = new Set(['P03']);
 
 export const chapterOf = room => Object.keys(CHAPTERS).find(name => CHAPTERS[name].includes(room));
 
@@ -58,17 +60,26 @@ export function createScore(url, slots) {
   }
   function fadeTo(name) {
     if (!context || !name) return;
-    const seconds = fadeFor(name);
+    // Her film's own soundtrack (P03) is in another key and tempo: it fades through silence,
+    // never under or over a D track, and always starts from the film's beginning.
+    const through = ALONE.has(name) || ALONE.has(current);
+    const seconds = through ? .45 : fadeFor(name);
     for (const [key, other] of Object.entries(tracks)) {
       if (key === name) continue;
       ramp(other.gain.gain, 0, seconds);
       setTimeout(() => { if (current !== key) other.element.pause(); }, seconds * 1000 + 250);
     }
     const next = track(name);
-    if (!next.started) { next.element.currentTime = entryFor(name); next.started = true; }
-    next.element.play().catch(() => {});
-    ramp(next.gain.gain, next.base, seconds);
+    const begin = () => {
+      if (current !== name) return;
+      if (!next.started || ALONE.has(name)) { next.element.currentTime = entryFor(name); next.started = true; }
+      next.element.play().catch(() => {});
+      ramp(next.gain.gain, next.base, through ? .5 : seconds);
+    };
+    const wasPlaying = current;
     current = name;
+    if (through && wasPlaying) setTimeout(begin, seconds * 1000 + 60);
+    else begin();
   }
   function apply() {
     if (!context) return;

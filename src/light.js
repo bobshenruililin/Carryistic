@@ -25,7 +25,7 @@ const rgb = h => [1, 3, 5].map(k => parseInt(h.slice(k, k + 2), 16));
 const towardWhite = (h, t) => `rgb(${rgb(h).map(v => Math.round(v + (255 - v) * t)).join(',')})`;
 const load = src => new Promise((ok, no) => { const im = new Image(); im.decoding = 'async'; im.onload = () => ok(im); im.onerror = no; im.src = src; });
 
-export function mountLight(canvas, { works, url, onLit, onRay, onShine, onEnter, onEntered }) {
+export function mountLight(canvas, { works, url, living, onLit, onRay, onShine, onEnter, onEntered }) {
   const ctx = canvas.getContext('2d');
   const rays = document.createElement('canvas'), rctx = rays.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -108,6 +108,7 @@ export function mountLight(canvas, { works, url, onLit, onRay, onShine, onEnter,
     s.k = s.k.map((v, i) => v + ((i === target ? level : 0) - v) * (reduced.matches ? 1 : .18));
     s.dim += ((touched >= 0 ? 1 : 0) - s.dim) * (reduced.matches ? 1 : .16);
     const [x0, y0, size] = s.rect, { W, H, DPR, O, R } = s;
+    if (s.living && s.living.video.readyState >= 2 && !s.living.video.paused) s.living.compose(s.living.video);
     const on = reduced.matches ? 1 : ease(clamp(t / .8));
 
     rctx.setTransform(1, 0, 0, 1, 0, 0); rctx.clearRect(0, 0, rays.width, rays.height);
@@ -220,12 +221,31 @@ export function mountLight(canvas, { works, url, onLit, onRay, onShine, onEnter,
     const S = photo.width, room = document.createElement('canvas');
     room.width = room.height = S;
     const rc = room.getContext('2d');
-    rc.drawImage(photo, 0, 0, S, S);
-    rc.globalCompositeOperation = 'destination-in';
+    const feather = document.createElement('canvas');
+    feather.width = feather.height = S;
+    const fc0 = feather.getContext('2d');
+    fc0.fillStyle = '#000'; fc0.fillRect(0, 0, S, S);
+    fc0.globalCompositeOperation = 'destination-in';
     for (const [x0, y0, x1, y1] of [[0, 0, S * .16, 0], [S, 0, S * .84, 0], [0, 0, 0, S * .16], [0, S, 0, S * .84]]) {
-      const g = rc.createLinearGradient(x0, y0, x1, y1);
+      const g = fc0.createLinearGradient(x0, y0, x1, y1);
       g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
-      rc.fillStyle = g; rc.fillRect(0, 0, S, S);
+      fc0.fillStyle = g; fc0.fillRect(0, 0, S, S);
+    }
+    const compose = source => {
+      rc.globalCompositeOperation = 'copy';
+      rc.drawImage(source, 0, 0, S, S);
+      rc.globalCompositeOperation = 'destination-in';
+      rc.drawImage(feather, 0, 0);
+      rc.globalCompositeOperation = 'source-over';
+    };
+    compose(photo);
+    // L1: the photograph alive (her hair stirs), drawn in place of the still once it plays.
+    if (living && !reduced.matches) {
+      const video = document.createElement('video');
+      Object.assign(video, { muted: true, loop: true, playsInline: true, preload: 'auto', src: living });
+      video.setAttribute('playsinline', '');
+      video.play().catch(() => {});
+      s.living = { video, compose };
     }
     // her figure: the mask's grey becomes alpha, so the rays can be cut away where she stands
     const fig = document.createElement('canvas');

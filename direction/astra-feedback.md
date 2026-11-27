@@ -81,3 +81,56 @@ Could you screen the P02-to-P03 join first, then swipe across the rays on a phon
 - **Order:** start with the fifteen tracks. Sound is on by default in version 2, so they change the experience most.
 - **Living stills:** propose before you render anything (section 5 of the handoff).
 - **Questions:** if a request can’t be met as written, say so here before working round it.
+
+### 2026-11-27 · Screening the audio
+
+Thank you. It’s all in. Measured on every file:
+
+- **Tracks:**
+  - −18.0 LUFS throughout, with true peaks from −1.4 to −6.6 dBTP.
+  - Eleven read D (major or minor) and the rest sit in its family (A major, A minor, F♯ minor).
+  - Most pulse at 84 BPM. P08, P09 and P12 read 112 on my onset check. That is 84 in a 4:3 feel, which is fine for a 1.4 s crossfade, but say so if it’s really a different tempo.
+- **Notes:** all fifteen within 2.4 cents of D3–B5, two seconds each, matched in level. Thanks for catching my stand-in an octave low.
+- **Sounds:** `shine` travels from 7.7 dB right-heavy to 18.6 dB left-heavy, as briefed. `open` is centred.
+- **Quiet entrances, fixed with entry points:** these four entered well under playing level, so the slots now start each on a strong attack at level:
+
+  | Track | First 4 s | Entry |
+  | --- | --- | --- |
+  | P07 | −27 dB | 8.57 s, on the 84 BPM grid |
+  | P14 | −24 dB | 8.4 s |
+  | P10 | −21 dB | 8.6 s |
+  | P15 | −21 dB | 5.6 s |
+
+- **Loop seams:** P10 fades to −27 dB before it loops, and P08 and P02 jump 7–8 dB at the join. Visitors rarely stay 75 s in one work, so this is low priority. Fix them only alongside other work.
+
+Your questions:
+
+1. **P03 from its start:** yes. Her film’s soundtrack now restarts from its beginning every time the room opens.
+2. **P03’s edges:** done. Going into or out of P03, the other track fades to silence in 0.45 s before the next begins, so the 118 BPM bass never sits under a D track.
+3. **Back from a work:** quiet. The sweep and `shine` play once, on arrival.
+4. **L1:** hair only, as you propose. Skip the cheek light; the profile is where the rays meet her face, and the sweep supplies the rest of the motion. The landing already plays `motion/L1.mp4` once it’s marked ready.
+
+Living stills: three approved, each already wired in `src/rooms.js`. Each plays the moment its key is marked ready in `src/motion.json`.
+
+| Key | Slide | Motion |
+| --- | --- | --- |
+| `V-P02-13` | P02-13 | Daylight moving across the empty floor. This replaces H2 (the dolly), which I’ve withdrawn, so there’s one clip on this picture. Fixed camera. |
+| `V-P13-06` | P13-06 | The flame tips lift and settle. |
+| `V-P12-08` | P12-08 | Dappled light on the grass behind the table. |
+
+Declined, to keep her pictures as she made them:
+
+- **P08-03:** her sculpture stays as photographed; the orbit and the 3D turn already move it.
+- **P09-06, P10-03, P04-01:** the graphic works; their flatness is the point.
+- **P07-10:** Carry and the child are in the frame.
+- **P11-02 and P14-17:** they only pass in a fast flash.
+- **P06-08:** the picture already turns in its beat.
+
+**Next, in order:**
+
+1. L1.
+2. The three living stills.
+3. The twelve move sounds.
+4. H3, H4, H7, M2 and M3.
+
+Version 2 goes to Vercel now with the audio. Each new clip plays as soon as it lands on `main`.

@@ -4,11 +4,6 @@
     "aspect": 1,
     "ready": true
   },
-  "H2": {
-    "file": "motion/H2.mp4",
-    "aspect": 1,
-    "ready": false
-  },
   "H3": {
     "file": "motion/H3.mp4",
     "aspect": 1,
@@ -56,6 +51,21 @@
   },
   "L2": {
     "file": "motion/L2.mp4",
+    "aspect": 1,
+    "ready": false
+  },
+  "V-P02-13": {
+    "file": "motion/V-P02-13.mp4",
+    "aspect": 1,
+    "ready": false
+  },
+  "V-P13-06": {
+    "file": "motion/V-P13-06.mp4",
+    "aspect": 1,
+    "ready": false
+  },
+  "V-P12-08": {
+    "file": "motion/V-P12-08.mp4",
     "aspect": 1,
     "ready": false
   }

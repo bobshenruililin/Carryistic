@@ -218,7 +218,7 @@ export const rooms = [
       cascade(['P02-10', 'P02-11'], .9, { path: 'pair' }),
       strip('P02', 1.7, 1.5),
       show('P02-12', .7, { size: { fit: .84 } }),
-      living('H2', 'P02-13', 1.4, { size: { cover: 1 }, zoom: [1, 1.3], out: 'none' }),
+      living('V-P02-13', 'P02-13', 1.4, { size: { cover: 1 }, zoom: [1, 1.3], out: 'none' }),
       // The film opens in the far window of the empty hall.
       exit('window', .9, { rect: [.41, .36, .18, .22], scale: 1.4 }),
     ],
@@ -241,7 +241,7 @@ export const rooms = [
       cascade(['P13-08', 'P13-09'], .9, { path: 'pair' }),
       strip('P13', 1.6, 1.4, { dir: 'v', band: [.84, .1] }),
       // The quiet image: a flame over its reflection, held.
-      show('P13-06', 1.1, { from: 'fade', size: { fit: .72 }, out: 'none' }),
+      living('V-P13-06', 'P13-06', 1.1, { from: 'fade', size: { fit: .72 }, out: 'none' }),
       // The flame's light rises into a gold dome.
       bridge('H3', { id: 'P13-06', at: [.45, .4], zoom: 1.8 }, null, 1.1, { size: { fit: .72 } }),
       exit('rise', .95),
@@ -391,7 +391,7 @@ export const rooms = [
       cascade(['P12-01', 'P12-02'], .9, { path: 'pair' }),
       show('P12-04', .9, { size: { cover: 1 }, zoom: [1.08, 1] }),
       cascade(['P12-05', 'P12-06'], .8, { path: 'pair' }),
-      show('P12-08', .8, { size: { cover: 1 }, zoom: [1, 1.06] }),
+      living('V-P12-08', 'P12-08', .8, { size: { cover: 1 }, zoom: [1, 1.06] }),
       strip('P12', 1.4, 1.2),
       show('P12-07', .9, { size: { fit: .84 }, out: 'none' }),
       // A pencil line opens into a page.

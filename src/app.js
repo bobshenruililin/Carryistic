@@ -12,6 +12,7 @@ import { rooms } from './rooms.js';
 import assets from './scroll-assets.json';
 import plates from './plates.json';
 import slots from './v2-assets.json';
+import motion from './motion.json';
 import { mountReel } from './reel.js';
 import { mountLight, RAYS } from './light.js';
 import { sample } from './stage.js';
@@ -67,6 +68,7 @@ let litWork = null;
 const light = mountLight($('#light'), {
   works,
   url,
+  living: motion.L1?.ready ? url(motion.L1.file) : null,
   onLit(work, how) {
     litWork = work;
     lit.hidden = !work;
