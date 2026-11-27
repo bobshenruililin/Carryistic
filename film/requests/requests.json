@@ -250,5 +250,288 @@
       "use": "Each replaces its code-built move only if it looks better in context; otherwise the code move stays.",
       "discard_if": "The landing frame is missed, or her picture changes before the move begins"
     }
-  ]
+  ],
+  "v2": {
+    "handoff": "direction/astra-v2.md",
+    "feedback": "direction/astra-feedback.md",
+    "slots": "src/v2-assets.json",
+    "audio_contract": "Instrumental, no voices or words, nothing that imitates a named artist. 84 BPM, D tonal centre, so any two tracks crossfade. Loudness -18 LUFS integrated, true peak -1 dBTP. MP3 192 kbps stereo, 44.1 kHz.",
+    "tracks": [
+      {
+        "id": "T-P01",
+        "work": "P01",
+        "title": "Dusk til Dawn",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Slow warm synth bloom, felt piano, night air. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P01.mp3"
+      },
+      {
+        "id": "T-P02",
+        "work": "P02",
+        "title": "Blackout photographs",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "A house beat heard through a wall, mirror-ball shimmer, a muffled crowd without words. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P02.mp3"
+      },
+      {
+        "id": "T-P03",
+        "work": "P03",
+        "title": "The Blackout Awaits",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": null,
+        "note": "No generation: use the soundtrack of her film from the 4K master (E1-P03-01), trimmed to 75 s with a natural loop point.",
+        "output": "sound/track-P03.mp3"
+      },
+      {
+        "id": "T-P04",
+        "work": "P04",
+        "title": "Streets of New York",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Street pulse, subway hum, upright bass. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P04.mp3"
+      },
+      {
+        "id": "T-P05",
+        "work": "P05",
+        "title": "Fly",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Airy guitar, wind, a rising figure. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P05.mp3"
+      },
+      {
+        "id": "T-P06",
+        "work": "P06",
+        "title": "DC Chronicles",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Museum hush, brushed jazz trio. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P06.mp3"
+      },
+      {
+        "id": "T-P07",
+        "work": "P07",
+        "title": "Proud Daddy",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Warm piano with a basketball bounce as the kick; quiet pride. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P07.mp3"
+      },
+      {
+        "id": "T-P08",
+        "work": "P08",
+        "title": "To Bleed in Liquid Gold",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Glass beads and metallic taps over a slow sub-bass heartbeat. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P08.mp3"
+      },
+      {
+        "id": "T-P09",
+        "work": "P09",
+        "title": "Graphic pose studies",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Glitchy synth-pop arpeggios, bright and playful. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P09.mp3"
+      },
+      {
+        "id": "T-P10",
+        "work": "P10",
+        "title": "Record-store portraits",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Lo-fi tape echo; one short motif repeating like her echoed figures. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P10.mp3"
+      },
+      {
+        "id": "T-P11",
+        "work": "P11",
+        "title": "Record-store shoot",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Vinyl crackle, boom-bap drums, a chopped soul feel. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P11.mp3"
+      },
+      {
+        "id": "T-P12",
+        "work": "P12",
+        "title": "First Weeks at RISD",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Pencil scratches as rhythm, solo piano. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P12.mp3"
+      },
+      {
+        "id": "T-P13",
+        "work": "P13",
+        "title": "Artful and Grateful",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Fire crackle, warm acoustic guitar, distant friends without words. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P13.mp3"
+      },
+      {
+        "id": "T-P14",
+        "work": "P14",
+        "title": "Italy in motion",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Mandolin and strings on a warm afternoon. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P14.mp3"
+      },
+      {
+        "id": "T-P15",
+        "work": "P15",
+        "title": "Domus Dei",
+        "model": "elevenlabs_music",
+        "duration": 75,
+        "prompt": "Organ pad, distant bells, stone reverb. Instrumental, 84 BPM, centred on D. The first four seconds work as an entrance on their own; the last bars loop back into the first.",
+        "note": null,
+        "output": "sound/track-P15.mp3"
+      }
+    ],
+    "notes": {
+      "what": "Fifteen soft plucked-harp notes, one per ray, so that sliding a finger across her light plays a scale.",
+      "method": "Generate one clean, dry, single pluck at D4 (about 2 s with its natural decay, no reverb tail cut off). Then pitch it to each note with rubberband so the tuning is exact, for example: rubberband -p <semitones> pluck-D4.wav note-01.wav.",
+      "pitches": [
+        "D3",
+        "E3",
+        "F#3",
+        "A3",
+        "B3",
+        "D4",
+        "E4",
+        "F#4",
+        "A4",
+        "B4",
+        "D5",
+        "E5",
+        "F#5",
+        "A5",
+        "B5"
+      ],
+      "order": "note-01 is the lowest and belongs to the first ray (night, low in front of her face); note-15 the highest (daylight white, behind her).",
+      "output": "sound/note-01.mp3 … sound/note-15.mp3",
+      "discard_if": "Any note sounds like a different instrument from the others, or carries room noise"
+    },
+    "sounds": [
+      {
+        "id": "S-shine",
+        "seconds": 2.6,
+        "prompt": "A soft glass shimmer that travels from the right speaker to the left, like light sweeping across a room. Bright but gentle, no whoosh.",
+        "output": "sound/shine.mp3"
+      },
+      {
+        "id": "S-open",
+        "seconds": 1.0,
+        "prompt": "A short warm swell of air and light as a door of light opens; no impact, no whoosh.",
+        "output": "sound/ray-open.mp3"
+      },
+      {
+        "id": "S-shutters",
+        "seconds": 1.5,
+        "prompt": "Three tall panels landing one after another, soft wooden thuds",
+        "output": "sound/move-shutters.mp3"
+      },
+      {
+        "id": "S-window",
+        "seconds": 1.5,
+        "prompt": "A rush of air through an opening window",
+        "output": "sound/move-window.mp3"
+      },
+      {
+        "id": "S-rise",
+        "seconds": 1.5,
+        "prompt": "A breath of flame rising",
+        "output": "sound/move-rise.mp3"
+      },
+      {
+        "id": "S-iris",
+        "seconds": 1.5,
+        "prompt": "A struck glass ring",
+        "output": "sound/move-iris.mp3"
+      },
+      {
+        "id": "S-spin",
+        "seconds": 1.5,
+        "prompt": "A record spinning down",
+        "output": "sound/move-spin.mp3"
+      },
+      {
+        "id": "S-flash",
+        "seconds": 1.5,
+        "prompt": "A camera flash firing and recharging",
+        "output": "sound/move-flash.mp3"
+      },
+      {
+        "id": "S-star",
+        "seconds": 1.5,
+        "prompt": "A bright, short zap",
+        "output": "sound/move-star.mp3"
+      },
+      {
+        "id": "S-flood",
+        "seconds": 1.5,
+        "prompt": "Paint pouring",
+        "output": "sound/move-flood.mp3"
+      },
+      {
+        "id": "S-flip",
+        "seconds": 1.5,
+        "prompt": "A card turning over on a table",
+        "output": "sound/move-flip.mp3"
+      },
+      {
+        "id": "S-slices",
+        "seconds": 1.5,
+        "prompt": "Paper strips pulling apart",
+        "output": "sound/move-slices.mp3"
+      },
+      {
+        "id": "S-drain",
+        "seconds": 1.5,
+        "prompt": "A low hum fading out",
+        "output": "sound/move-drain.mp3"
+      },
+      {
+        "id": "S-unfold",
+        "seconds": 1.5,
+        "prompt": "A sheet of paper unfolding",
+        "output": "sound/move-unfold.mp3"
+      }
+    ],
+    "living": {
+      "what": "At most one living still per work, where only light, water, sky, smoke, flame or fabric moves and every figure, face, hand, letter and border holds pixel for pixel (the lock-fly-motion.py method). H5 (Fly) and H6 (Domus Dei) already count.",
+      "first": "Before rendering, propose the slide and the motion for each work in direction/astra-feedback.md. Opus agrees or redirects in the same file.",
+      "settings": "Seedance 2.5 omni_reference, 4k, 1:1, 5 s, start and end frame both the slide, so it loops",
+      "output": "motion/V-<slide>.mp4, with a key in src/motion.json"
+    },
+    "order": [
+      "T (tracks)",
+      "notes and S-shine, S-open",
+      "L1",
+      "the open H and M shots",
+      "living-still proposals",
+      "the twelve move sounds",
+      "L2"
+    ]
+  }
 }

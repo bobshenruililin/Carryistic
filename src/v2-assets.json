@@ -1,0 +1,200 @@
+{
+  "note": "Every asset from direction/astra-v2.md has a slot here. The site uses it only when ready is true; until then the code-built version plays. npm test refuses a ready slot whose file is missing.",
+  "tracks": {
+    "P01": {
+      "file": "sound/track-P01.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P02": {
+      "file": "sound/track-P02.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P03": {
+      "file": "sound/track-P03.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P04": {
+      "file": "sound/track-P04.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P05": {
+      "file": "sound/track-P05.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P06": {
+      "file": "sound/track-P06.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P07": {
+      "file": "sound/track-P07.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P08": {
+      "file": "sound/track-P08.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P09": {
+      "file": "sound/track-P09.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P10": {
+      "file": "sound/track-P10.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P11": {
+      "file": "sound/track-P11.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P12": {
+      "file": "sound/track-P12.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P13": {
+      "file": "sound/track-P13.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P14": {
+      "file": "sound/track-P14.mp3",
+      "entry": 0,
+      "ready": false
+    },
+    "P15": {
+      "file": "sound/track-P15.mp3",
+      "entry": 0,
+      "ready": false
+    }
+  },
+  "notes": {
+    "01": {
+      "file": "sound/note-01.mp3",
+      "ready": false
+    },
+    "02": {
+      "file": "sound/note-02.mp3",
+      "ready": false
+    },
+    "03": {
+      "file": "sound/note-03.mp3",
+      "ready": false
+    },
+    "04": {
+      "file": "sound/note-04.mp3",
+      "ready": false
+    },
+    "05": {
+      "file": "sound/note-05.mp3",
+      "ready": false
+    },
+    "06": {
+      "file": "sound/note-06.mp3",
+      "ready": false
+    },
+    "07": {
+      "file": "sound/note-07.mp3",
+      "ready": false
+    },
+    "08": {
+      "file": "sound/note-08.mp3",
+      "ready": false
+    },
+    "09": {
+      "file": "sound/note-09.mp3",
+      "ready": false
+    },
+    "10": {
+      "file": "sound/note-10.mp3",
+      "ready": false
+    },
+    "11": {
+      "file": "sound/note-11.mp3",
+      "ready": false
+    },
+    "12": {
+      "file": "sound/note-12.mp3",
+      "ready": false
+    },
+    "13": {
+      "file": "sound/note-13.mp3",
+      "ready": false
+    },
+    "14": {
+      "file": "sound/note-14.mp3",
+      "ready": false
+    },
+    "15": {
+      "file": "sound/note-15.mp3",
+      "ready": false
+    }
+  },
+  "sounds": {
+    "shine": {
+      "file": "sound/shine.mp3",
+      "ready": false
+    },
+    "open": {
+      "file": "sound/ray-open.mp3",
+      "ready": false
+    },
+    "shutters": {
+      "file": "sound/move-shutters.mp3",
+      "ready": false
+    },
+    "window": {
+      "file": "sound/move-window.mp3",
+      "ready": false
+    },
+    "rise": {
+      "file": "sound/move-rise.mp3",
+      "ready": false
+    },
+    "iris": {
+      "file": "sound/move-iris.mp3",
+      "ready": false
+    },
+    "spin": {
+      "file": "sound/move-spin.mp3",
+      "ready": false
+    },
+    "flash": {
+      "file": "sound/move-flash.mp3",
+      "ready": false
+    },
+    "star": {
+      "file": "sound/move-star.mp3",
+      "ready": false
+    },
+    "flood": {
+      "file": "sound/move-flood.mp3",
+      "ready": false
+    },
+    "flip": {
+      "file": "sound/move-flip.mp3",
+      "ready": false
+    },
+    "slices": {
+      "file": "sound/move-slices.mp3",
+      "ready": false
+    },
+    "drain": {
+      "file": "sound/move-drain.mp3",
+      "ready": false
+    },
+    "unfold": {
+      "file": "sound/move-unfold.mp3",
+      "ready": false
+    }
+  }
+}

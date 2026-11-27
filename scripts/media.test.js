@@ -29,3 +29,14 @@ test('every room belongs to exactly one chapter of the score, and every cue is o
   for (const room of rooms) assert.ok(chapterOf(room.id), room.id);
   for (const name of Object.keys(CHAPTERS)) assert.ok(await exists(`public/sound/E3-${name}.mp3`), name);
 });
+
+test('every version 2 slot that is marked ready has its file, and every request has a slot', async () => {
+  const slots = JSON.parse(await readFile(new URL('src/v2-assets.json', root), 'utf8'));
+  const requests = JSON.parse(await readFile(new URL('film/requests/requests.json', root), 'utf8')).v2;
+  for (const group of ['tracks', 'notes', 'sounds'])
+    for (const [key, slot] of Object.entries(slots[group]))
+      if (slot.ready) assert.ok(await exists(`public/${slot.file}`), `${group}.${key} is marked ready but public/${slot.file} is missing`);
+  for (const track of requests.tracks) assert.equal(slots.tracks[track.work]?.file, track.output, track.id);
+  for (const sound of requests.sounds) assert.equal(slots.sounds[sound.id.slice(2)]?.file, sound.output, sound.id);
+  assert.equal(Object.keys(slots.notes).length, requests.notes.pitches.length);
+});

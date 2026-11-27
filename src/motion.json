@@ -48,5 +48,15 @@
     "file": "motion/M3.mp4",
     "aspect": 1,
     "ready": false
+  },
+  "L1": {
+    "file": "motion/L1.mp4",
+    "aspect": 1,
+    "ready": false
+  },
+  "L2": {
+    "file": "motion/L2.mp4",
+    "aspect": 1,
+    "ready": false
   }
 }
