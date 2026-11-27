@@ -4,6 +4,8 @@
 // interpolates, and writes transforms only for the room on screen (and the
 // next one, underneath, during a crossfade handoff).
 
+import { buildPacing, samplePacing } from './pacing.js';
+
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const mix = (a, b, t) => a + (b - a) * t;
 const smooth = t => t * t * (3 - 2 * t);
@@ -12,10 +14,12 @@ const DEFAULTS = { o: 1, s: 1, x: 0, y: 0, r: 0, f: 0, c: [0, 0, 0, 0] };
 function buildRoom(room) {
   let cursor = 0;
   const layers = [];
+  const holds = [];
   let previous = [];
   for (const beat of room.beats) {
     const start = cursor - (beat.lead || 0);
     const placed = beat.layers.map(layer => ({ ...layer, start, dur: beat.dur }));
+    for (const hold of beat.holds ?? []) holds.push({ ...hold, time: start + hold.at * beat.dur });
     // The picture a room ends on stays whole until its exit move has finished.
     if (beat.layers.some(layer => layer.kind === 'exit' || layer.kind === 'flood')) for (const layer of previous) layer.holdToEnd = true;
     layers.push(...placed);
@@ -33,7 +37,8 @@ function buildRoom(room) {
     const last = layer.keys.at(-1);
     if (layer.holdToEnd && last[1].o > 0 && last[0] < 1) layer.keys.push([1, { ...last[1] }]);
   }
-  return { ...room, length, layers };
+  holds.sort((a, b) => a.time - b.time);
+  return { ...room, length, layers, holds };
 }
 
 function sample(keys, p, reduced) {
@@ -54,7 +59,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
   const reducedQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const rooms = roomSpecs.map(buildRoom);
   const doc = document;
-  const state = { W: innerWidth, H: innerHeight, active: -1, loaded: new Set(), frame: 0 };
+  const state = { W: innerWidth, H: innerHeight, portrait: null, active: -1, loaded: new Set(), frame: 0 };
 
   const aspectOf = id => { const [w, h] = assets.hero[id]; return w / h; };
   const heroUrl = id => url(`scroll/h/${id}.webp`);
@@ -63,8 +68,6 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     const spacer = doc.createElement('section');
     spacer.className = 'spacer';
     spacer.id = room.id.toLowerCase();
-    // One beat unit is `pace` screen heights of scrolling.
-    spacer.style.setProperty('--length', (room.length * pace).toFixed(3));
     spacer.setAttribute('aria-labelledby', `title-${room.id}`);
     const heading = doc.createElement('h2');
     heading.id = `title-${room.id}`;
@@ -90,6 +93,11 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     el.dataset.ink = room.ink;
     el.hidden = true;
     room.el = el;
+    if (room.holds.some(hold => hold.light)) {
+      room.lightEl = doc.createElement('div');
+      room.lightEl.className = 'room-light';
+      el.append(room.lightEl);
+    }
     for (const layer of room.layers) {
       if (layer.kind === 'exit' || layer.kind === 'flood') room.exit = layer;
       layer.el = makeLayer(layer, room);
@@ -200,12 +208,16 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
   function measure() {
     state.W = stage.clientWidth;
     state.H = stage.clientHeight;
+    const portrait = state.W < state.H * .9;
     for (const room of rooms) {
+      if (state.portrait !== portrait) {
+        room.pacing = buildPacing(room.length, room.holds, pace, portrait);
+        room.spacer.style.setProperty('--length', room.pacing.length.toFixed(4));
+      }
       const placed = new Map();
       for (const layer of room.layers) {
         if (layer.kind === 'flood' || layer.kind === 'strip' || layer.kind === 'exit') continue;
         const { W, H } = state;
-        const portrait = W < H * .9;
         const size = (portrait && layer.sizeP) || layer.size || { fit: .84 };
         const aspect = layer.aspect;
         let w;
@@ -236,6 +248,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
         });
       }
     }
+    state.portrait = portrait;
     queue();
   }
 
@@ -251,12 +264,21 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     }
   }
 
-  function paint(room, p, under, handoffProgress = 0) {
+  function paint(room, p, under, handoffProgress = 0, pause = null) {
     const reduced = reducedQuery.matches;
     const replaceOutgoing = !reduced && room.renderedExit?.hasFrame && handoffProgress >= .74;
     const { W, H } = state;
     room.el.hidden = false;
     room.el.classList.toggle('under', under);
+    if (room.lightEl) {
+      const light = reduced ? null : pause?.light;
+      if (light && light !== room.light) {
+        room.light = light;
+        room.lightEl.style.setProperty('--light-origin', light.origin);
+        room.lightEl.style.setProperty('--light-color', light.color);
+      }
+      room.lightEl.style.opacity = light ? (light.strength * pause.glow).toFixed(3) : '0';
+    }
     for (const layer of room.layers) {
       if (!layer.el) continue;
       const v = sample(layer.keys, p, reduced);
@@ -335,12 +357,14 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
 
   function frame() {
     state.frame = 0;
-    let index = rooms.length - 1, p = 1;
+    let index = rooms.length - 1, fraction = 1;
     for (const room of rooms) {
       const rect = room.spacer.getBoundingClientRect();
-      if (rect.bottom > 0) { index = room.index; p = clamp(-rect.top / rect.height); break; }
+      if (rect.bottom > 0) { index = room.index; fraction = clamp(-rect.top / rect.height); break; }
     }
     const room = rooms[index];
+    const pause = samplePacing(room.pacing, fraction);
+    const p = pause.progress;
     const next = rooms[index + 1];
     load(room); load(next); load(rooms[index + 2]);
     const exit = room.exit ? sample(room.exit.keys, p, false) : null;
@@ -349,7 +373,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     for (const other of rooms) {
       if (other !== room && !(showNext && other === next)) other.el.hidden = true;
     }
-    paint(room, p, false, f);
+    paint(room, p, false, f, pause);
     if (showNext) paint(next, 0, true);
     handoff(room, showNext ? next : null, f);
     if (state.active !== index) {

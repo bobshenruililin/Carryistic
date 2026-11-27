@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 import { rooms } from '../src/rooms.js';
+import { buildPacing, samplePacing } from '../src/pacing.js';
 
 const root = new URL('../', import.meta.url);
 const read = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
@@ -73,5 +74,35 @@ test('a generated passage is used only once Astra delivers it', async () => {
     assert.equal(typeof clip.ready, 'boolean');
     assert.equal(layers.filter(layer => layer.kind === 'video' && layer.file === clip.file).length, clip.ready ? 1 : 0, key);
     if (clip.ready) assert.ok(await exists(`public/${clip.file}`), `${key} is marked ready but ${clip.file} is missing`);
+  }
+});
+
+test('holds add scroll distance while keeping the artwork on the same frame', () => {
+  const light = { color: '#a74b1e' };
+  const holds = [{ time: 2, desktop: .5, phone: .8, light }, { time: 6, desktop: .25, phone: .4 }];
+  const plan = buildPacing(8, holds, .75, true);
+  assert.equal(plan.length, 7.2);
+  const halfwayIntoFirstHold = (1.5 + .4) / plan.length;
+  const sample = samplePacing(plan, halfwayIntoFirstHold);
+  assert.equal(sample.progress, .25);
+  assert.equal(sample.light, light);
+  assert.ok(sample.glow > .999);
+  assert.equal(samplePacing(plan, 0).progress, 0);
+  assert.equal(samplePacing(plan, 1).progress, 1);
+  const path = Array.from({ length: 401 }, (_, index) => samplePacing(plan, index / 400).progress);
+  assert.ok(path.every((progress, index) => index === 0 || path[index - 1] <= progress));
+  assert.equal(buildPacing(8, holds, .75, false).length, 6.75);
+});
+
+test('the work index can open a real cover from each chapter', () => {
+  for (const room of rooms) {
+    assert.ok(room.slides.includes(room.cover), room.title);
+    assert.ok(assets.hero[room.cover], room.title);
+    for (const beat of room.beats) {
+      for (const stop of beat.holds ?? []) {
+        assert.ok(stop.at > 0 && stop.at < 1, room.title);
+        assert.ok(stop.desktop > 0 && stop.phone >= stop.desktop, room.title);
+      }
+    }
   }
 });

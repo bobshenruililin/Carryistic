@@ -13,6 +13,9 @@
   <a class="skip" href="#coda">Skip to the end of the scroll</a>
   <header class="chrome">
     <a class="mark" href="#top" aria-label="Carryistic, back to the beginning"><span class="mark-squares" aria-hidden="true"><i></i><i></i><i></i></span>carryistic</a>
+    <button class="browse" type="button" data-open="works" aria-haspopup="dialog" aria-controls="work-index">
+      <span class="browse-icon" aria-hidden="true"></span>Works
+    </button>
     <nav class="rail" id="rail" aria-label="The fifteen works"></nav>
   </header>
 
@@ -30,7 +33,7 @@
         <p class="coda-line">Painting, photography, sculpture.</p>
         <a class="coda-instagram" href="https://www.instagram.com/carryistic/" target="_blank" rel="noreferrer">@carryistic <span aria-hidden="true">↗</span></a>
         <p class="coda-quiet">
-          <button type="button" data-open="plates">All 153 works</button>
+          <button type="button" data-open="works">All 153 works</button>
           <button type="button" data-open="film">Afterimage, the film</button>
           <button type="button" data-open="credits">Credits</button>
           <button type="button" data-open="note">Leave a note</button>
@@ -39,7 +42,16 @@
     </section>
   </main>
 
-  <dialog id="plates" class="sheet" aria-label="All works">
+  <dialog id="work-index" class="works-sheet" aria-labelledby="works-title">
+    <div class="works-wrap">
+      <header class="works-head">
+        <h2 id="works-title">Works</h2>
+        <button class="works-back sheet-close" type="button" autofocus><span aria-hidden="true">←</span> Back to story</button>
+      </header>
+      <ol class="works-grid"></ol>
+    </div>
+  </dialog>
+  <dialog id="plates" class="sheet" aria-label="Artwork viewer">
     <button type="button" class="sheet-close" aria-label="Close">×</button>
     <div id="collection"></div>
   </dialog>

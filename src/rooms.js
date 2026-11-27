@@ -8,6 +8,7 @@
 
 import plates from './plates.json' with { type: 'json' };
 import motion from './motion.json' with { type: 'json' };
+import assets from './scroll-assets.json' with { type: 'json' };
 
 const slidesOf = post => plates.filter(plate => plate.postId === post).map(plate => plate.id);
 const OPEN = [0, 0, 0, 0];
@@ -37,7 +38,7 @@ function pick(o) {
   return Object.fromEntries(Object.entries({ size, sizeP, a, at, atP, on, crop, pos, z, name, origin }).filter(([, v]) => v !== undefined));
 }
 
-const show = (id, dur, o = {}) => ({ dur, lead: o.lead, layers: [image(id, o)] });
+const show = (id, dur, o = {}) => ({ dur, lead: o.lead, holds: o.holds, layers: [image(id, o)] });
 
 // Several pictures arrive one by one in one of Carry's own arrangements, then leave together.
 const paths = {
@@ -89,7 +90,7 @@ function peel(stack, dur, o = {}) {
     // landmark to that same point at the same width, so the camera moves them as one.
     const base = i
       ? { kind: 'img', id, name: id, a: anchor, on: [stack[0][0], ...stack[0][1]], size: { ref: stack[0][0] }, z: i + 1 }
-      : { kind: 'img', id, name: id, at: o.at || [.5, .5], origin: anchor, size: o.size, z: 1 };
+      : { kind: 'img', id, name: id, at: o.at || [.5, .5], origin: anchor, size: o.size, sizeP: o.sizeP, z: 1 };
     const zooms = o.zoom || [[0, 1], [1, 1]];
     const keys = [];
     const [w0, w1] = wipe || [0, 0];
@@ -103,7 +104,7 @@ function peel(stack, dur, o = {}) {
     // Carry forward the zoom at each wipe so registered layers move together.
     return { ...base, keys: keys.filter(([t]) => t >= (i ? w0 : 0) && t <= (stack[i + 1] ? end : 9)).map(([t, v]) => [t, { ...v, s: v.s ?? zoomAt(zooms, t) }]) };
   });
-  return { dur, lead: o.lead, layers };
+  return { dur, lead: o.lead, holds: o.holds, layers };
 }
 
 function zoomAt(zooms, t) {
@@ -117,7 +118,7 @@ function zoomAt(zooms, t) {
 }
 
 const flip = (set, dur, o = {}) => ({
-  dur, lead: o.lead,
+  dur, lead: o.lead, holds: o.holds,
   layers: [{ kind: 'flip', set, drag: o.drag, size: o.size || { fit: .9 }, sizeP: o.sizeP, keys: [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.06, { o: 1 }], [o.end ?? .96, { f: 1 }], [1, { f: 1 }], ...(o.out === 'none' ? [] : [[1.12, { o: 0 }]])] }],
 });
 
@@ -169,23 +170,34 @@ function living(key, id, dur, o = {}) {
   if (!clip?.ready) return beat;
   const keys = [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.12, { o: 1 }], [1, { f: 1 }]];
   if (o.out !== 'none') keys.push([1.12, { o: 0 }]);
-  beat.layers.push({ kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: o.size, z: 3, keys });
+  beat.layers.push({ kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: o.size, sizeP: o.sizeP, z: 3, keys });
   return beat;
 }
 
 const EYE = { oil: [.575, .47], line: [.605, .493], photo: [.602, .494] };
 const BOUQUET = 1080;
+const PHONE_ART = { fit: .94 };
+const hold = (at, desktop, phone, light) => ({ at, desktop, phone, light });
+// The flipbook runs from .06 through .96. Pause with both Blackout prints visible.
+const PRINTS = .06 + .90 * assets.reel.times.indexOf(47.8) / (assets.reel.times.length - 1);
 
 export const rooms = [
   {
-    id: 'P01', title: 'Dusk til Dawn', ground: '#040406', ink: 'light', handoff: 'shutters',
+    id: 'P01', title: 'Dusk til Dawn', cover: 'P01-02', ground: '#040406', ink: 'light', handoff: 'shutters',
     beats: [
       // The entrance: the painting, whole, then the same glance in pencil and in the photograph it came from.
       peel([
         ['P01-02', EYE.oil],
         ['P01-08', EYE.line, [.4, .55]],
         ['P01-09', EYE.photo, [.62, .76]],
-      ], 2.6, { size: { fit: .86 }, at: [.5, .5], zoom: [[0, 1], [.12, 1], [.4, 2.35], [1, 2.5]] }),
+      ], 2.6, {
+        size: { fit: .86 }, sizeP: PHONE_ART, at: [.5, .5],
+        zoom: [[0, 1], [.12, 1], [.4, 2.35], [1, 2.5]],
+        holds: [
+          hold(.055, .55, .82, { color: '#255d9b', origin: '75% 42%', strength: .48 }),
+          hold(.58, .24, .43),
+        ],
+      }),
       show('P01-07', .9, { size: { fit: .9 }, zoom: [1.1, 1] }),
       show('P01-06', .9, { size: { fit: .88 }, from: 'fade', zoom: [1, 1.05] }),
       cascade(['P01-01', 'P01-03', 'P01-05'], 1.1),
@@ -196,9 +208,12 @@ export const rooms = [
     ],
   },
   {
-    id: 'P02', title: 'Blackout photographs', ground: '#000000', ink: 'light', handoff: 'window',
+    id: 'P02', title: 'Blackout photographs', cover: 'P02-01', ground: '#000000', ink: 'light', handoff: 'window',
     beats: [
-      show('P02-01', .7, { from: 'none', size: { fit: .84 }, zoom: [1, 1.05] }),
+      show('P02-01', .7, {
+        from: 'none', size: { fit: .84 }, sizeP: PHONE_ART, zoom: [1, 1.05],
+        holds: [hold(.6, .36, .57)],
+      }),
       show('P02-06', 1, { size: { cover: 1 }, zoom: [1.08, 1] }),
       cascade(['P02-02', 'P02-03', 'P02-07'], 1.1),
       // The bouquet holds still while the room assembles around the cut-out (src/blackout-registration.json).
@@ -218,15 +233,18 @@ export const rooms = [
     ],
   },
   {
-    id: 'P03', title: 'The Blackout Awaits', ground: '#2e2c32', ink: 'light', handoff: 'cross',
+    id: 'P03', title: 'The Blackout Awaits', cover: 'P03-01', ground: '#2e2c32', ink: 'light', handoff: 'cross',
     beats: [
-      flip('reel', 3.4, { size: { cover: 1 }, sizeP: { fit: 1 }, from: 'none', out: 'none' }),
+      flip('reel', 3.4, {
+        size: { cover: 1 }, sizeP: { fit: 1 }, from: 'none', out: 'none',
+        holds: [hold(PRINTS, .43, .71, { color: '#405e76', origin: '66% 34%', strength: .35 })],
+      }),
       strip('P03', 1, 1, { band: [.06, .14] }),
       exit('cross', .5),
     ],
   },
   {
-    id: 'P13', title: 'Artful and Grateful', ground: '#060201', ink: 'light', handoff: 'rise',
+    id: 'P13', title: 'Artful and Grateful', cover: 'P13-06', ground: '#060201', ink: 'light', handoff: 'rise',
     beats: [
       show('P13-02', .9, { from: 'fade', size: { cover: 1 }, zoom: [1.12, 1] }),
       cascade(['P13-01', 'P13-03', 'P13-07'], 1.1),
@@ -235,14 +253,17 @@ export const rooms = [
       cascade(['P13-08', 'P13-09'], .9, { path: 'pair' }),
       strip('P13', 1.6, 1.4, { dir: 'v', band: [.84, .1] }),
       // The quiet image: a flame over its reflection, held.
-      show('P13-06', 1.1, { from: 'fade', size: { fit: .72 }, out: 'none' }),
+      show('P13-06', 1.1, {
+        from: 'fade', size: { fit: .72 }, sizeP: PHONE_ART, out: 'none',
+        holds: [hold(.76, .49, .77, { color: '#a74b1e', origin: '40% 66%', strength: .5 })],
+      }),
       // The flame's light rises into a gold dome.
       bridge('H3', { id: 'P13-06', at: [.45, .4], zoom: 1.8 }, null, 1.1, { size: { fit: .72 } }),
       exit('rise', .95),
     ],
   },
   {
-    id: 'P15', title: 'Domus Dei', ground: '#264050', ink: 'light', handoff: 'iris',
+    id: 'P15', title: 'Domus Dei', cover: 'P15-01', ground: '#264050', ink: 'light', handoff: 'iris',
     beats: [
       show('P15-01', .9, { from: 'none', size: { fit: .72 }, zoom: [1, 1.6] }),
       show('P15-04', .8, { size: { cover: 1 }, zoom: [1.08, 1] }),
@@ -251,17 +272,23 @@ export const rooms = [
       living('H6', 'P15-06', .9, { size: { fit: .84 }, zoom: [1, 1.05] }),
       show('P15-08', .8, { size: { cover: 1 }, zoom: [1.06, 1] }),
       strip('P15', 1.5, 1.3),
-      show('P15-07', .8, { size: { fit: .84 } }),
+      show('P15-07', .8, {
+        size: { fit: .84 },
+        holds: [hold(.7, .38, .6, { color: '#b88b3b', origin: '52% 26%', strength: .43 })],
+      }),
       // The halo's ring opens on the sculpture's gold rim.
       bridge('H4', { id: 'P15-07', at: [.5, .26], zoom: 2.6 }, null, 1.2),
       exit('iris', .85, { on: ['P15-07@bridge', .5, .26], from: 30 }),
     ],
   },
   {
-    id: 'P08', title: 'To Bleed in Liquid Gold', ground: '#940103', ink: 'light', handoff: 'spin',
+    id: 'P08', title: 'To Bleed in Liquid Gold', cover: 'P08-04', ground: '#940103', ink: 'light', handoff: 'spin',
     beats: [
       show('P08-04', .9, { from: 'none', size: { fit: .84 } }),
-      flip('orbit', 2, { size: { fit: .84 }, drag: true }),
+      flip('orbit', 2, {
+        size: { fit: .84 }, sizeP: PHONE_ART, drag: true,
+        holds: [hold(.38, .4, .63, { color: '#c9843c', origin: '28% 37%', strength: .31 })],
+      }),
       show('P08-03', .9, { size: { cover: 1 }, zoom: [1, 1.18] }),
       cascade(['P08-01', 'P08-05', 'P08-06'], 1.1),
       show('P08-07', .8, { size: { fit: .7 } }),
@@ -273,7 +300,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P11', title: 'Record-store shoot', ground: '#251202', ink: 'light', handoff: 'flash',
+    id: 'P11', title: 'Record-store shoot', cover: 'P11-01', ground: '#251202', ink: 'light', handoff: 'flash',
     beats: [
       show('P11-01', .9, { from: 'none', size: { fit: .84 } }),
       flash(['P11-02', 'P11-03', 'P11-04', 'P11-05', 'P11-07', 'P11-08', 'P11-09', 'P11-11', 'P11-12', 'P11-13', 'P11-14'], 2.8),
@@ -285,7 +312,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P09', title: 'Graphic pose studies', ground: '#f9ff01', ink: 'dark', handoff: 'cross',
+    id: 'P09', title: 'Graphic pose studies', cover: 'P09-01', ground: '#f9ff01', ink: 'dark', handoff: 'cross',
     beats: [
       show('P09-05', .7, { from: 'none', size: { fit: .84 } }),
       flash(['P09-02', 'P09-03', 'P09-07', 'P09-08', 'P09-09', 'P09-11', 'P09-12'], 2.1),
@@ -300,7 +327,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P10', title: 'Record-store portraits', ground: '#0007ba', ink: 'light', handoff: 'star',
+    id: 'P10', title: 'Record-store portraits', cover: 'P10-01', ground: '#0007ba', ink: 'light', handoff: 'star',
     beats: [
       show('P10-08', .7, { from: 'none', size: { fit: .84 } }),
       // The held cap, then its echoes arrive left to right.
@@ -316,25 +343,28 @@ export const rooms = [
     ],
   },
   {
-    id: 'P05', title: 'Fly', ground: '#0a80da', ink: 'light', handoff: 'flood',
+    id: 'P05', title: 'Fly', cover: 'P05-01', ground: '#0a80da', ink: 'light', handoff: 'flood',
     beats: [
       // Fly read backwards: the blocks become the bodies, the bodies find the waterfront.
       {
         dur: 2.1, layers: [
-          { kind: 'img', id: 'P05-03', size: { fit: .84 }, z: 1, keys: [[0, { o: 0, c: [30, 32, 30, 32] }], [.06, { o: 1 }], [.2, { c: OPEN }], [.58, {}]] },
-          { kind: 'img', id: 'P05-02', size: { fit: .84 }, z: 2, keys: [[.3, { o: 1, c: [0, 100, 100, 0] }], [.52, { c: OPEN }], [.86, {}]] },
-          { kind: 'img', id: 'P05-01', size: { fit: .84 }, z: 3, keys: [[.62, { o: 1, c: [0, 100, 100, 0] }], [.84, { c: OPEN }], [1, {}], [1.12, { o: 0 }]] },
+          { kind: 'img', id: 'P05-03', size: { fit: .84 }, sizeP: PHONE_ART, z: 1, keys: [[0, { o: 0, c: [30, 32, 30, 32] }], [.06, { o: 1 }], [.2, { c: OPEN }], [.58, {}]] },
+          { kind: 'img', id: 'P05-02', size: { fit: .84 }, sizeP: PHONE_ART, z: 2, keys: [[.3, { o: 1, c: [0, 100, 100, 0] }], [.52, { c: OPEN }], [.86, {}]] },
+          { kind: 'img', id: 'P05-01', size: { fit: .84 }, sizeP: PHONE_ART, z: 3, keys: [[.62, { o: 1, c: [0, 100, 100, 0] }], [.84, { c: OPEN }], [1, {}], [1.12, { o: 0 }]] },
         ],
       },
-      living('H5', 'P05-01', .9, { from: 'none', size: { fit: .84 } }),
-      show('P05-01', 1, { from: 'fade', size: { cover: 1 }, zoom: [1, 1.1] }),
+      living('H5', 'P05-01', 1.15, {
+        from: 'none', size: { fit: .84 }, sizeP: PHONE_ART,
+        holds: [hold(.2, .42, .76, { color: '#8ed7ff', origin: '74% 24%', strength: .59 })],
+      }),
+      show('P05-01', 1, { from: 'fade', size: { cover: 1 }, sizeP: PHONE_ART, zoom: [1, 1.1] }),
       cascade(['P05-04', 'P05-05', 'P05-06'], 1.3, { path: 'diag' }),
       strip('P05', 1.3, .3, { dir: 'd', band: [0, .16] }),
       flood('#922626', .9),
     ],
   },
   {
-    id: 'P06', title: 'DC Chronicles', ground: '#922626', ink: 'light', handoff: 'flip',
+    id: 'P06', title: 'DC Chronicles', cover: 'P06-01', ground: '#922626', ink: 'light', handoff: 'flip',
     beats: [
       show('P06-01', .9, { size: { fit: .84 } }),
       cascade(['P06-03', 'P06-04', 'P06-05'], 1.1),
@@ -350,7 +380,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P04', title: 'Streets of New York', ground: '#caeaff', ink: 'dark', handoff: 'slices',
+    id: 'P04', title: 'Streets of New York', cover: 'P04-05', ground: '#caeaff', ink: 'dark', handoff: 'slices',
     beats: [
       show('P04-02', .9, { from: 'none', size: { fit: .84 } }),
       cascade(['P04-01', 'P04-03', 'P04-04'], 1.1),
@@ -364,7 +394,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P14', title: 'Italy in motion', ground: '#d0bda1', ink: 'dark', handoff: 'drain',
+    id: 'P14', title: 'Italy in motion', cover: 'P14-16', ground: '#d0bda1', ink: 'dark', handoff: 'drain',
     beats: [
       show('P14-16', 1, { from: 'none', size: { fit: .84 } }),
       show('P14-01', .7, { size: { fit: .84 } }),
@@ -377,7 +407,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P12', title: 'First Weeks at RISD', ground: '#ffffff', ink: 'dark', handoff: 'unfold',
+    id: 'P12', title: 'First Weeks at RISD', cover: 'P12-03', ground: '#ffffff', ink: 'dark', handoff: 'unfold',
     beats: [
       show('P12-03', .9, { from: 'fade', size: { fit: .84 } }),
       cascade(['P12-01', 'P12-02'], .9, { path: 'pair' }),
@@ -391,16 +421,19 @@ export const rooms = [
     ],
   },
   {
-    id: 'P07', title: 'Proud Daddy', ground: '#8e8d8b', ink: 'light', handoff: 'end',
+    id: 'P07', title: 'Proud Daddy', cover: 'P07-01', ground: '#8e8d8b', ink: 'light', handoff: 'end',
     beats: [
-      show('P07-04', .8, { from: 'none', size: { fit: .86 } }),
+      show('P07-04', .8, { from: 'none', size: { fit: .86 }, sizeP: PHONE_ART, holds: [hold(.66, .31, .51)] }),
       flash(['P07-05', 'P07-06', 'P07-01'], 1.8, { size: { fit: .9 } }),
       cascade(['P07-03', 'P07-07', 'P07-08', 'P07-09'], 1.2),
       show('P07-02', .7, { size: { fit: .88 } }),
       show('P07-12', .7, { size: { fit: .86 } }),
       // Carry will decide if the linen should enter the ending. The original is still in All works.
       strip('P07', 1.6, 1.4, { holdForReview: 'P07-11' }),
-      show('P07-10', 1.3, { from: 'fade', size: { fit: .9 }, out: 'none' }),
+      show('P07-10', 1.3, {
+        from: 'fade', size: { fit: .9 }, sizeP: PHONE_ART, out: 'none',
+        holds: [hold(.77, .66, 1, { color: '#d2b996', origin: '32% 36%', strength: .39 })],
+      }),
     ],
   },
 ].map(room => ({ ...room, slides: slidesOf(room.id) }));

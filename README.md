@@ -6,6 +6,8 @@
 
 The portfolio is one continuous scroll through Carry’s 15 posts, and the scroll is the film.
 
+Open **Works** from the top of any scene to browse the fifteen projects as a grid. The scroll holds at ten key frames, with additional room around the painting, the two prints, *Fly* and the studio on a phone. [Pacing notes](direction/scroll-pacing.md)
+
 - **The entrance** is *Dusk til Dawn*, whole, on black. Scrolling moves into the painted eye, peels the oil back to its pencil line and the photograph it came from, then steps back to the canvas on the wall.
 - **The order follows the light** in her pictures: nights with friends, candlelit gold, a neon record store, daylight on the waterfront in *Fly*, travel, and finally the studio. It ends on Carry beside *Proud Daddy*.
 - **One colour runs through the page.** Each work’s ground is sampled from one of her slides. Each handoff is a different move taken from her own pictures, and no move repeats back to back. The BLACKOUT triptych drops in as three panels. The halo irises open on the sculpture’s gold rim. The sculpture spins away like a record. Her red starburst opens onto the sky in *Fly*. [Watch the walkthrough](direction/scroll-walkthrough.mp4) · [Direction, storyboard and the twelve moves](direction/scroll-direction.md)

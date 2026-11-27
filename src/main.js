@@ -1,7 +1,7 @@
 import './style.css';
 import { mountScroll } from './scroll.js';
 import { rooms } from './rooms.js';
-import assets from './scroll-assets.json';
+import assets from './scroll-assets.json' with { type: 'json' };
 import { mountCollection } from './collection.js';
 import { cleanReview, decodeReview, encodeReview } from './review.js';
 
@@ -34,6 +34,7 @@ const railButtons = rooms.map((room, index) => {
   button.type = 'button';
   button.style.setProperty('--swatch', room.ground);
   button.setAttribute('aria-label', `${String(index + 1).padStart(2, '0')} ${room.title}`);
+  button.title = room.title;
   button.addEventListener('click', () => scroll.jump(index));
   rail.append(button);
   return button;
@@ -62,9 +63,53 @@ addEventListener('scroll', () => document.body.classList.toggle('moved', scrollY
 
 // Every slide stays one click from its credit and original file.
 const plates = $('#plates');
+const workIndex = $('#work-index');
+const workGrid = $('.works-grid', workIndex);
+let worksOrigin = '';
+let plateOrigin = '';
 let collectionMounted = false;
+
+function showWorks() {
+  if (workIndex.open) return;
+  if (!workGrid.childElementCount) {
+    for (const { title, cover, ground } of rooms) {
+      const item = element('li');
+      const link = element('a', undefined, 'works-tile');
+      link.href = '#work-' + cover;
+      const picture = element('span', undefined, 'works-image');
+      picture.style.backgroundColor = ground;
+      const image = element('img');
+      const [width, height] = assets.hero[cover];
+      Object.assign(image, { width, height, alt: '', loading: 'lazy', decoding: 'async', src: url(`scroll/h/${cover}.webp`) });
+      picture.append(image);
+      link.append(picture, element('span', title, 'works-name'));
+      link.addEventListener('click', event => {
+        if (event.button || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        openPlate(cover);
+      });
+      item.append(link);
+      workGrid.append(item);
+    }
+  }
+  workIndex.showModal();
+  workIndex.scrollTop = 0;
+}
+
+function openWorks() {
+  if (location.hash !== '#works') {
+    worksOrigin = location.hash;
+    history.pushState(null, '', '#works');
+  }
+  showWorks();
+}
+
 function openPlate(id) {
   const hash = '#work-' + id;
+  if (!plates.open) {
+    plateOrigin = linkedPlate() ? '' : location.hash;
+    $('.sheet-close', plates).setAttribute('aria-label', workIndex.open ? 'Back to works' : 'Close artwork');
+  }
   if (location.hash !== hash) history.pushState(null, '', hash);
   if (!plates.open) plates.showModal();
   // The viewer reads the slide from the address; once mounted it follows hash changes.
@@ -79,7 +124,9 @@ function openPlate(id) {
 }
 function closeSheets(dialog) {
   dialog.querySelectorAll('video').forEach(video => video.pause());
-  if (dialog === plates && location.hash.startsWith('#work-')) history.replaceState(null, '', location.pathname + location.search);
+  const base = location.pathname + location.search;
+  if (dialog === plates && linkedPlate()) history.replaceState(null, '', base + plateOrigin);
+  if (dialog === workIndex && location.hash === '#works') history.replaceState(null, '', base + worksOrigin);
 }
 for (const dialog of $$('dialog')) {
   $('.sheet-close', dialog).addEventListener('click', () => dialog.close());
@@ -89,7 +136,17 @@ for (const dialog of $$('dialog')) {
 function linkedPlate() {
   return location.hash.match(/^#work-(P\d{2}-\d{2})$/)?.[1];
 }
-addEventListener('hashchange', () => { const id = linkedPlate(); if (id && !plates.open) openPlate(id); });
+function syncArtworkView() {
+  const id = linkedPlate();
+  if (id) {
+    if (!plates.open) openPlate(id);
+    return;
+  }
+  if (plates.open) plates.close();
+  if (location.hash === '#works') showWorks();
+  else if (workIndex.open) workIndex.close();
+}
+addEventListener('hashchange', syncArtworkView);
 
 // The quiet things at the end of the film.
 const info = $('#info');
@@ -191,11 +248,11 @@ if (location.hash.startsWith(prefix)) {
 for (const button of $$('[data-open]')) {
   button.addEventListener('click', () => {
     const kind = button.dataset.open;
-    if (kind === 'plates') openPlate(rooms[0].slides[0]);
+    if (kind === 'works') openWorks();
     else if (kind === 'credits') showCredits();
     else if (kind === 'film') showFilm();
     else if (kind === 'note') showNote(false);
   });
 }
 
-if (linkedPlate()) openPlate(linkedPlate());
+syncArtworkView();
