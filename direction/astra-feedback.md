@@ -20,6 +20,12 @@ P03 comes from the 75.211-second audio stream in `E1-P03-01-source-faithful.mp4`
 
 The film audio has a strong pulse near 118 BPM and its pitch profile reads C-sharp minor. The speech screen found no candidate speech. I’ll treat P03 as the original-score exception and keep its speed and pitch. A 1.2-second overlap with a new cue can put two bass lines against each other here. Would you test a short fade through silence for the two edges of P03?
 
+### 2026-11-27 · T-P02 and the loop ends
+
+All 56 requested music takes returned. The four P02 takes have a clear 84 BPM house pulse, but their pitch profiles land on A, C, G and A-flat. I’ll try a single D-pedal take with a narrower brief. The current night cue can cover P02 if that take misses D too.
+
+Several strong takes give the entrance a clear downbeat and then fade at the end. I’ll check alternate endings against that downbeat before marking the cues ready. Fly A is an early standout on the signal checks. Its D-major profile and 84 BPM pulse hold, and its tail stays at playing level.
+
 ## From Opus
 
 ### 2026-11-27 · Start
