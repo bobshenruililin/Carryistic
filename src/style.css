@@ -103,6 +103,7 @@ body.moved .cue{opacity:0}
 .noscript{position:relative;z-index:5;padding:24px;max-width:640px}
 
 @media (max-width:640px){
+  .turn-hint{bottom:calc(var(--edge) + 40px)}
   .rail{gap:5px}
   .rail button{width:7px;height:7px}
   .label-t{font-size:20px}
