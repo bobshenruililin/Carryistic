@@ -343,7 +343,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P05', title: 'Fly', cover: 'P05-01', ground: '#0a80da', ink: 'light', handoff: 'flood',
+    id: 'P05', title: 'Fly', cover: 'P05-01', ground: '#0a80da', ink: 'dark', handoff: 'flood',
     beats: [
       // Fly read backwards: the blocks become the bodies, the bodies find the waterfront.
       {
@@ -421,7 +421,7 @@ export const rooms = [
     ],
   },
   {
-    id: 'P07', title: 'Proud Daddy', cover: 'P07-01', ground: '#8e8d8b', ink: 'light', handoff: 'end',
+    id: 'P07', title: 'Proud Daddy', cover: 'P07-01', ground: '#8e8d8b', ink: 'dark', handoff: 'end',
     beats: [
       show('P07-04', .8, { from: 'none', size: { fit: .86 }, sizeP: PHONE_ART, holds: [hold(.66, .31, .51)] }),
       flash(['P07-05', 'P07-06', 'P07-01'], 1.8, { size: { fit: .9 } }),

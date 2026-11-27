@@ -9,7 +9,7 @@
   --edge:clamp(16px,2.4vw,34px);
   color-scheme:dark;
 }
-:root[data-ink="dark"]{--chrome:var(--dark)}
+:root[data-ink="dark"]{--chrome:#10110e}
 *,*::before,*::after{box-sizing:border-box}
 html{background:#040406;scroll-behavior:auto}
 body{margin:0;color:var(--light);font-family:var(--sans);-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
