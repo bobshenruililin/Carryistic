@@ -29,9 +29,9 @@
       "start_image": "film/requests/H2-start.jpg",
       "end_image": null,
       "duration": 5,
-      "prompt": "A slow, steady dolly forward into this black-and-white photograph of an empty hall with tall windows and a polished floor. One small figure stands far away in the middle of the floor and stays completely still. Reflections on the floor shift a little as the camera moves. The window grid stays straight. The camera stops well before the figure. No new people, no text. Silent.",
-      "protect": "The lone figure, small and unmoving; the straight window grid",
-      "discard_if": "The figure moves, a second person appears, or the window grid bends"
+      "prompt": "A very slow, steady dolly forward into this black-and-white photograph of an entirely empty hall with tall windows and a polished floor. The small black stand on its rectangular weighted base at mid-distance stays fixed exactly where it is. No person or human silhouette appears. Shift the polished floor reflection only as the perspective changes. Maintain the same strictly straight vertical window mullions and stop before reaching the stand. No extra text. Silent.",
+      "protect": "The original stand with a weighted rectangular base and the straight window grid",
+      "discard_if": "The stand changes shape, a person appears, or the window grid bends"
     },
     {
       "id": "H3",

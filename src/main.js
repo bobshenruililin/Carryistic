@@ -107,10 +107,10 @@ function showCredits() {
     'To Bleed in Liquid Gold and First Weeks at RISD were posted by @20.09.07.29 and appear on Carry’s grid.',
     'The record-store portraits credit @bigartparty for photography. The record-store shoot was posted by @bigartparty with help from @ca.m.z. The graphic pose studies credit @bigartparty as model.',
     'Museum works and architecture photographed in DC Chronicles, Streets of New York, Italy in motion and Domus Dei belong to their makers and appear as Carry saw them.',
-    'The order of the scroll, its colour handoffs and any generated passage between two of Carry’s images were made for this portfolio and are recorded in the repository.',
+    'Opus choreographed the scroll and its colour handoffs. Higgsfield generated the moving glints, dusk light, water and paper for this edition. The figures in Fly come from Carry’s original photograph throughout.',
   ]) list.append(element('li', line));
   const links = element('p', undefined, 'sheet-links');
-  links.append(external('Direction', repository + '/blob/main/direction/scroll-direction.md'), external('Source archive', repository + '/tree/main/archive'));
+  links.append(external('Direction', repository + '/blob/8e975c89700f0640addad0d477d7d71175931085/direction/scroll-direction.md'), external('Source archive', repository + '/tree/main/archive'));
   sheet('Credits', 'Sources and interpretation', list, links);
 }
 function showFilm() {

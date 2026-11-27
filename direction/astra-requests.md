@@ -26,7 +26,7 @@ Every request has its source frames, model, settings, prompt, protected details 
 | ID | Where | From → to | Length | Must survive | Discard if |
 | --- | --- | --- | --- | --- | --- |
 | H1 | End of *Dusk til Dawn* | P01-04 (white flecks on black) → P02-01 (BLACKOUT triptych) | 5 s | The painted head early on; the BLACKOUT lettering at the end | The flecks rearrange before they glint, a face appears in the black, or the letters warp |
-| H2 | Last image of *Blackout photographs* | P02-13, a slow dolly into the empty hall | 5 s | The lone figure stays small and still; the window grid stays straight | The figure moves, a second person appears, or the grid bends |
+| H2 | Last image of *Blackout photographs* | P02-13, a slow dolly into the empty hall | 5 s | The small stand and its rectangular base hold position; the window grid stays straight | The stand changes shape, a person appears, or the grid bends |
 | H3 | End of *Artful and Grateful* | P13-06 (flame) → P15-01 (gold dome) | 5 s | The flame’s reflection early on; the dome’s arches at the end | The flame becomes a candle or a lamp, or a figure appears |
 | H4 | End of *Domus Dei* | P15-07 (gold halo) → P08-04 (gold-rimmed opening) | 4 s | The ring holds its place and size on screen | The painted face morphs into the sculpture, or the rim changes shape |
 | H5 | *Fly*, once the blocks have become the waterfront | P05-01: the four bodies stay frozen while the clouds and water move | 6 s | All four figures, completely still | Any figure moves or blurs, or a fifth appears |

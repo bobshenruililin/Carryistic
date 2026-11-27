@@ -95,6 +95,10 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       layer.el = makeLayer(layer, room);
       if (layer.el) el.append(layer.el);
     }
+    if (room.exit?.rendered) room.renderedExit = room.layers.find(layer => layer.file === room.exit.rendered);
+    for (const layer of room.layers) {
+      if (layer.fallbackFor) layer.motionReplacement = room.layers.find(item => item.file === layer.fallbackFor);
+    }
     stage.append(el);
     room.index = index;
   }
@@ -125,6 +129,9 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       node.preload = 'auto';
       node.dataset.src = url(layer.file);
       layer.aspect ??= 1;
+      node.addEventListener('loadedmetadata', queue);
+      node.addEventListener('loadeddata', () => { layer.hasFrame = true; queue(); });
+      node.addEventListener('error', () => { layer.hasFrame = false; queue(); });
     } else if (layer.kind === 'strip') {
       node = doc.createElement('div');
       node.className = `strip strip-${layer.dir || 'h'}`;
@@ -220,8 +227,9 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     }
   }
 
-  function paint(room, p, under) {
+  function paint(room, p, under, handoffProgress = 0) {
     const reduced = reducedQuery.matches;
+    const replaceOutgoing = !reduced && room.renderedExit?.hasFrame && handoffProgress >= .74;
     const { W, H } = state;
     room.el.hidden = false;
     room.el.classList.toggle('under', under);
@@ -229,7 +237,18 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       if (!layer.el) continue;
       const v = sample(layer.keys, p, reduced);
       const node = layer.el;
-      if (!v || v.o <= .001) { node.style.visibility = 'hidden'; continue; }
+      if (!v || v.o <= .001 || (!reduced && layer.motionReplacement?.hasFrame) || (replaceOutgoing && layer.holdToEnd)) {
+        node.style.visibility = 'hidden';
+        continue;
+      }
+      if (layer.kind === 'video') {
+        if (reduced) { node.style.visibility = 'hidden'; continue; }
+        if (node.readyState >= 1 && Number.isFinite(node.duration)) {
+          const time = v.f * Math.max(0, node.duration - .04);
+          if (Math.abs(node.currentTime - time) > .02) node.currentTime = time;
+        }
+        if (!layer.hasFrame) { node.style.visibility = 'hidden'; continue; }
+      }
       node.style.visibility = 'visible';
       node.style.opacity = v.o.toFixed(3);
       if (layer.kind === 'strip') {
@@ -251,10 +270,6 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
       if (layer.kind === 'flip' && layer.cache) {
         const index = Math.round(v.f * (layer.urls.length - 1));
         if (layer.shown !== index) { layer.shown = index; node.src = layer.urls[index]; }
-      }
-      if (layer.kind === 'video' && node.readyState >= 1 && node.duration) {
-        const time = v.f * (node.duration - .04);
-        if (Math.abs(node.currentTime - time) > .02) node.currentTime = time;
       }
       node.style.transform = `translate3d(${(v.x * W / 100).toFixed(1)}px,${(v.y * H / 100).toFixed(1)}px,0) scale(${v.s.toFixed(4)}) rotate(${v.r.toFixed(2)}deg)`;
       const [t, r, b, l] = v.c;
@@ -305,7 +320,7 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     for (const other of rooms) {
       if (other !== room && !(showNext && other === next)) other.el.hidden = true;
     }
-    paint(room, p, false);
+    paint(room, p, false, f);
     if (showNext) paint(next, 0, true);
     handoff(room, showNext ? next : null, f);
     if (state.active !== index) {
@@ -356,6 +371,19 @@ export function mountScroll({ stage, track, rooms: roomSpecs, assets, url, onOpe
     if (reducedQuery.matches && type !== 'flood') type = 'cross';
     const params = room.exit.params || {};
     const on = top => { inn.zIndex = top ? '3' : '0'; out.zIndex = '2'; };
+    const rendered = room.renderedExit;
+    if (!reducedQuery.matches && rendered?.hasFrame) {
+      on(false);
+      const landing = next.placed.get(params.landing);
+      if (landing) {
+        // The filmed square settles on the middle of the original portrait before it takes over.
+        const clip = room.placed.get(rendered.name);
+        const scale = mix(1, landing.w / clip.w, smooth(clamp((f - .74) / .18)));
+        rendered.el.style.transform = `scale(${scale.toFixed(4)})`;
+      }
+      out.opacity = String(1 - smooth(clamp((f - .92) / .08)));
+      return;
+    }
     switch (type) {
       case 'flood':
         on(false);

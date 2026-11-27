@@ -2,7 +2,7 @@
   "H1": {
     "file": "motion/H1.mp4",
     "aspect": 1,
-    "ready": false
+    "ready": true
   },
   "H2": {
     "file": "motion/H2.mp4",
@@ -22,12 +22,12 @@
   "H5": {
     "file": "motion/H5.mp4",
     "aspect": 1,
-    "ready": false
+    "ready": true
   },
   "H6": {
     "file": "motion/H6.mp4",
     "aspect": 1,
-    "ready": false
+    "ready": true
   },
   "H7": {
     "file": "motion/H7.mp4",
@@ -37,7 +37,7 @@
   "M1": {
     "file": "motion/M1.mp4",
     "aspect": 1,
-    "ready": false
+    "ready": true
   },
   "M2": {
     "file": "motion/M2.mp4",

@@ -7,3 +7,7 @@ Open the [15 unannotated contact sheets](archive/contact-sheets) first. Carry’
 3. Request any Higgsfield shot from Codex in the issue with a start image, landing image, duration, intended motion, protected detail and one visible failure condition. Codex returns the result for comparison.
 
 Carry sees one continuous experience. Leave her one open question whose answer could change the edit. The [research notes](direction/collaboration.md) describe the later comparison with admissions readers and prospective clients.
+
+## Review the footage on your scroll
+
+Start with the glint into the shutters, the two living stills and the paper fold in the studio. Scrub each way on desktop and phone and compare the landing to Carry’s source frame. The screening notes record each choice, give the outgoing shot and landing, and point to the private masters. The sculpture study and the linen ending await Carry. [Footage review](direction/opus-footage-review.md) · [Take ledger](film/requests/ledger.csv)

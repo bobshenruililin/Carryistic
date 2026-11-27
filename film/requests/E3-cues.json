@@ -1,0 +1,126 @@
+{
+  "bpm_grid": 84,
+  "chapter_files": [
+    {
+      "chapter": "night",
+      "room_ids": [
+        "P01",
+        "P02",
+        "P03",
+        "P13"
+      ],
+      "source": "raw/E3-night-C.mp3",
+      "selected": "selected/E3-night.mp3",
+      "tonal_reading": "D and B-flat bass",
+      "source_LUFS": "-15.03",
+      "gain_db": -7.7,
+      "selected_LUFS": "-23.00",
+      "selected_dBTP": "-9.09"
+    },
+    {
+      "chapter": "gold",
+      "room_ids": [
+        "P15",
+        "P08"
+      ],
+      "source": "raw/E3-gold-B.mp3",
+      "selected": "selected/E3-gold.mp3",
+      "tonal_reading": "D minor with a free sustained pulse",
+      "source_LUFS": "-14.14",
+      "gain_db": -8.6,
+      "selected_LUFS": "-23.01",
+      "selected_dBTP": "-11.23"
+    },
+    {
+      "chapter": "neon",
+      "room_ids": [
+        "P11",
+        "P09",
+        "P10"
+      ],
+      "source": "raw/E3-neon-D.mp3",
+      "selected": "selected/E3-neon.mp3",
+      "tonal_reading": "D tonal center and modal mixture",
+      "source_LUFS": "-13.18",
+      "gain_db": -9.56,
+      "selected_LUFS": "-23.00",
+      "selected_dBTP": "-10.59"
+    },
+    {
+      "chapter": "day",
+      "room_ids": [
+        "P05",
+        "P06",
+        "P04",
+        "P14"
+      ],
+      "source": "raw/E3-day-C.mp3",
+      "selected": "selected/E3-day.mp3",
+      "tonal_reading": "D major",
+      "source_LUFS": "-14.64",
+      "gain_db": -8.1,
+      "selected_LUFS": "-23.00",
+      "selected_dBTP": "-9.49"
+    },
+    {
+      "chapter": "studio",
+      "room_ids": [
+        "P12",
+        "P07"
+      ],
+      "source": "raw/E3-studio-C.mp3",
+      "selected": "selected/E3-studio.mp3",
+      "tonal_reading": "D major",
+      "source_LUFS": "-23.55",
+      "gain_db": 0.81,
+      "selected_LUFS": "-23.02",
+      "selected_dBTP": "-3.35"
+    }
+  ],
+  "audition": [
+    {
+      "chapter": "night",
+      "source_in": 2.917,
+      "source_out": 11.489,
+      "audition_in": 0,
+      "audition_out": 8.571,
+      "crossfade_in": 0
+    },
+    {
+      "chapter": "gold",
+      "source_in": 2.857,
+      "source_out": 11.429,
+      "audition_in": 7.143,
+      "audition_out": 15.714,
+      "crossfade_in": 1.429
+    },
+    {
+      "chapter": "neon",
+      "source_in": 11.459,
+      "source_out": 20.03,
+      "audition_in": 14.286,
+      "audition_out": 22.857,
+      "crossfade_in": 1.429
+    },
+    {
+      "chapter": "day",
+      "source_in": 5.774,
+      "source_out": 14.346,
+      "audition_in": 22.143,
+      "audition_out": 30.714,
+      "crossfade_in": 0.714
+    },
+    {
+      "chapter": "studio",
+      "source_in": 0.08,
+      "source_out": 8.651,
+      "audition_in": 29.286,
+      "audition_out": 37.857,
+      "crossfade_in": 1.429
+    }
+  ],
+  "audition_file": "E3-crossfade-audition.mp3",
+  "audition_seconds": 37.857,
+  "audition_LUFS": "-24.48",
+  "audition_dBTP": "-7.20"
+}

@@ -20,13 +20,18 @@ test('the scroll follows the light: dusk, night, gold, neon, day, studio', () =>
   }
 });
 
-test('every one of the 153 positions is in its own room, large and in its strip', () => {
+test('the scroll preserves each room’s art and gives Carry the choice about the linen', () => {
   const byRoom = new Map(rooms.map(room => [room.id, room]));
   for (const plate of plates) {
     const room = byRoom.get(plate.postId);
     assert.ok(room.slides.includes(plate.id), plate.id);
     const layers = room.beats.flatMap(beat => beat.layers);
     const strip = layers.find(layer => layer.kind === 'strip');
+    if (plate.id === 'P07-11') {
+      assert.ok(!strip?.ids.includes(plate.id), 'the linen awaits Carry’s decision before entering the strip');
+      assert.ok(!layers.some(layer => layer.id === plate.id), 'the linen awaits Carry’s decision before entering the ending');
+      continue;
+    }
     assert.ok(strip?.ids.includes(plate.id), `${plate.id} is missing from the strip`);
     if (plate.id === 'P03-01') assert.ok(layers.some(layer => layer.kind === 'flip' && layer.set === 'reel'));
     else assert.ok(layers.some(layer => layer.id === plate.id), `${plate.id} never appears large`);
@@ -61,10 +66,12 @@ test('every room hands on with its own move, never the same one twice in a row',
 });
 
 test('a generated passage is used only once Astra delivers it', async () => {
+  const layers = rooms.flatMap(room => room.beats.flatMap(beat => beat.layers));
   for (const [key, clip] of Object.entries(motion)) {
     assert.match(key, /^[HM]\d+$/);
     assert.match(clip.file, /^motion\/[HM]\d+\.mp4$/);
     assert.equal(typeof clip.ready, 'boolean');
+    assert.equal(layers.filter(layer => layer.kind === 'video' && layer.file === clip.file).length, clip.ready ? 1 : 0, key);
     if (clip.ready) assert.ok(await exists(`public/${clip.file}`), `${key} is marked ready but ${clip.file} is missing`);
   }
 });

@@ -125,7 +125,7 @@ const flip = (set, dur, o = {}) => ({
 // (P04-06, P09-01, P10-08), a column (P13-04, P14-16) or Fly's diagonal (P05-03).
 const strip = (post, dur, lead, o = {}) => ({
   dur, lead,
-  layers: [{ kind: 'strip', ids: slidesOf(post), band: o.band, dir: o.dir, angle: o.angle, z: 40, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }],
+  layers: [{ kind: 'strip', ids: slidesOf(post).filter(id => id !== o.holdForReview), band: o.band, dir: o.dir, angle: o.angle, z: 40, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }],
 });
 
 // The move that hands a room to the next one. It overlaps the room's last beat.
@@ -133,14 +133,14 @@ const flood = (color, dur) => ({ dur, lead: dur * .45, layers: [{ kind: 'flood',
 function exit(type, dur, params = {}) {
   const keys = [[0, { f: 0 }], [1, { f: 1 }]];
   const clip = params.clip && motion[params.clip];
-  // A rendered version of the move (Astra's M shots) replaces the code-built one once it is ready.
+  const handoff = { kind: 'exit', type, params, keys };
   if (clip?.ready) {
     return { dur, lead: dur * .45, layers: [
-      { kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: { fit: .84 }, z: 30, keys: [[0, { o: 1, f: 0 }], [.92, { f: 1 }], [1, { f: 1 }]] },
-      { kind: 'exit', type: 'cross', keys },
+      { kind: 'video', file: clip.file, name: clip.file, aspect: clip.aspect || 1, size: { fit: .84 }, z: 30, keys: [[0, { o: 1, f: 0 }], [.92, { f: 1 }], [1, { f: 1 }]] },
+      { ...handoff, rendered: clip.file },
     ] };
   }
-  return { dur, lead: dur * .45, layers: [{ kind: 'exit', type, params, keys }] };
+  return { dur, lead: dur * .45, layers: [handoff] };
 }
 
 // A generated passage Astra renders between two of Carry's frames. Until the
@@ -149,27 +149,28 @@ function exit(type, dur, params = {}) {
 function bridge(key, from, to, dur, o = {}) {
   const clip = motion[key];
   const box = { size: o.size || { fit: .84 } };
-  if (clip?.ready) {
-    return { dur, lead: o.lead, layers: [{ kind: 'video', file: clip.file, aspect: clip.aspect || 1, ...box, z: 5, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }], [1.1, { o: 0 }]] }] };
-  }
+  const video = clip?.ready ? [{ kind: 'video', file: clip.file, aspect: clip.aspect || 1, ...box, z: 7, keys: [[0, { o: 1, f: 0 }], [1, { f: 1 }]] }] : [];
+  const fallbackFor = video[0]?.file;
   const name = `${from.id}@bridge`;
   if (!to) {
     // The next room is revealed by the room's exit move; this picture travels toward its landmark until then.
-    return { dur, lead: o.lead, layers: [{ kind: 'img', id: from.id, name, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [1, { s: from.zoom || 1.5 }]] }] };
+    return { dur, lead: o.lead, layers: [{ kind: 'img', id: from.id, name, fallbackFor, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [1, { s: from.zoom || 1.5 }]] }, ...video] };
   }
-  const fromLayer = { kind: 'img', id: from.id, name, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [.62, { s: from.zoom || 1.5 }], [.9, { o: 0, s: (from.zoom || 1.5) * 1.06 }]] };
-  const toLayer = { kind: 'img', id: to.id, crop: to.crop, pos: to.pos, origin: to.at, ...box, z: 6, keys: [[.5, { o: 0, s: to.zoom || 1.4 }], [.86, { o: 1 }], [1, { s: 1 }], [1.1, {}]] };
-  return { dur, lead: o.lead, layers: [fromLayer, toLayer] };
+  const fromLayer = { kind: 'img', id: from.id, name, fallbackFor, crop: from.crop, pos: from.pos, origin: from.at, ...box, z: 5, keys: [[0, { o: 1, s: 1 }], [.62, { s: from.zoom || 1.5 }], [.9, { o: 0, s: (from.zoom || 1.5) * 1.06 }]] };
+  const toLayer = { kind: 'img', id: to.id, fallbackFor, crop: to.crop, pos: to.pos, origin: to.at, ...box, z: 6, keys: [[.5, { o: 0, s: to.zoom || 1.4 }], [.86, { o: 1 }], [1, { s: 1 }], [1.1, {}]] };
+  return { dur, lead: o.lead, layers: [fromLayer, toLayer, ...video] };
 }
 
 // A generated movement inside one picture (Astra renders it from that picture).
 // Until it is delivered, the still itself plays with a slow camera move.
 function living(key, id, dur, o = {}) {
   const clip = motion[key];
-  if (!clip?.ready) return show(id, dur, o);
+  const beat = show(id, dur, o);
+  if (!clip?.ready) return beat;
   const keys = [[0, { o: o.from === 'none' ? 1 : 0, f: 0 }], [.12, { o: 1 }], [1, { f: 1 }]];
   if (o.out !== 'none') keys.push([1.12, { o: 0 }]);
-  return { dur, lead: o.lead, layers: [{ kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: o.size, keys }] };
+  beat.layers.push({ kind: 'video', file: clip.file, aspect: clip.aspect || 1, size: o.size, z: 3, keys });
+  return beat;
 }
 
 const EYE = { oil: [.575, .47], line: [.605, .493], photo: [.602, .494] };
@@ -386,7 +387,7 @@ export const rooms = [
       strip('P12', 1.4, 1.2),
       show('P12-07', .9, { size: { fit: .84 }, out: 'none' }),
       // A pencil line opens into a page.
-      exit('unfold', .95, { clip: 'M1' }),
+      exit('unfold', .95, { clip: 'M1', landing: 'P07-04' }),
     ],
   },
   {
@@ -397,9 +398,8 @@ export const rooms = [
       cascade(['P07-03', 'P07-07', 'P07-08', 'P07-09'], 1.2),
       show('P07-02', .7, { size: { fit: .88 } }),
       show('P07-12', .7, { size: { fit: .86 } }),
-      strip('P07', 1.6, 1.4),
-      // The ghost of the child on raw linen, beside the painting: the afterimage.
-      show('P07-11', 1.1, { from: 'fade', size: { fit: .9 } }),
+      // Carry will decide if the linen should enter the ending. The original is still in All works.
+      strip('P07', 1.6, 1.4, { holdForReview: 'P07-11' }),
       show('P07-10', 1.3, { from: 'fade', size: { fit: .9 }, out: 'none' }),
     ],
   },
