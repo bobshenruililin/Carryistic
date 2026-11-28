@@ -14,3 +14,4 @@ R18,gpt_image_2_6,high 2k ref=official photo,64c8a63e-5e35-4f99-9b83-bc06de0d74d
 COLD,seedance_2_5,omni_reference draft 480p 10s start=M1 refs=M2+R12 end=M4 audio off,c6901a9b-8a1d-49d0-b06d-dee4db5bdcbe,30,keep,continuous single shot (no cut above scene 0.25); exactly six layers at the end; finalizing at 1080p
 S1,seedance_2_5,omni_reference draft 480p 6s start=R11 end=R12 audio off,ce6bc0dd-6919-4ed2-a5d9-9593fdfd2055,18,keep PRELIMINARY,clean push; mask does not move; remake from group photo P1 before finalizing
 S6,seedance_2_5,omni_reference draft 480p 6s start=R18 audio off,1b7de322-f803-4a8c-9cd4-331c081c34a9,18,keep PRELIMINARY,drift leaves the mask for empty sky blue; remake from group photo P6
+COLD,seedance_2_5,finalized from draft c6901a9b at 1080p high bitrate; re-encoded H.264 30fps no audio,8e6125ba-607c-4249-9db7-5d62df11f2fa,160,keep FINAL,matches the approved draft; no cuts; ends on exactly six layers; 7.4 MB

@@ -22,7 +22,7 @@ Plates are in [media/plates](media/plates); every take is logged in [ledger.csv]
 | R17 | Pinstriped fabric under moving water | Slide 13 (washes) |
 | R18 | Mask on a brass hook, sky-blue wall | Slide 27 ending · S6 start |
 
-**Drafts done (66 credits):** the cold open (M1 → M2 → R12 → M4, 10 s), S1 (R11 → R12, 6 s) and the ending drift (R18 → empty sky blue, 6 s) all pass their reject conditions; contact sheet in [media/drafts](media/drafts). The cold open is being finalized at 1080p from its draft. S1 and S6 wait for the group's photos.
+**Drafts done (66 credits):** the cold open (M1 → M2 → R12 → M4, 10 s), S1 (R11 → R12, 6 s) and the ending drift (R18 → empty sky blue, 6 s) all pass their reject conditions; contact sheet in [media/drafts](media/drafts). The cold open is final: [media/COLD.mp4](media/COLD.mp4) (1080p, 10 s, 7.4 MB, 160 credits). S1 and S6 wait for the group's photos.
 
 ## Every slide, one detail
 
