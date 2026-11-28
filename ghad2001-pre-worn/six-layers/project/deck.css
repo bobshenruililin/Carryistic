@@ -40,3 +40,20 @@ section {
 @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 .fragment { opacity: 0; transition: opacity 400ms ease; }
 .fragment.visible { opacity: 1; }
+.bleed { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
+.strip { position: absolute; left: 1664px; top: 0; width: 256px; height: 1080px; object-fit: cover; }
+.panel { position: absolute; left: 0; top: 0; width: 640px; height: 1080px; object-fit: cover; }
+.gen { position: absolute; right: 64px; bottom: 56px; font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 24px; letter-spacing: 1px; color: #F3F4F6; background: #15181C; border: 2px solid #8A9099; padding: 4px 14px; margin: 0; }
+.chip { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 24px; letter-spacing: 1px; color: #F3F4F6; background: #15181C; border: 2px solid #8A9099; padding: 4px 14px; margin: 0; align-self: flex-start; }
+.src.short { width: 1400px; }
+.big { font-family: 'Archivo', Arial, sans-serif; font-size: 240px; font-weight: 800; line-height: 0.9; letter-spacing: -6px; margin: 0; }
+.tag { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 24px; letter-spacing: 1px; color: #F3F4F6; background: rgba(21,24,28,.78); padding: 4px 12px; margin: 0; }
+@property --n { syntax: '<integer>'; inherits: false; initial-value: 0 }
+@keyframes count { from { --n: 0 } }
+.n { animation: count 1.2s ease-out both }
+.grow { transform-origin: left center; animation: grow 900ms ease-out both; animation-delay: calc(var(--i) * 150ms); }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.stack { animation: rise 500ms ease-out both; animation-delay: calc(var(--i) * 120ms); }
+.late { animation: fadein 900ms ease-out 900ms both; }
+.title-in { animation: fadein 1200ms ease-out 300ms both; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
