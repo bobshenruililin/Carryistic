@@ -56,7 +56,7 @@ def v1():
         cv.paste(Image.new("RGB", (W, 260), "#07090D"), (0, H - 260), strip.resize((W, 260)))
         dr = ImageDraw.Draw(cv)
         cap1 = "1880s · FOUND IN A MINE SHAFT · SOLD FOR US$87,400 (2022)"
-        cap2 = "2026 · TEACH ME DESTRUCTED · PC9 005013599"
+        cap2 = "2026 · 501 ORIGINAL · MEDIUM INDIGO WORN · PC9 00501-0162"
         f = font(MONO, 30)
         if t < 3.0: dr.text((128, 960), cap1, font=f, fill="#F3F5F9")
         if t > 3.0: dr.text((128, 960), cap2, font=f, fill="#F3F5F9")

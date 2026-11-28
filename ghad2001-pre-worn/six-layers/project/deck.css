@@ -1,0 +1,42 @@
+body { font-family: 'Inter', Arial, sans-serif; }
+section {
+  background: #F6F7F8; color: #15181C; padding: 128px 128px 160px; box-sizing: border-box;
+  font-family: 'Inter', Arial, sans-serif; counter-increment: page;
+}
+.claim { font-family: 'Archivo', Arial, sans-serif; font-size: 56px; font-weight: 700; line-height: 1.1; letter-spacing: -0.5px; width: 1240px; margin: 0; }
+.claim-wide { width: 1600px; }
+.title { font-family: 'Archivo', Arial, sans-serif; font-size: 140px; font-weight: 800; line-height: 0.95; letter-spacing: -3px; margin: 0; }
+.label { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 24px; letter-spacing: 1px; color: #5A616B; margin: 0; }
+.body { font-size: 32px; line-height: 1.4; color: #464C55; margin: 0; }
+.say { font-size: 32px; line-height: 1.35; color: #15181C; margin: 0; }
+.num { font-family: 'Archivo', Arial, sans-serif; font-size: 120px; font-weight: 800; line-height: 1; letter-spacing: -2px; margin: 0; }
+.k { font-family: 'Archivo', Arial, sans-serif; font-size: 32px; font-weight: 700; line-height: 1.2; margin: 0; }
+.src { position: absolute; left: 128px; bottom: 64px; width: 1664px; font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 24px; color: #5A616B; margin: 0; }
+.cu { color: #9A4F22; }
+.rule { border-top: 3px solid #15181C; padding-top: 20px; }
+.rule-cu { border-top: 3px solid #B8642E; padding-top: 20px; }
+.row { display: flex; gap: 48px; }
+.col { display: flex; flex-direction: column; gap: 24px; }
+.night { background: #15181C; color: #F3F4F6; }
+.night .label, .night .body, .night .src { color: #C3C8D0; }
+.night .say { color: #F3F4F6; }
+.night .rule { border-top: 3px solid #C3C8D0; }
+.copper { background: #5C2E14; color: #FBF4EE; }
+.copper .label, .copper .body, .copper .src { color: #EBD3C2; }
+.copper .rule { border-top: 3px solid #EBD3C2; }
+.sky { background: #8FCBE5; color: #15181C; }
+.sky .label, .sky .src { color: #23313B; }
+.sky .body { color: #15181C; }
+.sky .rule { border-top: 3px solid #15181C; }
+.grey { background: #C9CED4; color: #15181C; }
+.grey .label, .grey .src { color: #2E343B; }
+.grey .body { color: #15181C; }
+.layer { height: 64px; display: flex; align-items: center; padding: 0 24px; box-sizing: border-box; }
+.bar { height: 44px; background: #15181C; }
+.paint { border: 3px dashed #9A4F22; padding: 20px; box-sizing: border-box; }
+.rise { animation: rise 600ms ease-out both; }
+.rise2 { animation: rise 600ms ease-out 250ms both; }
+.rise3 { animation: rise 600ms ease-out 500ms both; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.fragment { opacity: 0; transition: opacity 400ms ease; }
+.fragment.visible { opacity: 1; }

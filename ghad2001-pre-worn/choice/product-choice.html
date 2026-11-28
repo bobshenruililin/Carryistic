@@ -1,0 +1,162 @@
+<title>Pre-Worn Product Choice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* One reading column; candidates as a scored list; recommendation first. */
+:root{--bg:#ffffff;--ink:#10141d;--muted:#586174;--rule:#e2e6ed;--panel:#f3f5f9;--accent:#2b4a7e;--copper:#a9592a;--tab:#c0202e;--ok:#2f7a4a;
+--display:"Archivo","Helvetica Neue",Arial,sans-serif;--body:"Inter",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c1018;--ink:#e7ebf2;--muted:#9aa4b6;--rule:#232b39;--panel:#141a26;--accent:#9db8e6;--copper:#d58d52;--tab:#ea5866;--ok:#62c088;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c1018;--ink:#e7ebf2;--muted:#9aa4b6;--rule:#232b39;--panel:#141a26;--accent:#9db8e6;--copper:#d58d52;--tab:#ea5866;--ok:#62c088;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:48px 72px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-0.01em}
+h1{font-size:clamp(36px,6vw,60px);font-weight:800;line-height:1}
+h2{font-size:clamp(24px,3.4vw,32px);font-weight:700;margin-bottom:14px}
+h3{font-size:19px;font-weight:650}
+p{margin:0}.muted{color:var(--muted)}.mono{font-family:var(--mono);font-size:12.5px}
+section{padding-block:44px 4px;border-top:1px solid var(--rule)}
+.lead{font-size:18px;max-width:66ch;margin-top:16px}
+.prose{max-width:68ch;display:grid;gap:10px}
+a{color:var(--accent)}
+.verdict{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:22px}
+.v{border:1px solid var(--rule);border-radius:6px;padding:18px;display:grid;gap:8px;min-width:0}
+.v .tag{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--copper)}
+.v.pick{border-color:var(--copper)}
+@media (max-width:760px){.verdict{grid-template-columns:1fr}}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;margin-top:14px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:640px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--mono);font-size:11.5px;font-weight:500;color:var(--muted);background:var(--panel)}
+tr:last-child td{border-bottom:0}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:center}
+.cands{display:grid;gap:0;border-top:1px solid var(--rule);margin-top:10px}
+.c{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:24px;padding:20px 0;border-bottom:1px solid var(--rule)}
+.c>*{min-width:0}
+.c ul{margin:8px 0 0;padding-left:18px;display:grid;gap:4px;font-size:14.5px}
+.score{display:grid;gap:5px;font-size:12.5px;font-family:var(--mono)}
+.score div{display:grid;grid-template-columns:96px 1fr 18px;gap:8px;align-items:center}
+.bar{height:8px;background:var(--panel);border-radius:2px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+.total{font-family:var(--display);font-size:22px;font-weight:700;margin-top:4px}
+@media (max-width:760px){.c{grid-template-columns:1fr}}
+.pal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin-top:14px}
+.pal div{padding:44px 10px 10px;font-family:var(--mono);font-size:11px;line-height:1.35;min-width:0}
+@media (max-width:640px){.pal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+pre{white-space:pre-wrap;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px;font:13px/1.55 var(--mono);margin-top:12px;overflow-x:auto}
+</style>
+<div class="wrap">
+<p class="mono muted">GHAD2001 · choosing the product · Saturday 28 November 2026</p>
+<h1>Which product should we follow?</h1>
+<p class="lead">Jeans are still a strong choice. The weak “two of eight stages” came from the particular pair we picked, not from jeans. If the group wants the most original and most course-aligned item and can get Dr Park’s approval quickly, the Hong Kong government’s CuMask+ beats every other option we looked at.</p>
+
+<div class="verdict">
+  <div class="v pick"><span class="tag">Highest ceiling</span><h3>CuMask+, the copper mask every Hong Kong resident was offered in 2020</h3><p>It is pandemic-era clothing, made in Hong Kong and recorded in LegCo papers: who designed it, who made it, where, at what cost and how many. It touches six of the course’s seven topics. The risks are approval (is a mask “clothing”?) and two days to rebuild.</p></div>
+  <div class="v"><span class="tag">Safest strong option</span><h3>Levi’s 501, a version with a full production record</h3><p>Levi’s own traceability site lists every production stage for mainstream 501s. Most of what we have built can stay, but the 501 has no pandemic strand of its own. We would add one: Levi’s 2020 payment decision and the year jeans lost out to sweatpants.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Why “two of eight” was our mistake</h2>
+<div class="prose">
+<p>Our pair, PC9 005013599 “Teach Me Destructed”, is a Hong Kong-only style. Levi’s product-information site, built for EU disclosure rules, has no record of it. Mainstream 501s are recorded stage by stage, for each production order. We read these on 28 November:</p>
+</div>
+<div class="tbl"><table>
+<thead><tr><th>Code</th><th>Colour</th><th>Orders</th><th>One full record, as Levi’s publishes it</th></tr></thead>
+<tbody>
+<tr><td>00501-0193</td><td>Medium Indigo Flat</td><td class="n">860</td><td>Cotton fabric, weaving, dyeing, cut &amp; sew, processing, laundry: all Pakistan (other orders: Egypt, Mexico)</td></tr>
+<tr><td>00501-0115</td><td>Rinse</td><td class="n">968</td><td>All Pakistan, or Pakistani fabric sewn and washed in Egypt</td></tr>
+<tr><td>00501-0162</td><td>Medium Indigo Worn</td><td class="n">246</td><td>All Türkiye, or Turkish fabric finished in Egypt</td></tr>
+<tr><td>00501-0226</td><td>Black</td><td class="n">139</td><td>All Mexico</td></tr>
+<tr><td>00501-3639</td><td>East Bound</td><td class="n">4</td><td>Fabric woven and dyed in Hong Kong, sewn and laundered in Egypt</td></tr>
+<tr><td>00501-3599</td><td>Teach Me Destructed (ours)</td><td class="n">0</td><td>“No product information found”</td></tr>
+</tbody></table></div>
+<p class="mono muted" style="margin-top:8px">Source: productinfo.levi.com, read 28 Nov 2026. Countries only; factory names come from Levi’s supplier map.</p>
+</section>
+
+<section>
+<h2>The candidates</h2>
+<p class="muted">Each is scored from 1 to 5: how well it fits Park’s course, how traceable it is, how relevant to Hong Kong, how much pop culture and story it carries, and the risk of switching by Monday (5 means low risk).</p>
+<div class="cands">
+  <div class="c"><div><h3>1 · CuMask+ (HKRITA design; Hong Kong government, 2020)</h3><ul>
+    <li>A six-layer reusable mask with two copper layers, designed by the Hong Kong Research Institute of Textiles and Apparel. It cost about HK$40 each, and over 10 million had been given out by early 2021.</li>
+    <li>Made by Crystal International in Hong Kong and Vietnam, without a competitive tender. The official in charge admitted they had not disclosed the maker at first. That is our record thesis, in Hong Kong.</li>
+    <li>Course links: pathogens (SARS 2003, COVID, the SARS hotel lecture), infodemics (copper claims, mask debates), health knowledge (the patent and the design changes), corruption and transparency (the tender), pollution (masks washed up on the Soko Islands), and HK$40 of public money per person.</li>
+    <li>Pop culture: Hong Kong’s mask habit since SARS, the 945-day mandate (July 2020 to March 2023), masks as fashion, two million sign-ups in about a day. Most of us still have one in a drawer to photograph.</li>
+    <li>Risks: Dr Park may class it as medical rather than clothing, and it may overlap with a pharmaceuticals group.</li></ul></div>
+    <div class="score"><div>Park fit<span class="bar"><i style="width:100%"></i></span>5</div><div>Traceable<span class="bar"><i style="width:80%"></i></span>4</div><div>Hong Kong<span class="bar"><i style="width:100%"></i></span>5</div><div>Pop &amp; story<span class="bar"><i style="width:60%"></i></span>3</div><div>Low risk<span class="bar"><i style="width:40%"></i></span>2</div><p class="total">19</p></div></div>
+  <div class="c"><div><h3>2 · Levi’s 501, a traceable version (for example 00501-0193)</h3><ul>
+    <li>All seven production stages are recorded to the country: on some orders the whole chain runs inside Pakistan, which also grows the cotton. Factory names come from the supplier map.</li>
+    <li>Everything built so far survives: the films, the silicosis dots, Kantamanto, the launderette ads, the 1880s mine pair.</li>
+    <li>A pandemic strand to add: Levi’s 2020 payment commitment, and lockdown’s switch from jeans to sweatpants.</li></ul></div>
+    <div class="score"><div>Park fit<span class="bar"><i style="width:80%"></i></span>4</div><div>Traceable<span class="bar"><i style="width:80%"></i></span>4</div><div>Hong Kong<span class="bar"><i style="width:60%"></i></span>3</div><div>Pop &amp; story<span class="bar"><i style="width:100%"></i></span>5</div><div>Low risk<span class="bar"><i style="width:100%"></i></span>5</div><p class="total">21</p></div></div>
+  <div class="c"><div><h3>3 · Mink fur (Danish mink, sold through the fur trade Hong Kong long served)</h3><ul>
+    <li>In November 2020 Denmark culled its entire farmed mink herd after a mink-linked virus variant, “Cluster 5”, was found in people. Mink on 290 of 1,147 farms had tested positive.</li>
+    <li>The strongest One Health story here, and fur is clearly clothing. Pelts are traceable through the auction system.</li>
+    <li>But few of us take a fur coat for granted, and the subject is heavy.</li></ul></div>
+    <div class="score"><div>Park fit<span class="bar"><i style="width:100%"></i></span>5</div><div>Traceable<span class="bar"><i style="width:80%"></i></span>4</div><div>Hong Kong<span class="bar"><i style="width:60%"></i></span>3</div><div>Pop &amp; story<span class="bar"><i style="width:60%"></i></span>3</div><div>Low risk<span class="bar"><i style="width:40%"></i></span>2</div><p class="total">17</p></div></div>
+  <div class="c"><div><h3>4 · Disposable nitrile gloves (Top Glove, Malaysia)</h3><ul>
+    <li>Pandemic demand, then a US ban on its imports over forced-labour indicators (July 2020), a formal finding (March 2021), and over US$30 million paid back to migrant workers before the ban was lifted (September 2021).</li>
+    <li>Academically excellent on labour, migration and pathogens. Little pop culture, and gloves are a stretch for clothing.</li></ul></div>
+    <div class="score"><div>Park fit<span class="bar"><i style="width:100%"></i></span>5</div><div>Traceable<span class="bar"><i style="width:80%"></i></span>4</div><div>Hong Kong<span class="bar"><i style="width:40%"></i></span>2</div><div>Pop &amp; story<span class="bar"><i style="width:20%"></i></span>1</div><div>Low risk<span class="bar"><i style="width:40%"></i></span>2</div><p class="total">14</p></div></div>
+  <div class="c"><div><h3>5 · Crocs</h3><ul>
+    <li>A lockdown boom, free pairs given to healthcare workers, and celebrity collaborations. Lots of fun, but a thin public record of where and how they are made.</li></ul></div>
+    <div class="score"><div>Park fit<span class="bar"><i style="width:40%"></i></span>2</div><div>Traceable<span class="bar"><i style="width:40%"></i></span>2</div><div>Hong Kong<span class="bar"><i style="width:40%"></i></span>2</div><div>Pop &amp; story<span class="bar"><i style="width:100%"></i></span>5</div><div>Low risk<span class="bar"><i style="width:40%"></i></span>2</div><p class="total">13</p></div></div>
+</div>
+</section>
+
+<section>
+<h2>What each choice costs by Monday</h2>
+<div class="tbl"><table>
+<thead><tr><th></th><th>CuMask+</th><th>Traceable 501</th></tr></thead>
+<tbody>
+<tr><td>Approval</td><td>Email Dr Park tonight; a reply may not come before Monday</td><td>None needed</td></tr>
+<tr><td>Research</td><td>New: LegCo papers, HKRITA, Crystal, mask efficacy and copper evidence, mask waste. About a day.</td><td>Swap the product code; add the Pakistan chain and the 2020 strand. Half a day.</td></tr>
+<tr><td>Deck</td><td>The structure, style and five chapters carry over; most slides are rewritten</td><td>About eight slides change</td></tr>
+<tr><td>Films</td><td>New films from Higgsfield prompt packs</td><td>Re-shoot the hole photo and re-render</td></tr>
+<tr><td>Rehearsal</td><td>One run-through, on Sunday night</td><td>Two run-throughs, as planned</td></tr>
+</tbody></table></div>
+</section>
+
+<section>
+<h2>The look stays, whichever we choose</h2>
+<div class="prose"><p>The style carries over to either product: a real object on a plain ground, evidence shown as photograph, line or paint, and Carry’s window, echo and swatch moves. For CuMask+ the copper accent becomes the product’s own copper layer. These tokens go at the top of every Higgsfield prompt, so the films match the slides.</p></div>
+<div class="pal">
+  <div style="background:#1B2A47;color:#eef1f6">Ink indigo<br>#1B2A47</div>
+  <div style="background:#45689A;color:#f4f7fb">Mid<br>#45689A</div>
+  <div style="background:#A9BFD8;color:#10141D">Pale<br>#A9BFD8</div>
+  <div style="background:#FAFBFC;color:#10141D;border-left:1px solid #e2e6ed">Paper<br>#FAFBFC</div>
+  <div style="background:#C27434;color:#fff">Copper<br>#C27434</div>
+  <div style="background:#C8202F;color:#fff">Red tab<br>#C8202F</div>
+</div>
+<pre>STYLE HEADER (paste before every Higgsfield prompt)
+Documentary product cinematography, Apple-keynote restraint. One real object on a plain
+ground or in its true location. Palette: ink indigo #1B2A47, mid blue #45689A, pale blue
+#A9BFD8, paper #FAFBFC, copper #C27434 accents only. Soft natural light or one hard raking
+key light. Slow, single camera move (push-in, lateral track or locked-off). No text,
+no logos, no people's faces unless asked, no lens flares, no glossy CGI, no added objects.
+
+MODELS
+Seedance 2.5, omni_reference, with start_image and end_image: first/last-frame bridges
+  between our photos (4-8 s, 1080p, audio off).
+Cinema Studio Video 3.0, with start_image: macro product moves (4-6 s).
+FLUX 3 Video, image-to-video with ordered frames: stop-motion-like sequences.</pre>
+</section>
+
+<section>
+<h2>If we switch: email to Dr Park</h2>
+<pre>Subject: GHAD2001 group project: request to change our item
+
+Dear Dr Park,
+Our group (Clothing) would like to change our item from Levi's 501 jeans to CuMask+,
+the reusable copper mask designed by HKRITA and distributed by the Hong Kong
+government in 2020. It lets us follow a garment whose production, distribution and
+disposal are on the public record in Hong Kong. May we make this change for
+Monday's presentation?
+Kind regards,
+[names]</pre>
+</section>
+
+<section>
+<p class="mono muted">Sources: <a href="https://www.info.gov.hk/gia/general/202005/20/P2020052000356.htm">LCQ15 CuMask+ (2020)</a> · <a href="https://amp.scmp.com/news/hong-kong/politics/article/3083270/coronavirus-uniqlo-and-hm-manufacturer-making-reusable">SCMP on the maker</a> · <a href="https://www.scmp.com/news/hong-kong/health-environment/article/3083609/hong-kong-civil-servant-charge-reusable-mask">SCMP on transparency</a> · <a href="https://news.gov.hk/eng/2020/05/20200507/20200507_132114_106.html">2m registered</a> · <a href="https://www.info.gov.hk/gia/general/202101/13/P2021011300375.htm">10 million distributed</a> · <a href="https://oceansasia.org/beach-mask-coronavirus/">OceansAsia, Soko Islands</a> · <a href="https://www.bloomberg.com/news/articles/2023-02-28/hk-ends-one-of-world-s-longest-mask-mandates-after-945-days">945-day mandate</a> · <a href="https://cbp.gov/newsroom/national-media-release/cbp-modifies-forced-labor-finding-top-glove-corporation-bhd">CBP on Top Glove</a> · <a href="https://www.who.int/emergencies/disease-outbreak-news/item/2020-DON301">WHO on mink</a> · productinfo.levi.com</p>
+</section>
+</div>
