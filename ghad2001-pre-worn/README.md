@@ -1,12 +1,12 @@
 # Pre-Worn
 
-GHAD2001 Globalisation and Health group presentation (Monday 30 November 2026) and methodology report (Friday 4 December). One pair of Levi’s 501 Original jeans, PC9 005013599 “Teach Me Destructed”, followed from the cotton field to a market in Accra.
+GHAD2001 Globalisation and Health group presentation (Monday 30 November 2026) and methodology report (Friday 4 December). One pair of Levi’s 501 Original jeans, PC9 00501-0162 “Medium Indigo Worn”, whose fabric, sewing and finishing Levi’s records in Türkiye, followed from the cotton field to a market in Accra. The alternative deck, Six Layers, follows CuMask+.
 
 **Thesis.** Globalisation made this pair cheap and everywhere by spreading its making, wearing and discarding across borders. Its health costs land where its record stops.
 
 [Plan and storyboard](https://claude.ai/artifact/GgHbaooqcPdQZgVDfRAPGu) · [Pre-Worn deck (Levi’s 501, 00501-0162)](https://claude.ai/artifact/2biRnyPKsnzV4ifZow3Qfz) · [Six Layers deck (CuMask+)](https://claude.ai/artifact/HcR1rSiRoWmuBS3FUNwcKP) · [Product choice](https://claude.ai/artifact/7i3WeT6b7xTQGYURCG1ZfG) · [Higgsfield prompts](higgsfield-prompts.md) · [Methodology report and research record](https://docs.google.com/document/d/1tlXrdgzSIEi8yEivGhe7PxQvuDLC3gXB30VXmpHH6Yw/edit) · [The bench](bench.md)
 
-The two Claude pages are private to their owner until shared from each page’s Share menu.
+The Claude pages are private to their owner until shared from each page’s Share menu.
 
 ## What is here
 
