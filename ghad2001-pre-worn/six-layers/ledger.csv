@@ -1,1 +1,13 @@
 shot,model,settings,job_id,credits,decision,reason
+M1,gpt_image_2_6,high 2k 16:9 text-only,54ebbce5-5a60-4438-8822-064570c535fe,2,keep,copper fibre to thread; cold-open start frame; illustration
+M2,gpt_image_2_6,high 2k 16:9 text-only,5c637c56-eb63-416d-bfb9-7e02dd950d93,2,keep,meltblown web; filtration layer plate; illustration
+M3,gpt_image_2_6,high 2k 16:9 text-only,3b7e44bf-6ce8-4673-8152-8605c9b0b187,2,superseded,woven stripes run diagonal; R12 matches the real fabric better
+M4,gpt_image_2_6,high 2k 16:9 text-only,044202f3-590a-4179-bebe-4ff92aa36778,2,keep,exactly six layers; cold-open end frame; illustration (layer colours not the real ones)
+R11,gpt_image_2_6,high 2k ref=official photo,e03d7d13-2ef2-4b7c-94ea-bb4d39b33bd5,2,keep PRELIMINARY,cover; stripes run lengthwise unlike the reference; replace with group photo P1
+R12,gpt_image_2_6,high 2k ref=official photo,78c91805-ae42-4e16-9487-2d12ada446fa,2,keep PRELIMINARY,stripe macro; reads as knit rib; check against real mask
+R13,gpt_image_2_6,high 2k ref=official photo,4fb8a72c-1ba4-408f-bf72-83f3c1bb2174,2,keep PRELIMINARY,worn binding for the 60-washes slide
+R14,gpt_image_2_6,high 2k text-only,b3f5a4de-08df-461a-a390-abcad5c2a664,2,keep,blank envelope; no text generated
+R15,gpt_image_2_6,high 2k ref=official photo,625240a6-aeb5-4923-9655-1dbf37151ab9,2,keep PRELIMINARY,drawer payoff for the show of hands
+R16,gpt_image_2_6,high 2k text-only,8d99ec47-4b77-4abe-a557-6b7333494135,2,keep,copper surface vs fabric diptych for slide 14
+R17,gpt_image_2_6,high 2k text-only,3b4d46e5-2296-4cdd-8f8d-c620cd296eb7,2,keep,washing plate for the 60-washes test
+R18,gpt_image_2_6,high 2k ref=official photo,64c8a63e-5e35-4f99-9b83-bc06de0d74d9,2,keep PRELIMINARY,hook on sky blue; ending start frame
