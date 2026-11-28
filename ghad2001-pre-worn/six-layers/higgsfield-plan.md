@@ -22,14 +22,14 @@ Plates are in [media/plates](media/plates); every take is logged in [ledger.csv]
 | R17 | Pinstriped fabric under moving water | Slide 13 (washes) |
 | R18 | Mask on a brass hook, sky-blue wall | Slide 27 ending · S6 start |
 
-**Drafts rendering:** the cold open (M1 → M2 → R12 → M4, 10 s), S1 (R11 → R12, 6 s) and the ending drift (R18 → empty sky blue, 6 s), all 480p drafts at 3 credits a second. Keepers are finalized at 1080p from the same draft, so the chosen motion doesn't change.
+**Drafts done (66 credits):** the cold open (M1 → M2 → R12 → M4, 10 s), S1 (R11 → R12, 6 s) and the ending drift (R18 → empty sky blue, 6 s) all pass their reject conditions; contact sheet in [media/drafts](media/drafts). The cold open is being finalized at 1080p from its draft. S1 and S6 wait for the group's photos.
 
 ## Every slide, one detail
 
 | # | Slide | Higgsfield detail | Tool | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Cover | 6 s push from the flat mask into its pinstripes | Seedance 2.5, start/end frames | Draft rendering |
-| — | Cold open, before slide 1 | 10 s: copper fibre → plastic web → pinstriped cloth → six layers. Title lands on the last frame. | Seedance 2.5, start + references + end | Draft rendering |
+| 1 | Cover | 6 s push from the flat mask into its pinstripes | Seedance 2.5, start/end frames | Draft passed |
+| — | Cold open, before slide 1 | 10 s: copper fibre → plastic web → pinstriped cloth → six layers. Title lands on the last frame. | Seedance 2.5, start + references + end | Draft passed |
 | 2 | 720,000 in a day | Data film D1, built in code; nothing generated | Code | To build |
 | 3 | SARS and the queues | Real, credited photos only; no generation (rule: no real events) | — | — |
 | 4 | Every maker named | Each supplier's material as a small swatch beside its name: copper fibre (M1), nonwoven (M2), thread, test, envelope | Image plates | Partly done |
@@ -55,7 +55,7 @@ Plates are in [media/plates](media/plates); every take is logged in [ledger.csv]
 | 24 | Five flows cross | Five thin lines through the M4 stack | Code over M4 | To build |
 | 25 | Three conclusions | Type only | — | — |
 | 26 | Four suggestions | Type only | — | — |
-| 27 | Ending | R18 drift to empty sky blue as "The seventh was us" lands | Seedance 2.5 | Draft rendering |
+| 27 | Ending | R18 drift to empty sky blue as "The seventh was us" lands | Seedance 2.5 | Draft passed |
 | 28 | Sources | Type only | — | — |
 
 ## Sound, used sparingly
