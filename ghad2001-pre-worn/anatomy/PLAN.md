@@ -1,3 +1,5 @@
+> **Superseded.** The final plan, merged with ChatGPT's masterplan, is the self-contained [INIT-PROMPT.md](INIT-PROMPT.md). This file is kept as the first draft.
+
 # Teach Me Destructed: the anatomy plan
 
 A new deck, built from scratch. The group's Google Slides draft gives us the **content**: speakers, research and notes. None of its look carries over, and none of Pre-Worn's either.
